@@ -66,7 +66,7 @@ export default function HomePage() {
                       <HeartPulse className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-slate-900">ApexCare Assurance</h3>
+                      <h3 className="font-bold text-slate-900">Nan Da Wun Care Assurance</h3>
                       <p className="text-xs text-slate-500">Same-Day Urgent Care Slots</p>
                     </div>
                   </div>

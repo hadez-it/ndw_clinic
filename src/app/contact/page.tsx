@@ -58,7 +58,7 @@ export default function ContactPage() {
           <span>Patient Support & Emergency Inquiries</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Contact ApexHealth Clinic
+          Contact Nan Da Wun Healthcare
         </h1>
         <p className="text-slate-600 text-xs sm:text-sm max-w-xl mx-auto">
           Have inquiries regarding procedures, insurance coverage, or clinical directions? Our care coordination team responds promptly.
@@ -91,7 +91,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="text-xs text-teal-200 font-medium">Electronic Inquiries</p>
-                  <p className="font-bold text-white">support@apexhealthclinic.com</p>
+                  <p className="font-bold text-white">support@nandawunhealthcare.com</p>
                 </div>
               </div>
 

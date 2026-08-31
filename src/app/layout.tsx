@@ -45,7 +45,7 @@ export default function RootLayout({
                 <div className="w-7 h-7 rounded-lg bg-teal-600 flex items-center justify-center text-white">
                   <Activity className="w-4 h-4" />
                 </div>
-                <span className="text-lg font-bold text-white">ApexHealth Clinic</span>
+                <span className="text-lg font-bold text-white">Nan Da Wun Healthcare</span>
               </div>
               <p className="text-slate-400 text-xs leading-relaxed">
                 Patient-first multidisciplinary medical care. Combining clinical expertise, preventative medicine, and secure digital records.
@@ -83,14 +83,14 @@ export default function RootLayout({
               <div className="space-y-2 text-slate-400 text-xs">
                 <p>📍 742 Evergreen Medical Way, Suite 400</p>
                 <p>📞 Appointment Hotline: (800) 555-0199</p>
-                <p>✉️ Desk: support@apexhealthclinic.com</p>
+                <p>✉️ Desk: support@nandawunhealthcare.com</p>
                 <p>⏰ Mon - Fri: 8am - 8pm | Sat: 9am - 4pm</p>
               </div>
             </div>
           </div>
 
           <div className="border-t border-slate-800/80 py-4 text-center text-xs text-slate-500">
-            &copy; {new Date().getFullYear()} ApexHealth Clinic. All rights reserved. Encrypted with Row Level Security and zero-trust perimeter defense.
+            &copy; {new Date().getFullYear()} Nan Da Wun Healthcare. All rights reserved. Encrypted with Row Level Security and zero-trust perimeter defense.
           </div>
         </footer>
       </body>

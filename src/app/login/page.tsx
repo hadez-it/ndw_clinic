@@ -69,7 +69,7 @@ export default function LoginPage() {
           <span>Staff & Physician Access Only</span>
         </div>
         <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-          ApexHealth Portal
+          Nan Da Wun Healthcare Portal
         </h1>
         <p className="text-slate-600 text-xs sm:text-sm">
           Secure medical access for clinical doctors and clinic administration.

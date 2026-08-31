@@ -3,7 +3,7 @@ import { initialDoctors } from '@/lib/types';
 import { Award, Calendar, CheckCircle2, ShieldCheck, Stethoscope, Clock } from 'lucide-react';
 
 export const metadata = {
-  title: 'Our Doctors & Medical Specialists | ApexHealth Clinic',
+  title: 'Our Doctors & Medical Specialists | Nan Da Wun Healthcare',
   description: 'Meet our board-certified healthcare professionals across cardiology, pediatrics, endocrinology, and orthopedics.',
 };
 

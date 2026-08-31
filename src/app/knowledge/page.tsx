@@ -108,7 +108,7 @@ export default function HealthKnowledgePage() {
             Health Knowledge & Medical Insights
           </h1>
           <p className="text-slate-600 text-xs sm:text-sm max-w-xl mt-1">
-            Clinical articles, preventative care guidelines, and wellness recommendations published by ApexHealth medical doctors.
+            Clinical articles, preventative care guidelines, and wellness recommendations published by Nan Da Wun Healthcare medical doctors.
           </p>
         </div>
 

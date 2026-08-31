@@ -27,7 +27,7 @@ export function ClinicNavbar() {
           </div>
           <div>
             <span className="text-lg sm:text-xl font-bold tracking-tight text-slate-900">
-              Apex<span className="text-teal-600">Health</span>
+              Nan Da Wun <span className="text-teal-600">Healthcare</span>
             </span>
             <span className="hidden sm:block text-[9px] uppercase font-semibold text-slate-400 tracking-wider">
               Care & Specialty Clinic
