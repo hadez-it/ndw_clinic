@@ -68,39 +68,39 @@ export default function ContactPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Contact Info Sidebar */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-slate-900 text-white rounded-3xl p-8 space-y-6 shadow-xl">
+          <div className="bg-teal-900 text-white rounded-3xl p-6 sm:p-8 space-y-6 shadow-md">
             <h2 className="text-2xl font-bold">Clinic Desk & Direct Lines</h2>
-            <p className="text-slate-400 text-xs leading-relaxed">
+            <p className="text-teal-100 text-xs leading-relaxed">
               For acute life-threatening emergencies, dial 911 immediately or proceed directly to your nearest hospital emergency department.
             </p>
 
-            <div className="space-y-4 pt-2 text-sm text-slate-200">
+            <div className="space-y-4 pt-2 text-sm text-teal-50">
               <div className="flex items-start gap-3">
-                <div className="p-2.5 bg-slate-800 rounded-xl text-teal-400">
+                <div className="p-2.5 bg-teal-800/80 rounded-xl text-teal-300">
                   <Phone className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400 font-medium">Telephone Inquiries</p>
+                  <p className="text-xs text-teal-200 font-medium">Telephone Inquiries</p>
                   <p className="font-bold text-white">(800) 555-0199 / (555) 321-7890</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="p-2.5 bg-slate-800 rounded-xl text-teal-400">
+                <div className="p-2.5 bg-teal-800/80 rounded-xl text-teal-300">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400 font-medium">Electronic Inquiries</p>
+                  <p className="text-xs text-teal-200 font-medium">Electronic Inquiries</p>
                   <p className="font-bold text-white">support@apexhealthclinic.com</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="p-2.5 bg-slate-800 rounded-xl text-teal-400">
+                <div className="p-2.5 bg-teal-800/80 rounded-xl text-teal-300">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400 font-medium">Physical Location</p>
+                  <p className="text-xs text-teal-200 font-medium">Physical Location</p>
                   <p className="font-bold text-white">
                     742 Evergreen Medical Way, Suite 400<br />
                     San Francisco, CA 94107
@@ -109,14 +109,14 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="p-2.5 bg-slate-800 rounded-xl text-teal-400">
+                <div className="p-2.5 bg-teal-800/80 rounded-xl text-teal-300">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400 font-medium">Operational Consultation Hours</p>
+                  <p className="text-xs text-teal-200 font-medium">Operational Consultation Hours</p>
                   <p className="font-semibold text-white text-xs">Monday – Friday: 8:00 AM – 8:00 PM</p>
                   <p className="font-semibold text-white text-xs">Saturday: 9:00 AM – 4:00 PM</p>
-                  <p className="text-xs text-slate-400">Sunday: Closed for inpatient emergency consults only</p>
+                  <p className="text-xs text-teal-200">Sunday: Closed for inpatient emergency consults only</p>
                 </div>
               </div>
             </div>
