@@ -12,9 +12,10 @@ export default function HealthKnowledgePage() {
   // Doctor Post Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('General Health');
+  const [category, setCategory] = useState('အထွေထွေကျန်းမာရေး (General Health)');
   const [authorName, setAuthorName] = useState('Dr. Sarah Jenkins');
   const [authorPin, setAuthorPin] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [excerpt, setExcerpt] = useState('');
   const [content, setContent] = useState('');
 
@@ -72,6 +73,7 @@ export default function HealthKnowledgePage() {
           category,
           authorName,
           authorPin,
+          imageUrl: imageUrl || undefined,
           excerpt,
           content,
         }),
@@ -163,39 +165,60 @@ export default function HealthKnowledgePage() {
       </div>
 
       {/* Topics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredTopics.map((topic) => (
           <article
             key={topic.id}
             onClick={() => setSelectedTopic(topic)}
-            className="cursor-pointer bg-white rounded-3xl border border-slate-200 p-6 shadow-xs hover-lift hover:border-teal-400 transition-all flex flex-col justify-between group"
+            className="cursor-pointer bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs hover-lift hover:border-teal-400 transition-all flex flex-col justify-between group"
           >
-            <div>
-              <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
-                <span className="px-2.5 py-0.5 rounded-full font-semibold bg-teal-50 text-teal-700 group-hover:bg-teal-100 transition-colors">
-                  {topic.category}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5" />
-                  <span>{topic.createdAt}</span>
-                </span>
+            {/* Featured Image */}
+            {topic.imageUrl && (
+              <div className="overflow-hidden h-48 sm:h-52 bg-slate-100 relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={topic.imageUrl}
+                  alt={topic.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-3 left-3">
+                  <span className="px-2.5 py-1 rounded-lg font-semibold bg-white/90 backdrop-blur-md text-teal-800 text-xs shadow-xs">
+                    {topic.category}
+                  </span>
+                </div>
               </div>
-              <h2 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-teal-600 transition-colors">
-                {topic.title}
-              </h2>
-              <p className="text-xs text-slate-600 mt-2.5 line-clamp-3 leading-relaxed">
-                {topic.excerpt}
-              </p>
-            </div>
+            )}
 
-            <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-1.5 text-slate-700 font-medium">
-                <User className="w-3.5 h-3.5 text-teal-600" />
-                <span>{topic.authorName}</span>
+            <div className="p-6 flex-1 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+                  {!topic.imageUrl && (
+                    <span className="px-2.5 py-0.5 rounded-full font-semibold bg-teal-50 text-teal-700">
+                      {topic.category}
+                    </span>
+                  )}
+                  <span className="flex items-center gap-1 ml-auto">
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>{topic.createdAt}</span>
+                  </span>
+                </div>
+                <h2 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-teal-600 transition-colors">
+                  {topic.title}
+                </h2>
+                <p className="text-xs text-slate-600 mt-2.5 line-clamp-3 leading-relaxed">
+                  {topic.excerpt}
+                </p>
               </div>
-              <span className="text-teal-600 font-semibold group-hover:translate-x-1 transition-transform inline-block">
-                Read Full Insight →
-              </span>
+
+              <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5 text-slate-700 font-medium">
+                  <User className="w-3.5 h-3.5 text-teal-600" />
+                  <span>{topic.authorName}</span>
+                </div>
+                <span className="text-teal-600 font-semibold group-hover:translate-x-1 transition-transform inline-block">
+                  ဖတ်ရှုရန် →
+                </span>
+              </div>
             </div>
           </article>
         ))}
@@ -223,6 +246,18 @@ export default function HealthKnowledgePage() {
               </button>
             </div>
 
+            {/* Featured Image in Reader */}
+            {selectedTopic.imageUrl && (
+              <div className="w-full h-64 sm:h-80 overflow-hidden bg-slate-100">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={selectedTopic.imageUrl}
+                  alt={selectedTopic.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+
             {/* WordPress Editorial Post Content */}
             <article className="p-6 sm:p-12 space-y-6">
               {/* Category & Date Meta */}
@@ -238,7 +273,7 @@ export default function HealthKnowledgePage() {
                   </span>
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 leading-tight tracking-tight">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 leading-tight tracking-tight">
                   {selectedTopic.title}
                 </h1>
 
@@ -249,7 +284,7 @@ export default function HealthKnowledgePage() {
                   </div>
                   <div>
                     <p className="text-sm font-bold text-slate-900">{selectedTopic.authorName}</p>
-                    <p className="text-xs text-slate-500">Clinical Contributor & Medical Specialist</p>
+                    <p className="text-xs text-slate-500">ဆရာဝန်ကြီးများ၏ ကျန်းမာရေးဆိုင်ရာ လမ်းညွှန်ချက်များ</p>
                   </div>
                 </div>
               </div>
@@ -412,7 +447,7 @@ export default function HealthKnowledgePage() {
                 {/* Category Selection */}
                 <div>
                   <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[11px]">
-                    Category
+                    Category (ကဏ္ဍ)
                   </label>
                   <select
                     value={category}
@@ -420,12 +455,30 @@ export default function HealthKnowledgePage() {
                     form="wp-post-form"
                     className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
                   >
-                    <option value="Cardiology">Cardiology</option>
-                    <option value="Pediatrics">Pediatrics</option>
-                    <option value="Endocrinology">Endocrinology</option>
-                    <option value="Orthopedics">Orthopedics</option>
-                    <option value="General Health">General Health</option>
+                    <option value="နှလုံးနှင့်သွေးကြော (Cardiology)">နှလုံးနှင့်သွေးကြော (Cardiology)</option>
+                    <option value="ကလေးကျန်းမာရေး (Pediatrics)">ကလေးကျန်းမာရေး (Pediatrics)</option>
+                    <option value="ဆီးချိုနှင့်ဟော်မုန်း (Endocrinology)">ဆီးချိုနှင့်ဟော်မုန်း (Endocrinology)</option>
+                    <option value="အရိုးနှင့်အကြော (Orthopedics)">အရိုးနှင့်အကြော (Orthopedics)</option>
+                    <option value="အထွေထွေကျန်းမာရေး (General Health)">အထွေထွေကျန်းမာရေး (General Health)</option>
                   </select>
+                </div>
+
+                {/* Featured Image URL */}
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[11px]">
+                    Featured Image URL (ဓာတ်ပုံလင့်ခ်)
+                  </label>
+                  <input
+                    type="url"
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    form="wp-post-form"
+                    placeholder="https://images.unsplash.com/..."
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                  />
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    Unsplash သို့မဟုတ် ဆေးပညာဆိုင်ရာ ပုံလင့်ခ် ထည့်သွင်းနိုင်ပါသည်။
+                  </p>
                 </div>
 
                 {/* Security Verification Key */}

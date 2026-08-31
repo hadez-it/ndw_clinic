@@ -236,30 +236,42 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {initialTopics.map((topic) => (
+            {initialTopics.slice(0, 3).map((topic) => (
               <article
                 key={topic.id}
-                className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow"
+                className="bg-white rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover-lift overflow-hidden group"
               >
-                <div>
-                  <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
-                    <span className="px-2.5 py-0.5 rounded-full font-semibold bg-teal-50 text-teal-700">
-                      {topic.category}
-                    </span>
-                    <span>{topic.createdAt}</span>
+                {topic.imageUrl && (
+                  <div className="h-48 overflow-hidden bg-slate-100">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={topic.imageUrl}
+                      alt={topic.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 leading-snug hover:text-teal-600 transition">
-                    <Link href="/knowledge">{topic.title}</Link>
-                  </h3>
-                  <p className="text-xs text-slate-600 mt-2 line-clamp-3 leading-relaxed">
-                    {topic.excerpt}
-                  </p>
-                </div>
-                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <span className="font-medium text-slate-700">By {topic.authorName}</span>
-                  <Link href="/knowledge" className="font-semibold text-teal-600 hover:underline">
-                    Read Article →
-                  </Link>
+                )}
+                <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between text-xs text-slate-400 mb-2.5">
+                      <span className="px-2.5 py-0.5 rounded-full font-semibold bg-teal-50 text-teal-700 text-[11px]">
+                        {topic.category}
+                      </span>
+                      <span>{topic.createdAt}</span>
+                    </div>
+                    <h3 className="text-base font-bold text-slate-900 leading-snug group-hover:text-teal-600 transition-colors line-clamp-2">
+                      <Link href="/knowledge">{topic.title}</Link>
+                    </h3>
+                    <p className="text-xs text-slate-600 mt-2 line-clamp-3 leading-relaxed">
+                      {topic.excerpt}
+                    </p>
+                  </div>
+                  <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <span className="font-medium text-slate-700">{topic.authorName}</span>
+                    <Link href="/knowledge" className="font-semibold text-teal-600 hover:underline">
+                      ဖတ်ရှုရန် →
+                    </Link>
+                  </div>
                 </div>
               </article>
             ))}

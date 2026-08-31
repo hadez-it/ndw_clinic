@@ -11,7 +11,7 @@ export async function GET() {
   if (supabase) {
     const { data, error } = await supabase
       .from('health_topics')
-      .select('id, title, slug, category, excerpt, content, author_name, created_at')
+      .select('id, title, slug, category, excerpt, content, author_name, image_url, created_at')
       .eq('published', true)
       .order('created_at', { ascending: false });
 
@@ -24,6 +24,7 @@ export async function GET() {
         excerpt: t.excerpt,
         content: t.content,
         authorName: t.author_name,
+        imageUrl: t.image_url || 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800',
         createdAt: t.created_at.split('T')[0],
       }));
       return jsonResponse({ topics: formatted });
@@ -62,10 +63,7 @@ export async function POST(req: NextRequest) {
 
     // 4. Sanitize inputs
     const cleanTitle = sanitizeText(data.title);
-    const slug = cleanTitle
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '') + `-${Date.now().toString().slice(-4)}`;
+    const slug = `topic-${Date.now()}`;
 
     const newTopic = {
       title: cleanTitle,
@@ -74,6 +72,7 @@ export async function POST(req: NextRequest) {
       excerpt: sanitizeText(data.excerpt),
       content: sanitizeText(data.content),
       author_name: sanitizeText(data.authorName),
+      image_url: data.imageUrl || 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800',
       published: true,
     };
 
@@ -102,6 +101,7 @@ export async function POST(req: NextRequest) {
           excerpt: inserted.excerpt,
           content: inserted.content,
           authorName: inserted.author_name,
+          imageUrl: inserted.image_url,
           createdAt: inserted.created_at.split('T')[0],
         },
       }, 201);
@@ -116,6 +116,7 @@ export async function POST(req: NextRequest) {
       excerpt: newTopic.excerpt,
       content: newTopic.content,
       authorName: newTopic.author_name,
+      imageUrl: newTopic.image_url,
       createdAt: new Date().toISOString().split('T')[0],
     };
 

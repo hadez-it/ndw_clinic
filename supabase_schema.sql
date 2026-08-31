@@ -24,9 +24,10 @@ CREATE TABLE IF NOT EXISTS health_topics (
     slug TEXT UNIQUE NOT NULL,
     content TEXT NOT NULL,
     excerpt TEXT NOT NULL,
-    category TEXT NOT NULL DEFAULT 'General Health',
+    category TEXT NOT NULL DEFAULT 'အထွေထွေကျန်းမာရေး',
     author_name TEXT NOT NULL,
     author_id UUID REFERENCES doctors(id) ON DELETE SET NULL,
+    image_url TEXT,
     published BOOLEAN DEFAULT true NOT NULL,
     created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
 );
