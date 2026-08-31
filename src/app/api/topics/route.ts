@@ -53,10 +53,11 @@ export async function POST(req: NextRequest) {
 
     const data = parseResult.data;
 
-    // 3. Security: Authenticate Doctor via Doctor Secret PIN or Supabase Auth
+    // 3. Security: Authenticate Doctor or Owner via Secret PIN / Password
     const serverDoctorPin = process.env.DOCTOR_SECRET_PIN || 'doctor1234';
-    if (data.authorPin !== serverDoctorPin) {
-      return jsonResponse({ error: 'Unauthorized: Invalid Doctor Secret PIN.' }, 401);
+    const serverOwnerPass = process.env.CLINIC_OWNER_PASSWORD || 'owner2026!';
+    if (data.authorPin !== serverDoctorPin && data.authorPin !== serverOwnerPass) {
+      return jsonResponse({ error: 'Unauthorized: Invalid Doctor PIN or Owner Password.' }, 401);
     }
 
     // 4. Sanitize inputs
