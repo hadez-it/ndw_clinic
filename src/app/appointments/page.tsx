@@ -78,21 +78,21 @@ function AppointmentFormContent() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center space-y-3 mb-10">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="text-center space-y-3 mb-8 sm:mb-10">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold">
-          <Shield className="w-4 h-4 text-teal-600" />
+          <Shield className="w-4 h-4 text-teal-600 shrink-0" />
           <span>Confidential & End-to-End Secure Booking</span>
         </div>
-        <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
           Schedule Your Clinical Appointment
         </h1>
-        <p className="text-slate-600 text-sm max-w-xl mx-auto">
+        <p className="text-slate-600 text-xs sm:text-sm max-w-xl mx-auto">
           Reserve your consultation with our specialist physicians. Verified slots with zero double-booking and instant database persistence.
         </p>
       </div>
 
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-md p-6 sm:p-10">
+      <div className="bg-white rounded-3xl border border-slate-200 shadow-md p-5 sm:p-10">
         {successMessage && (
           <div className="mb-8 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-start gap-3 text-emerald-900">
             <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />

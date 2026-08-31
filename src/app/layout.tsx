@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Shield, Activity, Phone, Calendar, BookOpen, Users, Mail } from 'lucide-react';
+import { Shield, Activity, Phone } from 'lucide-react';
+import { ClinicNavbar } from '@/components/ClinicNavbar';
 
 export default function RootLayout({
   children,
@@ -9,68 +10,28 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className="flex min-h-screen flex-col bg-slate-50 text-slate-900 antialiased selection:bg-teal-500 selection:text-white">
-        {/* Top Emergency & Trust Banner */}
-        <div className="bg-slate-900 text-slate-300 text-xs px-4 py-2 flex flex-wrap justify-between items-center border-b border-slate-800">
-          <div className="flex items-center gap-2">
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Clinic Hours: Mon - Sat (8:00 AM - 8:00 PM)</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1 text-slate-400">
-              <Shield className="w-3.5 h-3.5 text-teal-400" />
-              <span>HIPAA Compliant & End-to-End Encrypted</span>
-            </span>
-            <a href="tel:+18005550199" className="hover:text-white font-medium flex items-center gap-1">
-              <Phone className="w-3.5 h-3.5 text-teal-400" />
-              <span>(800) 555-0199</span>
-            </a>
+        {/* Top Emergency & Trust Banner (Responsive wrap and stacked layout on small screens) */}
+        <div className="bg-slate-900 text-slate-300 text-xs px-3 sm:px-4 py-2 border-b border-slate-800">
+          <div className="max-w-7xl mx-auto flex flex-col xs:flex-row items-center justify-between gap-1.5 sm:gap-4 text-center xs:text-left">
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+              <span>Clinic: Mon - Sat (8am - 8pm)</span>
+            </div>
+            <div className="flex items-center gap-3 sm:gap-4 text-[11px] sm:text-xs">
+              <span className="hidden sm:flex items-center gap-1 text-slate-400">
+                <Shield className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                <span>HIPAA Compliant</span>
+              </span>
+              <a href="tel:+18005550199" className="hover:text-white font-medium flex items-center gap-1">
+                <Phone className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                <span>(800) 555-0199</span>
+              </a>
+            </div>
           </div>
         </div>
 
-        {/* Main Navigation Header */}
-        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 shadow-xs">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-teal-500/20 group-hover:scale-105 transition-transform">
-                <Activity className="w-6 h-6" />
-              </div>
-              <div>
-                <span className="text-xl font-bold tracking-tight text-slate-900">
-                  Apex<span className="text-teal-600">Health</span>
-                </span>
-                <span className="block text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
-                  Care & Specialty Clinic
-                </span>
-              </div>
-            </Link>
-
-            {/* Navigation links */}
-            <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
-              <Link href="/" className="hover:text-teal-600 transition-colors">
-                Home
-              </Link>
-              <Link href="/doctors" className="hover:text-teal-600 transition-colors flex items-center gap-1">
-                <Users className="w-4 h-4" /> Doctors
-              </Link>
-              <Link href="/knowledge" className="hover:text-teal-600 transition-colors flex items-center gap-1">
-                <BookOpen className="w-4 h-4" /> Health Knowledge
-              </Link>
-              <Link href="/contact" className="hover:text-teal-600 transition-colors flex items-center gap-1">
-                <Mail className="w-4 h-4" /> Contact Us
-              </Link>
-            </nav>
-
-            <div className="flex items-center gap-3">
-              <Link
-                href="/appointments"
-                className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm shadow-teal-600/30 transition-all"
-              >
-                <Calendar className="w-4 h-4" />
-                <span>Book Appointment</span>
-              </Link>
-            </div>
-          </div>
-        </header>
+        {/* Responsive Navbar */}
+        <ClinicNavbar />
 
         {/* Main Content Area */}
         <main className="flex-1">{children}</main>

@@ -9,17 +9,17 @@ export const metadata = {
 
 export default function DoctorsPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 sm:space-y-12">
       {/* Header */}
-      <div className="text-center max-w-3xl mx-auto space-y-4">
+      <div className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold">
-          <ShieldCheck className="w-4 h-4 text-teal-600" />
+          <ShieldCheck className="w-4 h-4 text-teal-600 shrink-0" />
           <span>Board Certified & Credentialed Specialists</span>
         </div>
-        <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
           Meet Our Dedicated Medical Team
         </h1>
-        <p className="text-slate-600 text-base leading-relaxed">
+        <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
           Our clinic unites experienced clinicians committed to compassionate care, state-of-the-art evidence-based medicine, and personalized health roadmaps.
         </p>
       </div>

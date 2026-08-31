@@ -6,34 +6,34 @@ export default function HomePage() {
   return (
     <div className="space-y-20 pb-16">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-teal-50/70 via-white to-slate-50 pt-16 pb-20 lg:pt-24 lg:pb-32 border-b border-slate-200">
+      <section className="relative overflow-hidden bg-gradient-to-b from-teal-50/70 via-white to-slate-50 pt-10 pb-16 sm:pt-16 sm:pb-20 lg:pt-24 lg:pb-32 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-7 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <div className="lg:col-span-7 space-y-5 sm:space-y-6 text-center lg:text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-100/80 border border-teal-200 text-teal-800 text-xs font-semibold">
-                <ShieldCheck className="w-4 h-4 text-teal-600" />
+                <ShieldCheck className="w-4 h-4 text-teal-600 shrink-0" />
                 <span>Certified Clinical Excellence & Data Privacy</span>
               </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight">
+              <h1 className="text-3xl xs:text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight">
                 Modern Healthcare, <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-cyan-600">
                   Rooted in Trust & Empathy
                 </span>
               </h1>
-              <p className="text-lg text-slate-600 max-w-2xl leading-relaxed">
+              <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                 Connect with world-class specialists in cardiology, pediatrics, endocrinology, and orthopedics. Book your visit effortlessly with instant digital confirmation.
               </p>
-              <div className="flex flex-wrap gap-4 pt-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-2">
                 <Link
                   href="/appointments"
-                  className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-6 py-3.5 rounded-xl font-semibold shadow-lg shadow-teal-600/25 transition-all text-base"
+                  className="inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-6 py-3.5 rounded-xl font-semibold shadow-lg shadow-teal-600/25 transition-all text-sm sm:text-base text-center"
                 >
                   <span>Book Appointment Now</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="/doctors"
-                  className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 border border-slate-300 px-6 py-3.5 rounded-xl font-semibold text-slate-800 shadow-xs transition"
+                  className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-300 px-6 py-3.5 rounded-xl font-semibold text-slate-800 shadow-xs transition text-sm sm:text-base text-center"
                 >
                   <UserCheck className="w-4 h-4 text-teal-600" />
                   <span>Meet Our Specialists</span>
@@ -41,18 +41,18 @@ export default function HomePage() {
               </div>
 
               {/* Trust Indicators */}
-              <div className="pt-8 border-t border-slate-200/80 grid grid-cols-3 gap-4">
+              <div className="pt-6 sm:pt-8 border-t border-slate-200/80 grid grid-cols-3 gap-2 sm:gap-4 text-center lg:text-left">
                 <div>
-                  <p className="text-2xl font-bold text-slate-900">15,000+</p>
-                  <p className="text-xs text-slate-500 font-medium">Patients Treated</p>
+                  <p className="text-xl sm:text-2xl font-bold text-slate-900">15,000+</p>
+                  <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Patients Treated</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-slate-900">99.4%</p>
-                  <p className="text-xs text-slate-500 font-medium">Patient Satisfaction</p>
+                  <p className="text-xl sm:text-2xl font-bold text-slate-900">99.4%</p>
+                  <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Satisfaction</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-slate-900">100%</p>
-                  <p className="text-xs text-slate-500 font-medium">Encrypted & Secure</p>
+                  <p className="text-xl sm:text-2xl font-bold text-slate-900">100%</p>
+                  <p className="text-[11px] sm:text-xs text-slate-500 font-medium">HIPAA Encrypted</p>
                 </div>
               </div>
             </div>

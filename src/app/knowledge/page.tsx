@@ -96,18 +96,18 @@ export default function HealthKnowledgePage() {
       : topics.filter((t) => t.category === activeCategory);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 sm:space-y-12">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200">
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold mb-2">
-            <ShieldCheck className="w-4 h-4 text-teal-600" />
+            <ShieldCheck className="w-4 h-4 text-teal-600 shrink-0" />
             <span>Physician Verified Knowledge Base</span>
           </div>
-          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Health Knowledge & Medical Insights
           </h1>
-          <p className="text-slate-600 text-sm max-w-xl mt-1">
+          <p className="text-slate-600 text-xs sm:text-sm max-w-xl mt-1">
             Clinical articles, preventative care guidelines, and wellness recommendations published by ApexHealth medical doctors.
           </p>
         </div>
@@ -115,9 +115,9 @@ export default function HealthKnowledgePage() {
         {/* Doctor Post Button */}
         <button
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 active:bg-black text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition"
+          className="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 active:bg-black text-white px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-sm transition w-full sm:w-auto shrink-0"
         >
-          <PlusCircle className="w-4 h-4 text-teal-400" />
+          <PlusCircle className="w-4 h-4 text-teal-400 shrink-0" />
           <span>Doctor Portal: Post Topic</span>
         </button>
       </div>
