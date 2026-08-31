@@ -128,27 +128,16 @@ export default function HealthKnowledgePage() {
           </p>
         </div>
 
-        {/* Doctor / Owner Post Button */}
-        {userRole === 'doctor' || userRole === 'owner' ? (
+        {/* Doctor / Owner Post Button - Visible ONLY when logged in as Doctor or Owner */}
+        {(userRole === 'doctor' || userRole === 'owner') && (
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={() => setIsModalOpen(true)}
               className="inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-sm shadow-teal-600/30 transition w-full sm:w-auto shrink-0"
             >
               <PlusCircle className="w-4 h-4 text-white shrink-0" />
-              <span>{userRole === 'owner' ? 'Owner Portal: Post Topic' : 'Doctor Portal: Post Topic'}</span>
+              <span>{userRole === 'owner' ? 'Owner: Post Topic' : 'Doctor: Post Topic'}</span>
             </button>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <span className="text-xs text-slate-500 hidden lg:inline">Doctor or Clinic Owner?</span>
-            <a
-              href="/login"
-              className="inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-xs font-semibold transition w-full sm:w-auto shrink-0"
-            >
-              <Lock className="w-3.5 h-3.5 text-teal-600" />
-              <span>Doctor/Owner Sign In to Post</span>
-            </a>
           </div>
         )}
       </div>
