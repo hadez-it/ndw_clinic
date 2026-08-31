@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { HealthTopic, initialTopics } from '@/lib/types';
-import { BookOpen, PlusCircle, ShieldCheck, Tag, User, Calendar, CheckCircle2, AlertCircle, Lock, X } from 'lucide-react';
+import { BookOpen, PlusCircle, ShieldCheck, Tag, User, Calendar, CheckCircle2, AlertCircle, Lock, X, Filter } from 'lucide-react';
 
 export default function HealthKnowledgePage() {
   const [topics, setTopics] = useState<HealthTopic[]>(initialTopics);
@@ -144,24 +144,83 @@ export default function HealthKnowledgePage() {
         )}
       </div>
 
-      {/* Categories Filter */}
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-2">
-          Filter By:
-        </span>
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition ${
-              activeCategory === cat
-                ? 'bg-teal-600 text-white shadow-xs'
-                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
+      {/* Categories Filter - Responsive for all screen sizes */}
+      <div className="space-y-3">
+        {/* Mobile Dropdown View (for extra small screens < 640px) */}
+        <div className="sm:hidden">
+          <div className="relative flex items-center">
+            <div className="absolute left-3.5 pointer-events-none text-teal-600">
+              <Filter className="w-4 h-4" />
+            </div>
+            <select
+              value={activeCategory}
+              onChange={(e) => setActiveCategory(e.target.value)}
+              className="w-full pl-10 pr-9 py-3 rounded-2xl bg-white border border-slate-200 text-slate-800 text-xs font-semibold shadow-xs focus:ring-2 focus:ring-teal-500 focus:outline-none appearance-none"
+            >
+              {categories.map((cat) => {
+                const count = cat === 'All' ? topics.length : topics.filter((t) => t.category === cat).length;
+                return (
+                  <option key={cat} value={cat}>
+                    {cat === 'All' ? 'အားလုံး (All Topics)' : cat} ({count})
+                  </option>
+                );
+              })}
+            </select>
+            <div className="absolute right-3.5 pointer-events-none text-slate-400 text-xs">
+              ▼
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop & Tablet Scrollable/Pill Tabs View (sm screens and above) */}
+        <div className="hidden sm:flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0">
+            <Filter className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+            <span>ကဏ္ဍများ:</span>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            {categories.map((cat) => {
+              const isActive = activeCategory === cat;
+              const count = cat === 'All' ? topics.length : topics.filter((t) => t.category === cat).length;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                    isActive
+                      ? 'bg-teal-700 text-white shadow-md shadow-teal-700/20 scale-102'
+                      : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300'
+                  }`}
+                >
+                  <span>{cat === 'All' ? 'အားလုံး (All)' : cat}</span>
+                  <span
+                    className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono ${
+                      isActive ? 'bg-teal-800 text-teal-100' : 'bg-slate-100 text-slate-500'
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Results counter indicator */}
+        <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
+          <p>
+            ဖော်ပြထားသော ဆောင်းပါး <span className="font-bold text-slate-900">{filteredTopics.length}</span> ပုဒ်
+          </p>
+          {activeCategory !== 'All' && (
+            <button
+              onClick={() => setActiveCategory('All')}
+              className="text-xs font-semibold text-teal-600 hover:text-teal-800 underline cursor-pointer"
+            >
+              အားလုံးပြန်ကြည့်ရန် (Reset)
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Topics Grid */}
