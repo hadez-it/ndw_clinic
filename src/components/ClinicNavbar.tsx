@@ -14,6 +14,7 @@ export function ClinicNavbar() {
     { href: '/doctors', label: 'Doctors', icon: Users },
     { href: '/knowledge', label: 'Health Knowledge', icon: BookOpen },
     { href: '/contact', label: 'Contact Us', icon: Mail },
+    { href: '/login', label: 'Login', icon: Users },
   ];
 
   return (
