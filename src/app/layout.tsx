@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Shield, Activity, Phone } from 'lucide-react';
 import { ClinicNavbar } from '@/components/ClinicNavbar';
+import './globals.css';
 
 export default function RootLayout({
   children,
