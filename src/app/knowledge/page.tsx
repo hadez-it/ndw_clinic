@@ -168,11 +168,11 @@ export default function HealthKnowledgePage() {
           <article
             key={topic.id}
             onClick={() => setSelectedTopic(topic)}
-            className="cursor-pointer bg-white rounded-3xl border border-slate-200 p-6 shadow-xs hover:border-teal-400 hover:shadow-md transition-all flex flex-col justify-between"
+            className="cursor-pointer bg-white rounded-3xl border border-slate-200 p-6 shadow-xs hover-lift hover:border-teal-400 transition-all flex flex-col justify-between group"
           >
             <div>
               <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
-                <span className="px-2.5 py-0.5 rounded-full font-semibold bg-teal-50 text-teal-700">
+                <span className="px-2.5 py-0.5 rounded-full font-semibold bg-teal-50 text-teal-700 group-hover:bg-teal-100 transition-colors">
                   {topic.category}
                 </span>
                 <span className="flex items-center gap-1">
@@ -180,7 +180,7 @@ export default function HealthKnowledgePage() {
                   <span>{topic.createdAt}</span>
                 </span>
               </div>
-              <h2 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-teal-600">
+              <h2 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-teal-600 transition-colors">
                 {topic.title}
               </h2>
               <p className="text-xs text-slate-600 mt-2.5 line-clamp-3 leading-relaxed">
@@ -193,7 +193,7 @@ export default function HealthKnowledgePage() {
                 <User className="w-3.5 h-3.5 text-teal-600" />
                 <span>{topic.authorName}</span>
               </div>
-              <span className="text-teal-600 font-semibold hover:underline">
+              <span className="text-teal-600 font-semibold group-hover:translate-x-1 transition-transform inline-block">
                 Read Full Insight →
               </span>
             </div>
@@ -203,8 +203,8 @@ export default function HealthKnowledgePage() {
 
       {/* Reading Article View - WordPress Clean Blog Post Layout */}
       {selectedTopic && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-xs p-3 sm:p-6 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 relative my-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-xs p-3 sm:p-6 overflow-y-auto animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 relative my-auto animate-slide-down">
             {/* WordPress Post Header Toolbar */}
             <div className="sticky top-0 z-10 bg-slate-50 border-b border-slate-200 px-6 py-3 flex items-center justify-between text-xs text-slate-500">
               <div className="flex items-center gap-2">

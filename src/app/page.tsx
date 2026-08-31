@@ -9,9 +9,9 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-gradient-to-b from-teal-50/70 via-white to-slate-50 pt-10 pb-16 sm:pt-16 sm:pb-20 lg:pt-24 lg:pb-32 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            <div className="lg:col-span-7 space-y-5 sm:space-y-6 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-100/80 border border-teal-200 text-teal-800 text-xs font-semibold">
-                <ShieldCheck className="w-4 h-4 text-teal-600 shrink-0" />
+            <div className="lg:col-span-7 space-y-5 sm:space-y-6 text-center lg:text-left animate-fade-in">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-100/80 border border-teal-200 text-teal-800 text-xs font-semibold hover:bg-teal-200/70 transition-colors">
+                <ShieldCheck className="w-4 h-4 text-teal-600 shrink-0 animate-pulse" />
                 <span>Certified Clinical Excellence & Data Privacy</span>
               </div>
               <h1 className="text-3xl xs:text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight">
@@ -26,14 +26,14 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-2">
                 <Link
                   href="/appointments"
-                  className="inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-6 py-3.5 rounded-xl font-semibold shadow-lg shadow-teal-600/25 transition-all text-sm sm:text-base text-center"
+                  className="inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:scale-98 text-white px-6 py-3.5 rounded-xl font-semibold shadow-lg shadow-teal-600/25 hover:shadow-teal-600/40 transition-all text-sm sm:text-base text-center"
                 >
                   <span>Book Appointment Now</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
                   href="/doctors"
-                  className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-300 px-6 py-3.5 rounded-xl font-semibold text-slate-800 shadow-xs transition text-sm sm:text-base text-center"
+                  className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 active:scale-98 border border-slate-300 px-6 py-3.5 rounded-xl font-semibold text-slate-800 shadow-xs hover:border-slate-400 transition-all text-sm sm:text-base text-center"
                 >
                   <UserCheck className="w-4 h-4 text-teal-600" />
                   <span>Meet Our Specialists</span>
@@ -42,15 +42,15 @@ export default function HomePage() {
 
               {/* Trust Indicators */}
               <div className="pt-6 sm:pt-8 border-t border-slate-200/80 grid grid-cols-3 gap-2 sm:gap-4 text-center lg:text-left">
-                <div>
+                <div className="hover-lift p-2 rounded-xl">
                   <p className="text-xl sm:text-2xl font-bold text-slate-900">15,000+</p>
                   <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Patients Treated</p>
                 </div>
-                <div>
+                <div className="hover-lift p-2 rounded-xl">
                   <p className="text-xl sm:text-2xl font-bold text-slate-900">99.4%</p>
                   <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Satisfaction</p>
                 </div>
-                <div>
+                <div className="hover-lift p-2 rounded-xl">
                   <p className="text-xl sm:text-2xl font-bold text-slate-900">100%</p>
                   <p className="text-[11px] sm:text-xs text-slate-500 font-medium">HIPAA Encrypted</p>
                 </div>
@@ -58,8 +58,8 @@ export default function HomePage() {
             </div>
 
             {/* Quick Consultation Badge Card */}
-            <div className="lg:col-span-5">
-              <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200 p-8 space-y-6 relative">
+            <div className="lg:col-span-5 animate-fade-in">
+              <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200 p-8 space-y-6 relative hover-lift animate-glow">
                 <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                   <div className="flex items-center gap-3">
                     <div className="p-3 bg-teal-50 text-teal-600 rounded-xl">
@@ -179,20 +179,22 @@ export default function HomePage() {
           {initialDoctors.map((doc) => (
             <div
               key={doc.id}
-              className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-xs hover:border-teal-300 transition-all flex flex-col"
+              className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-xs hover-lift transition-all flex flex-col group"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={doc.avatarUrl}
-                alt={doc.name}
-                className="w-full h-48 object-cover object-top"
-              />
+              <div className="overflow-hidden h-48">
+                <img
+                  src={doc.avatarUrl}
+                  alt={doc.name}
+                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
               <div className="p-5 flex-1 flex flex-col justify-between">
                 <div>
                   <span className="text-xs font-semibold text-teal-700 uppercase tracking-wider">
                     {doc.specialty}
                   </span>
-                  <h3 className="text-base font-bold text-slate-900 mt-1">{doc.name}</h3>
+                  <h3 className="text-base font-bold text-slate-900 mt-1 group-hover:text-teal-600 transition-colors">{doc.name}</h3>
                   <p className="text-xs text-slate-500 mt-0.5">{doc.qualification}</p>
                   <p className="text-xs text-slate-600 mt-3 line-clamp-2">{doc.bio}</p>
                 </div>
