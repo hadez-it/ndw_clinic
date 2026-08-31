@@ -212,108 +212,224 @@ export default function HealthKnowledgePage() {
         ))}
       </div>
 
-      {/* Reading Article Modal */}
+      {/* Reading Article View - WordPress Clean Blog Post Layout */}
       {selectedTopic && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 shadow-2xl border border-slate-200 relative">
-            <button
-              onClick={() => setSelectedTopic(null)}
-              className="absolute top-5 right-5 p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-xs p-3 sm:p-6 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 relative my-auto">
+            {/* WordPress Post Header Toolbar */}
+            <div className="sticky top-0 z-10 bg-slate-50 border-b border-slate-200 px-6 py-3 flex items-center justify-between text-xs text-slate-500">
               <div className="flex items-center gap-2">
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-teal-50 text-teal-700">
+                <span className="font-serif italic font-semibold text-slate-700">WordPress Reader</span>
+                <span>•</span>
+                <span className="bg-slate-200 text-slate-700 px-2 py-0.5 rounded font-mono text-[11px]">
                   {selectedTopic.category}
                 </span>
-                <span className="text-xs text-slate-400">Published {selectedTopic.createdAt}</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
-                {selectedTopic.title}
-              </h2>
-              <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 pb-3 border-b border-slate-100">
-                <User className="w-4 h-4 text-teal-600" />
-                <span>Article Author: {selectedTopic.authorName}</span>
+              <button
+                onClick={() => setSelectedTopic(null)}
+                aria-label="Close Article"
+                className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* WordPress Editorial Post Content */}
+            <article className="p-6 sm:p-12 space-y-6">
+              {/* Category & Date Meta */}
+              <div className="space-y-3 pb-6 border-b border-slate-100">
+                <div className="flex items-center gap-3 text-xs text-slate-400">
+                  <span className="text-teal-700 font-bold uppercase tracking-wider">
+                    {selectedTopic.category}
+                  </span>
+                  <span>/</span>
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>Published on {selectedTopic.createdAt}</span>
+                  </span>
+                </div>
+
+                <h1 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 leading-tight tracking-tight">
+                  {selectedTopic.title}
+                </h1>
+
+                {/* Author Byline */}
+                <div className="flex items-center gap-3 pt-2">
+                  <div className="w-10 h-10 rounded-full bg-teal-100 border border-teal-200 text-teal-800 flex items-center justify-center font-bold text-sm font-serif">
+                    {selectedTopic.authorName.charAt(3) || 'D'}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-slate-900">{selectedTopic.authorName}</p>
+                    <p className="text-xs text-slate-500">Clinical Contributor & Medical Specialist</p>
+                  </div>
+                </div>
               </div>
-              <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-line pt-2">
+
+              {/* Excerpt / Pull-quote */}
+              <div className="p-4 sm:p-5 bg-teal-50/50 border-l-4 border-teal-600 rounded-r-xl text-slate-700 text-sm sm:text-base italic font-serif leading-relaxed">
+                &ldquo;{selectedTopic.excerpt}&rdquo;
+              </div>
+
+              {/* Article Main Body */}
+              <div className="font-serif text-slate-800 text-base sm:text-lg leading-relaxed whitespace-pre-line space-y-4 pt-2">
                 {selectedTopic.content}
               </div>
-              <div className="pt-6 border-t border-slate-100 flex justify-end">
+
+              {/* Post Footer Tags & Actions */}
+              <div className="pt-8 mt-8 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4 text-xs">
+                <div className="flex items-center gap-2 text-slate-500">
+                  <span className="font-semibold">Tagged:</span>
+                  <span className="bg-slate-100 px-2.5 py-1 rounded-full">#Healthcare</span>
+                  <span className="bg-slate-100 px-2.5 py-1 rounded-full">#{selectedTopic.category}</span>
+                  <span className="bg-slate-100 px-2.5 py-1 rounded-full">#Wellness</span>
+                </div>
+
                 <button
                   onClick={() => setSelectedTopic(null)}
-                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs px-4 py-2 rounded-xl"
+                  className="px-5 py-2 rounded-xl bg-slate-900 hover:bg-black text-white font-sans font-semibold text-xs transition"
                 >
-                  Close Article
+                  Finished Reading
                 </button>
               </div>
-            </div>
+            </article>
           </div>
         </div>
       )}
 
-      {/* Doctor Publish Modal */}
+      {/* Doctor / Owner Publish Modal - WordPress Block / Gutenberg Style Editor */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl border border-slate-200 relative">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-5 right-5 p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-2 mb-6">
-              <div className="p-2 bg-teal-50 text-teal-600 rounded-xl">
-                <BookOpen className="w-5 h-5" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-3 sm:p-6 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-hidden shadow-2xl border border-slate-200 flex flex-col my-auto">
+            {/* WordPress Admin Top Bar */}
+            <div className="bg-slate-900 text-white px-4 sm:px-6 py-3 flex items-center justify-between text-xs shrink-0">
+              <div className="flex items-center gap-3">
+                <span className="w-6 h-6 rounded-full bg-white text-slate-900 flex items-center justify-center font-serif font-black text-xs">
+                  W
+                </span>
+                <span className="font-semibold hidden xs:inline">Nan Da Wun &gt; Add New Post</span>
+                <span className="bg-slate-800 text-teal-300 px-2 py-0.5 rounded text-[11px] font-mono">
+                  Gutenberg Editor Mode
+                </span>
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900">Publish Doctor Insight</h3>
-                <p className="text-xs text-slate-500">
-                  Doctor-verified publication portal. Requires Doctor Secret PIN.
-                </p>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-slate-400 hover:text-white px-2.5 py-1 rounded"
+                >
+                  Discard
+                </button>
+                <button
+                  type="submit"
+                  form="wp-post-form"
+                  disabled={submitting}
+                  className="bg-teal-500 hover:bg-teal-600 active:bg-teal-700 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs transition disabled:opacity-50"
+                >
+                  {submitting ? 'Publishing...' : 'Publish Post'}
+                </button>
               </div>
             </div>
 
-            {postSuccess && (
-              <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-xs text-emerald-800">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>{postSuccess}</span>
-              </div>
-            )}
+            {/* Editor Body with Main Canvas & Document Settings Sidebar */}
+            <div className="flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-12">
+              {/* Main Document Canvas */}
+              <div className="lg:col-span-8 p-6 sm:p-10 border-b lg:border-b-0 lg:border-r border-slate-200 space-y-6">
+                {postSuccess && (
+                  <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-xs text-emerald-800">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>{postSuccess}</span>
+                  </div>
+                )}
 
-            {postError && (
-              <div className="mb-4 p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2 text-xs text-rose-800">
-                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
-                <span>{postError}</span>
-              </div>
-            )}
+                {postError && (
+                  <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2 text-xs text-rose-800">
+                    <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                    <span>{postError}</span>
+                  </div>
+                )}
 
-            <form onSubmit={handlePostSubmit} className="space-y-4 text-xs">
-              <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Article Title
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Recognizing Early Markers of Vascular Inflammation"
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm"
-                />
+                <form id="wp-post-form" onSubmit={handlePostSubmit} className="space-y-6">
+                  {/* Gutenberg Style Big Title */}
+                  <div>
+                    <input
+                      type="text"
+                      required
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      placeholder="Add post title..."
+                      className="w-full text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 border-0 border-b border-slate-200 pb-3 focus:outline-none focus:border-teal-600 placeholder:text-slate-300"
+                    />
+                  </div>
+
+                  {/* Gutenberg Style Excerpt */}
+                  <div>
+                    <label className="block text-xs font-mono uppercase text-slate-400 mb-1.5">
+                      Post Excerpt / Lead Paragraph
+                    </label>
+                    <textarea
+                      rows={2}
+                      required
+                      value={excerpt}
+                      onChange={(e) => setExcerpt(e.target.value)}
+                      placeholder="Write a brief excerpt to hook clinic readers..."
+                      className="w-full p-3 font-serif text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:outline-none placeholder:text-slate-300"
+                    />
+                  </div>
+
+                  {/* Gutenberg Main Content Area */}
+                  <div>
+                    <label className="block text-xs font-mono uppercase text-slate-400 mb-1.5">
+                      Document Content (Paragraphs, clinical bullet points)
+                    </label>
+                    <textarea
+                      rows={9}
+                      required
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      placeholder="Type / or start writing clinical medical advice..."
+                      className="w-full p-4 font-serif text-base leading-relaxed border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:outline-none placeholder:text-slate-300"
+                    />
+                  </div>
+                </form>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              {/* WordPress Document Sidebar (Meta, Category, PIN) */}
+              <div className="lg:col-span-4 bg-slate-50 p-6 space-y-6 text-xs text-slate-700">
+                <div className="border-b border-slate-200 pb-4">
+                  <h4 className="font-bold text-slate-900 text-sm">Post Settings</h4>
+                  <p className="text-[11px] text-slate-500">Status: Ready to publish immediately</p>
+                </div>
+
+                {/* Author Selection */}
                 <div>
-                  <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Specialty Category
+                  <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[11px]">
+                    Author
+                  </label>
+                  <select
+                    value={authorName}
+                    onChange={(e) => setAuthorName(e.target.value)}
+                    form="wp-post-form"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                  >
+                    <option value="Dr. Sarah Jenkins">Dr. Sarah Jenkins</option>
+                    <option value="Dr. Marcus Vance">Dr. Marcus Vance</option>
+                    <option value="Dr. Elena Rostova">Dr. Elena Rostova</option>
+                    <option value="Dr. Alexander Patel">Dr. Alexander Patel</option>
+                    <option value="Clinic Executive Owner">Clinic Executive Owner</option>
+                  </select>
+                </div>
+
+                {/* Category Selection */}
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[11px]">
+                    Category
                   </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-xs"
+                    form="wp-post-form"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
                   >
                     <option value="Cardiology">Cardiology</option>
                     <option value="Pediatrics">Pediatrics</option>
@@ -323,84 +439,33 @@ export default function HealthKnowledgePage() {
                   </select>
                 </div>
 
+                {/* Security Verification Key */}
                 <div>
-                  <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Doctor Author Name
+                  <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[11px] flex items-center gap-1">
+                    <Lock className="w-3.5 h-3.5 text-teal-600" />
+                    <span>Doctor PIN / Owner Pass</span>
                   </label>
-                  <select
-                    value={authorName}
-                    onChange={(e) => setAuthorName(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-xs"
-                  >
-                    <option value="Dr. Sarah Jenkins">Dr. Sarah Jenkins</option>
-                    <option value="Dr. Marcus Vance">Dr. Marcus Vance</option>
-                    <option value="Dr. Elena Rostova">Dr. Elena Rostova</option>
-                    <option value="Dr. Alexander Patel">Dr. Alexander Patel</option>
-                  </select>
+                  <input
+                    type="password"
+                    required
+                    value={authorPin}
+                    onChange={(e) => setAuthorPin(e.target.value)}
+                    form="wp-post-form"
+                    placeholder="doctor1234 or owner2026!"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none font-mono"
+                  />
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    Protected by server-side verification.
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-slate-200 text-center">
+                  <span className="text-[11px] text-slate-400 italic">
+                    WP Gutenberg Theme • Nan Da Wun CMS
+                  </span>
                 </div>
               </div>
-
-              {/* Security PIN */}
-              <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
-                  <Lock className="w-3.5 h-3.5 text-teal-600" />
-                  <span>Doctor Verification PIN (Default: doctor1234)</span>
-                </label>
-                <input
-                  type="password"
-                  required
-                  value={authorPin}
-                  onChange={(e) => setAuthorPin(e.target.value)}
-                  placeholder="Enter Doctor Secret PIN"
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Short Excerpt / Summary
-                </label>
-                <textarea
-                  rows={2}
-                  required
-                  value={excerpt}
-                  onChange={(e) => setExcerpt(e.target.value)}
-                  placeholder="Key takeaway in 1-2 sentences..."
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Full Article Body
-                </label>
-                <textarea
-                  rows={5}
-                  required
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="Provide complete medical explanation, actionable advice, and guidelines..."
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-xs font-sans"
-                />
-              </div>
-
-              <div className="pt-2 flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="px-5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 active:bg-teal-800 disabled:opacity-50 text-white font-bold transition shadow-xs"
-                >
-                  {submitting ? 'Publishing...' : 'Publish Article'}
-                </button>
-              </div>
-            </form>
+            </div>
           </div>
         </div>
       )}
