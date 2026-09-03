@@ -21,17 +21,23 @@ export async function GET() {
     const paidCount = list.filter((i) => i.status === 'paid').length;
     const unpaidCount = list.filter((i) => i.status === 'unpaid').length;
 
-    return jsonResponse({
-      success: true,
-      count: list.length,
-      metrics: {
-        totalRevenueMMK: totalRevenue,
-        pendingRevenueMMK: pendingRevenue,
-        paidCount,
-        unpaidCount,
+    return jsonResponse(
+      {
+        success: true,
+        count: list.length,
+        metrics: {
+          totalRevenueMMK: totalRevenue,
+          pendingRevenueMMK: pendingRevenue,
+          paidCount,
+          unpaidCount,
+        },
+        invoices: list,
       },
-      invoices: list,
-    });
+      200,
+      {
+        'Cache-Control': 'public, s-maxage=5, stale-while-revalidate=10',
+      }
+    );
   } catch (err) {
     console.error('Billing GET error:', err);
     return jsonResponse({ error: 'Failed to fetch billing records' }, 500);

@@ -14,12 +14,18 @@ export async function GET(req: NextRequest) {
     const medicines = getMedicinesStore(category);
     const lowStockItems = medicines.filter((m) => m.currentStock <= m.reorderLevel);
 
-    return jsonResponse({
-      success: true,
-      count: medicines.length,
-      lowStockCount: lowStockItems.length,
-      medicines,
-    });
+    return jsonResponse(
+      {
+        success: true,
+        count: medicines.length,
+        lowStockCount: lowStockItems.length,
+        medicines,
+      },
+      200,
+      {
+        'Cache-Control': 'public, s-maxage=15, stale-while-revalidate=30',
+      }
+    );
   } catch (err) {
     console.error('Pharmacy GET error:', err);
     return jsonResponse({ error: 'Failed to fetch medicines' }, 500);

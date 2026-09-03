@@ -15,7 +15,13 @@ export async function GET(req: NextRequest) {
     }
 
     const patients = getPatientsStore(search || undefined);
-    return jsonResponse({ success: true, count: patients.length, patients });
+    return jsonResponse(
+      { success: true, count: patients.length, patients },
+      200,
+      {
+        'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=20',
+      }
+    );
   } catch (err) {
     console.error('Patients GET error:', err);
     return jsonResponse({ error: 'Failed to fetch patients' }, 500);

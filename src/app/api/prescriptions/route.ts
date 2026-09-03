@@ -9,11 +9,17 @@ import {
 export async function GET() {
   try {
     const list = getPrescriptionsStore();
-    return jsonResponse({
-      success: true,
-      count: list.length,
-      prescriptions: list,
-    });
+    return jsonResponse(
+      {
+        success: true,
+        count: list.length,
+        prescriptions: list,
+      },
+      200,
+      {
+        'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=20',
+      }
+    );
   } catch (err) {
     console.error('Prescriptions GET error:', err);
     return jsonResponse({ error: 'Failed to fetch prescriptions' }, 500);

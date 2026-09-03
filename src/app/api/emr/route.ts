@@ -8,11 +8,17 @@ export async function GET(req: NextRequest) {
     const patientId = searchParams.get('patientId');
 
     const records = getEMRRecordsStore(patientId || undefined);
-    return jsonResponse({
-      success: true,
-      count: records.length,
-      records,
-    });
+    return jsonResponse(
+      {
+        success: true,
+        count: records.length,
+        records,
+      },
+      200,
+      {
+        'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=20',
+      }
+    );
   } catch (err) {
     console.error('EMR GET error:', err);
     return jsonResponse({ error: 'Failed to fetch EMR records' }, 500);

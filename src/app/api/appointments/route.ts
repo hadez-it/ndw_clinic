@@ -36,11 +36,17 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    return jsonResponse({
-      success: true,
-      count: list.length,
-      appointments: list,
-    });
+    return jsonResponse(
+      {
+        success: true,
+        count: list.length,
+        appointments: list,
+      },
+      200,
+      {
+        'Cache-Control': 'public, s-maxage=5, stale-while-revalidate=10',
+      }
+    );
   } catch (err) {
     console.error('Appointments GET error:', err);
     return jsonResponse({ error: 'Internal server error fetching appointments.' }, 500);
