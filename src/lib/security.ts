@@ -42,13 +42,15 @@ export function sanitizeText(text: string): string {
     .replace(/\//g, '&#x2F;');
 }
 
-export function jsonResponse(data: unknown, status = 200) {
+export function jsonResponse(data: unknown, status = 200, extraHeaders?: Record<string, string>) {
   return NextResponse.json(data, {
     status,
     headers: {
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'DENY',
       'X-XSS-Protection': '1; mode=block',
+      ...extraHeaders,
     },
   });
 }
+

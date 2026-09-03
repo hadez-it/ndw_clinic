@@ -96,10 +96,14 @@ export default function QueueDisplayPage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Poll queue every 5 seconds
+  // Poll queue every 10 seconds, only when tab/screen is visible
   useEffect(() => {
     fetchQueue();
-    const interval = setInterval(fetchQueue, 5000);
+    const interval = setInterval(() => {
+      if (typeof document !== 'undefined' && !document.hidden) {
+        fetchQueue();
+      }
+    }, 10000);
     return () => clearInterval(interval);
   }, [fetchQueue]);
 

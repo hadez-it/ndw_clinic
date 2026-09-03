@@ -27,11 +27,15 @@ export async function GET() {
         imageUrl: t.image_url || 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800',
         createdAt: t.created_at.split('T')[0],
       }));
-      return jsonResponse({ topics: formatted });
+      return jsonResponse({ topics: formatted }, 200, {
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+      });
     }
   }
 
-  return jsonResponse({ topics: dynamicTopics });
+  return jsonResponse({ topics: dynamicTopics }, 200, {
+    'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+  });
 }
 
 export async function POST(req: NextRequest) {
