@@ -321,3 +321,152 @@ export const initialTopics: HealthTopic[] = [
     createdAt: '2026-08-08',
   },
 ];
+
+// ============================================================================
+// HEALTHCARE ERP TYPES & SCHEMAS
+// ============================================================================
+
+export type AppointmentStatus =
+  | 'pending'
+  | 'confirmed'
+  | 'in_consultation'
+  | 'completed'
+  | 'cancelled';
+
+export interface Appointment {
+  id: string;
+  tokenNumber?: string;
+  patientName: string;
+  patientEmail: string;
+  patientPhone: string;
+  doctorId: string;
+  doctorName: string;
+  roomNumber?: string;
+  appointmentDate: string;
+  appointmentTime: string;
+  notes?: string;
+  status: AppointmentStatus;
+  createdAt: string;
+}
+
+export interface Patient {
+  id: string;
+  hn: string; // Hospital/Clinic Number e.g. HN-2026-001
+  name: string;
+  gender: 'Male' | 'Female' | 'Other';
+  age: number;
+  phone: string;
+  email?: string;
+  bloodType: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-' | 'Unknown';
+  allergies: string[];
+  chronicConditions: string[];
+  emergencyContact: string;
+  address?: string;
+  createdAt: string;
+}
+
+export interface Vitals {
+  bloodPressure: string; // e.g. "120/80"
+  heartRate: number; // bpm e.g. 74
+  temperature: number; // °C e.g. 36.8
+  spO2: number; // % e.g. 98
+  weight: number; // kg e.g. 65
+  height: number; // cm e.g. 170
+  bmi: number; // auto calculated
+}
+
+export interface PrescriptionItem {
+  medicineId: string;
+  medicineName: string;
+  dosage: string; // e.g. "500mg"
+  frequency: string; // e.g. "1 tab twice daily after meals (BID PC)"
+  duration: string; // e.g. "5 days"
+  quantity: number;
+  instructions: string;
+}
+
+export interface EMRRecord {
+  id: string;
+  patientId: string;
+  patientHn: string;
+  patientName: string;
+  doctorId: string;
+  doctorName: string;
+  date: string;
+  vitals: Vitals;
+  chiefComplaint: string;
+  diagnosis: string;
+  clinicalNotes: string;
+  prescriptions: PrescriptionItem[];
+  followUpDate?: string;
+  createdAt: string;
+}
+
+export interface Medicine {
+  id: string;
+  code: string;
+  genericName: string;
+  brandName: string;
+  category: string;
+  dosageForm: 'Tablet' | 'Capsule' | 'Syrup' | 'Injection' | 'Ointment' | 'Drops' | 'Sachet';
+  strength: string;
+  currentStock: number;
+  reorderLevel: number;
+  unitPrice: number; // MMK
+  costPrice: number; // MMK
+  expiryDate: string;
+  batchNumber: string;
+}
+
+export interface Prescription {
+  id: string;
+  prescriptionNumber: string;
+  patientId: string;
+  patientHn: string;
+  patientName: string;
+  doctorId: string;
+  doctorName: string;
+  date: string;
+  status: 'pending_dispense' | 'dispensed';
+  items: PrescriptionItem[];
+  dispensedAt?: string;
+  dispensedBy?: string;
+  notes?: string;
+}
+
+export interface InvoiceItem {
+  description: string;
+  category: 'consultation' | 'pharmacy' | 'procedure' | 'lab';
+  quantity: number;
+  unitPrice: number;
+  total: number;
+}
+
+export interface Invoice {
+  id: string;
+  invoiceNumber: string;
+  patientId: string;
+  patientName: string;
+  patientPhone: string;
+  date: string;
+  status: 'paid' | 'unpaid' | 'partial';
+  items: InvoiceItem[];
+  subtotal: number;
+  discount: number;
+  tax: number;
+  totalAmount: number;
+  paymentMethod?: 'cash' | 'kpay' | 'wave' | 'card';
+  paidAt?: string;
+  receiptNumber?: string;
+}
+
+export interface LiveQueueItem {
+  roomNumber: string;
+  doctorName: string;
+  specialty: string;
+  currentToken: string;
+  patientNameMasked: string;
+  status: 'consulting' | 'ready' | 'idle';
+  nextTokens: string[];
+}
+

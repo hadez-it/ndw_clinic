@@ -3,7 +3,18 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Activity, Calendar, Menu, X, Users, BookOpen, Mail, Home } from 'lucide-react';
+import {
+  Activity,
+  Calendar,
+  Menu,
+  X,
+  Users,
+  BookOpen,
+  Home,
+  Tv,
+  FileSearch,
+  LayoutDashboard,
+} from 'lucide-react';
 
 export function ClinicNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -12,9 +23,10 @@ export function ClinicNavbar() {
   const navLinks = [
     { href: '/', label: 'Home', icon: Home },
     { href: '/doctors', label: 'Doctors', icon: Users },
-    { href: '/knowledge', label: 'Health Knowledge', icon: BookOpen },
-    { href: '/contact', label: 'Contact Us', icon: Mail },
-    { href: '/login', label: 'Login', icon: Users },
+    { href: '/queue', label: 'Queue TV', icon: Tv, highlight: true },
+    { href: '/patient-portal', label: 'Patient Portal', icon: FileSearch },
+    { href: '/knowledge', label: 'Health Topics', icon: BookOpen },
+    { href: '/admin', label: 'Clinic ERP', icon: LayoutDashboard },
   ];
 
   return (
@@ -30,13 +42,13 @@ export function ClinicNavbar() {
               Nan Da Wun <span className="text-teal-600">Healthcare</span>
             </span>
             <span className="hidden sm:block text-[9px] uppercase font-semibold text-slate-400 tracking-wider">
-              Care & Specialty Clinic
+              Specialty Clinic & ERP
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation links */}
-        <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-slate-600">
+        <nav className="hidden lg:flex items-center gap-5 xl:gap-7 text-xs font-semibold text-slate-600">
           {navLinks.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -45,10 +57,14 @@ export function ClinicNavbar() {
                 key={item.href}
                 href={item.href}
                 className={`flex items-center gap-1.5 transition-colors py-1 ${
-                  isActive ? 'text-teal-600 font-semibold' : 'hover:text-teal-600'
+                  isActive
+                    ? 'text-teal-600 font-bold'
+                    : item.highlight
+                    ? 'text-teal-700 bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-200 hover:bg-teal-100'
+                    : 'hover:text-teal-600'
                 }`}
               >
-                <Icon className="w-4 h-4 opacity-70" />
+                <Icon className="w-4 h-4 opacity-80" />
                 <span>{item.label}</span>
               </Link>
             );
@@ -66,12 +82,12 @@ export function ClinicNavbar() {
             <span className="xs:hidden">Book</span>
           </Link>
 
-          {/* Hamburger button for mobile */}
+          {/* Hamburger button for mobile / tablet */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle navigation menu"
-            className="md:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="lg:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition focus:outline-none focus:ring-2 focus:ring-teal-500"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -80,7 +96,7 @@ export function ClinicNavbar() {
 
       {/* Mobile Drawer Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white/98 backdrop-blur-md px-4 py-4 space-y-2 shadow-lg transition-all animate-in fade-in slide-in-from-top-2">
+        <div className="lg:hidden border-t border-slate-200 bg-white/98 backdrop-blur-md px-4 py-4 space-y-1.5 shadow-lg transition-all animate-slide-down">
           {navLinks.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -91,7 +107,7 @@ export function ClinicNavbar() {
                 onClick={() => setMobileMenuOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition ${
                   isActive
-                    ? 'bg-teal-50 text-teal-700 font-semibold'
+                    ? 'bg-teal-50 text-teal-700 font-bold'
                     : 'text-slate-700 hover:bg-slate-50'
                 }`}
               >

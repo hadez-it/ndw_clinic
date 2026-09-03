@@ -156,3 +156,117 @@ VALUES
         'Dr. Alexander Patel'
     )
 ON CONFLICT DO NOTHING;
+
+-- =========================================================================
+-- 6. HEALTHCARE ERP OPERATIONAL SCHEMAS
+-- =========================================================================
+
+-- Enhanced Appointments (Token & Room Support)
+ALTER TABLE appointments ADD COLUMN IF NOT EXISTS token_number TEXT;
+ALTER TABLE appointments ADD COLUMN IF NOT EXISTS room_number TEXT;
+
+-- Patients Master Table
+CREATE TABLE IF NOT EXISTS patients (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    hn TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    gender TEXT NOT NULL,
+    age INTEGER NOT NULL,
+    phone TEXT NOT NULL,
+    email TEXT,
+    blood_type TEXT DEFAULT 'Unknown',
+    allergies TEXT[] DEFAULT ARRAY[]::TEXT[],
+    chronic_conditions TEXT[] DEFAULT ARRAY[]::TEXT[],
+    emergency_contact TEXT,
+    address TEXT,
+    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- EMR Consultation Encounters Table
+CREATE TABLE IF NOT EXISTS emr_records (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    patient_id UUID REFERENCES patients(id) ON DELETE CASCADE,
+    patient_hn TEXT,
+    patient_name TEXT NOT NULL,
+    doctor_id UUID REFERENCES doctors(id) ON DELETE SET NULL,
+    doctor_name TEXT NOT NULL,
+    date DATE NOT NULL,
+    vitals JSONB NOT NULL DEFAULT '{}'::JSONB,
+    chief_complaint TEXT,
+    diagnosis TEXT NOT NULL,
+    clinical_notes TEXT,
+    prescriptions JSONB DEFAULT '[]'::JSONB,
+    follow_up_date DATE,
+    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Pharmacy & Medicines Catalog Table
+CREATE TABLE IF NOT EXISTS medicines (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    code TEXT UNIQUE NOT NULL,
+    generic_name TEXT NOT NULL,
+    brand_name TEXT NOT NULL,
+    category TEXT NOT NULL,
+    dosage_form TEXT NOT NULL,
+    strength TEXT NOT NULL,
+    current_stock INTEGER NOT NULL DEFAULT 0,
+    reorder_level INTEGER NOT NULL DEFAULT 20,
+    unit_price NUMERIC NOT NULL DEFAULT 0,
+    cost_price NUMERIC NOT NULL DEFAULT 0,
+    expiry_date DATE,
+    batch_number TEXT,
+    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Electronic Prescriptions Table
+CREATE TABLE IF NOT EXISTS prescriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    prescription_number TEXT UNIQUE NOT NULL,
+    patient_id UUID REFERENCES patients(id) ON DELETE CASCADE,
+    patient_hn TEXT,
+    patient_name TEXT NOT NULL,
+    doctor_id UUID REFERENCES doctors(id) ON DELETE SET NULL,
+    doctor_name TEXT NOT NULL,
+    date DATE NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending_dispense' CHECK (status IN ('pending_dispense', 'dispensed')),
+    items JSONB NOT NULL DEFAULT '[]'::JSONB,
+    dispensed_at TIMESTAMPTZ,
+    dispensed_by TEXT,
+    notes TEXT,
+    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Cashier Billing & Invoices Table
+CREATE TABLE IF NOT EXISTS invoices (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    invoice_number TEXT UNIQUE NOT NULL,
+    patient_id UUID REFERENCES patients(id) ON DELETE SET NULL,
+    patient_name TEXT NOT NULL,
+    patient_phone TEXT,
+    date DATE NOT NULL,
+    status TEXT NOT NULL DEFAULT 'unpaid' CHECK (status IN ('paid', 'unpaid', 'partial')),
+    items JSONB NOT NULL DEFAULT '[]'::JSONB,
+    subtotal NUMERIC NOT NULL DEFAULT 0,
+    discount NUMERIC NOT NULL DEFAULT 0,
+    tax NUMERIC NOT NULL DEFAULT 0,
+    total_amount NUMERIC NOT NULL DEFAULT 0,
+    payment_method TEXT,
+    paid_at TIMESTAMPTZ,
+    receipt_number TEXT,
+    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Enable RLS on all ERP tables
+ALTER TABLE patients ENABLE ROW LEVEL SECURITY;
+ALTER TABLE emr_records ENABLE ROW LEVEL SECURITY;
+ALTER TABLE medicines ENABLE ROW LEVEL SECURITY;
+ALTER TABLE prescriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
+
+-- Default authenticated staff policies
+CREATE POLICY "Staff can view and manage patients" ON patients FOR ALL TO authenticated USING (true);
+CREATE POLICY "Staff can view and manage EMR" ON emr_records FOR ALL TO authenticated USING (true);
+CREATE POLICY "Staff can view and manage pharmacy" ON medicines FOR ALL TO authenticated USING (true);
+CREATE POLICY "Staff can view and manage prescriptions" ON prescriptions FOR ALL TO authenticated USING (true);
+CREATE POLICY "Staff can view and manage invoices" ON invoices FOR ALL TO authenticated USING (true);
+
