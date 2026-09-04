@@ -1,13 +1,13 @@
 'use client';
 
-import { useMemo, useState, Suspense } from 'react';
+import { useMemo, useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { initialDoctors } from '@/lib/types';
 import {
   Calendar, CheckCircle2, AlertCircle, Clock, User, Mail, Phone,
   ChevronLeft, ChevronRight, Stethoscope, Search, Check, PartyPopper,
-  MapPin, ShieldCheck, Sparkles, X, Loader2,
+  MapPin, ShieldCheck, Sparkles, X, Loader2, CalendarDays,
 } from 'lucide-react';
 
 const TIME_SLOTS = ['09:00 AM', '10:30 AM', '01:00 PM', '02:30 PM', '04:00 PM', '05:30 PM'];
@@ -20,9 +20,23 @@ const STEPS = [
 function dayName(iso: string) {
   return new Date(iso + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long' });
 }
+
 function fmtDate(iso: string) {
   if (!iso) return '';
   return new Date(iso + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+function fmtShortDays(daysArr: string[]) {
+  const shortMap: Record<string, string> = {
+    Monday: 'Mon',
+    Tuesday: 'Tue',
+    Wednesday: 'Wed',
+    Thursday: 'Thu',
+    Friday: 'Fri',
+    Saturday: 'Sat',
+    Sunday: 'Sun',
+  };
+  return daysArr.map((d) => shortMap[d] || d.slice(0, 3)).join(', ');
 }
 
 function BookingWizard() {
@@ -32,6 +46,12 @@ function BookingWizard() {
   const [step, setStep] = useState(preselected ? 2 : 1);
   const [doctorId, setDoctorId] = useState(preselected || initialDoctors[0]?.id || '');
   const [query, setQuery] = useState('');
+  const activeDateRef = useRef<HTMLButtonElement | null>(null);
+
+  // Scroll to top when moving between wizard steps on mobile
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [step]);
 
   const doctor = useMemo(() => initialDoctors.find((d) => d.id === doctorId), [doctorId]);
 
@@ -69,6 +89,17 @@ function BookingWizard() {
     return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   });
 
+  // Auto-center active date in horizontal carousel
+  useEffect(() => {
+    if (step === 2 && activeDateRef.current) {
+      activeDateRef.current.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
+    }
+  }, [step, date]);
+
   const [time, setTime] = useState('09:00 AM');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -100,6 +131,8 @@ function BookingWizard() {
         if (nextDay) setDate(nextDay.iso);
       }
     }
+    // Instantly advance to Date & Time step
+    setStep(2);
   };
 
   const canNext1 = !!doctorId;
@@ -159,113 +192,97 @@ function BookingWizard() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-36 sm:pb-12 pt-5 sm:pt-10">
-      {/* Hero */}
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-36 sm:pb-12 pt-4 sm:pt-10">
+      {/* Hero Header */}
       <div className="max-w-2xl">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-teal-200/70 text-teal-800 text-xs font-semibold shadow-sm max-w-full">
-          <Sparkles className="w-3.5 h-3.5 shrink-0" />
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-teal-200/70 text-teal-800 text-xs font-semibold shadow-xs max-w-full">
+          <Sparkles className="w-3.5 h-3.5 shrink-0 text-teal-600" />
           <span className="truncate">3 steps · ~1 min · Instant confirmation</span>
         </div>
-        <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mt-2.5 sm:mt-3">Book your visit</h1>
-        <p className="text-sm sm:text-[15px] text-slate-500 mt-1">Choose a doctor, pick a time, add your details.</p>
+        <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mt-2 sm:mt-3">Book your visit</h1>
+        <p className="text-xs sm:text-[15px] text-slate-500 mt-0.5 sm:mt-1">Choose a doctor, pick a time, add your details.</p>
       </div>
 
-      {/* Mobile Stepper Header & Segmented Progress */}
-      <div className="sm:hidden mt-4 mb-4" aria-label="Booking progress">
-        <div className="flex items-center justify-between text-xs font-semibold mb-2">
-          <span className="flex items-center gap-1.5 text-slate-900 font-bold">
-            <span className="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[11px]">
-              {step}
+      {/* Stepper Progress Indicator */}
+      <div className="mt-4 mb-5" aria-label="Booking progress">
+        {/* Mobile segmented stepper */}
+        <div className="sm:hidden">
+          <div className="flex items-center justify-between text-xs font-semibold mb-2">
+            <span className="flex items-center gap-1.5 text-slate-900 font-bold">
+              <span className="w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center text-[11px]">
+                {step}
+              </span>
+              <span>Step {step} of 3: {STEPS[step - 1].label}</span>
             </span>
-            <span>Step {step} of 3: {STEPS[step - 1].label}</span>
-          </span>
-          {step > 1 && (
-            <button
-              type="button"
-              onClick={() => setStep(step - 1)}
-              className="text-teal-700 font-bold inline-flex items-center gap-0.5 active:opacity-70"
-            >
-              <ChevronLeft className="w-3.5 h-3.5" /> Back
-            </button>
-          )}
-        </div>
-        <div className="grid grid-cols-3 gap-1.5 h-1.5">
-          {STEPS.map((s) => {
-            const done = step > s.n;
-            const active = step === s.n;
-            return (
-              <button
-                key={s.n}
-                type="button"
-                disabled={!done}
-                onClick={() => done && setStep(s.n)}
-                aria-label={`Step ${s.n}: ${s.label}`}
-                className={`rounded-full h-full transition-all ${
-                  done
-                    ? 'bg-emerald-500 cursor-pointer'
-                    : active
-                    ? 'bg-slate-900'
-                    : 'bg-slate-200 cursor-not-allowed'
-                }`}
-              />
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Desktop Stepper */}
-      <ol className="hidden sm:flex items-center gap-2 mt-6 mb-6" aria-label="Booking progress">
-        {STEPS.map((s, i) => {
-          const Icon = s.icon;
-          const active = step === s.n;
-          const done = step > s.n;
-          return (
-            <li key={s.n} className="flex items-center gap-2">
+            {step > 1 && (
               <button
                 type="button"
-                disabled={!done}
-                onClick={() => done && setStep(s.n)}
-                className={`flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 border text-[13px] font-bold transition text-left ${
-                  active
-                    ? 'bg-slate-900 text-white border-slate-900 shadow-lg cursor-default'
-                    : done
-                    ? 'bg-white text-emerald-700 border-emerald-200 hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer'
-                    : 'bg-white text-slate-400 border-slate-200 cursor-not-allowed opacity-75'
-                }`}
+                onClick={() => setStep(step - 1)}
+                className="text-teal-700 font-bold inline-flex items-center gap-0.5 active:opacity-70 text-xs"
               >
-                <span
-                  className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
-                    active ? 'bg-teal-400 text-slate-900' : done ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'
+                <ChevronLeft className="w-3.5 h-3.5" /> Back
+              </button>
+            )}
+          </div>
+          <div className="grid grid-cols-3 gap-1.5 h-1.5">
+            {STEPS.map((s) => {
+              const done = step > s.n;
+              const active = step === s.n;
+              return (
+                <button
+                  key={s.n}
+                  type="button"
+                  disabled={!done}
+                  onClick={() => done && setStep(s.n)}
+                  aria-label={`Step ${s.n}: ${s.label}`}
+                  className={`rounded-full h-full transition-all ${
+                    done
+                      ? 'bg-emerald-500 cursor-pointer'
+                      : active
+                      ? 'bg-teal-600'
+                      : 'bg-slate-200 cursor-not-allowed'
+                  }`}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Desktop stepper */}
+        <ol className="hidden sm:flex items-center gap-2">
+          {STEPS.map((s, i) => {
+            const Icon = s.icon;
+            const active = step === s.n;
+            const done = step > s.n;
+            return (
+              <li key={s.n} className="flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={!done}
+                  onClick={() => done && setStep(s.n)}
+                  className={`flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 border text-[13px] font-bold transition text-left ${
+                    active
+                      ? 'bg-slate-900 text-white border-slate-900 shadow-lg cursor-default'
+                      : done
+                      ? 'bg-white text-emerald-700 border-emerald-200 hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer'
+                      : 'bg-white text-slate-400 border-slate-200 cursor-not-allowed opacity-75'
                   }`}
                 >
-                  {done ? <Check className="w-3.5 h-3.5" /> : <Icon className="w-3.5 h-3.5" />}
-                </span>
-                <span>{s.n}. {s.label}</span>
-              </button>
-              {i < 2 && <div className={`w-10 h-1 rounded-full ${step > s.n ? 'bg-emerald-400' : 'bg-slate-200'}`} />}
-            </li>
-          );
-        })}
-      </ol>
-
-      {/* Compact summary strip — mobile only, shown on Step 2 */}
-      {doctor && step === 2 && (
-        <div className="lg:hidden flex items-center gap-2.5 bg-white border border-slate-200/80 rounded-2xl px-3.5 py-2.5 mb-4 shadow-sm text-[13px] font-medium text-slate-700 animate-fade-in">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={doctor.avatarUrl} alt="" className="w-9 h-9 rounded-xl object-cover bg-slate-100 shrink-0" />
-          <div className="min-w-0 flex-1">
-            <p className="font-bold text-slate-900 text-xs truncate">{doctor.name}</p>
-            <p className="text-[11px] text-teal-700 truncate">{doctor.specialty.split('(')[0]}</p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setStep(1)}
-            className="text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 px-2.5 py-1.5 rounded-xl border border-teal-200/60 shrink-0 transition"
-          >
-            Change
-          </button>
-        </div>
-      )}
+                  <span
+                    className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
+                      active ? 'bg-teal-400 text-slate-900' : done ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'
+                    }`}
+                  >
+                    {done ? <Check className="w-3.5 h-3.5" /> : <Icon className="w-3.5 h-3.5" />}
+                  </span>
+                  <span>{s.n}. {s.label}</span>
+                </button>
+                {i < 2 && <div className={`w-10 h-1 rounded-full ${step > s.n ? 'bg-emerald-400' : 'bg-slate-200'}`} />}
+              </li>
+            );
+          })}
+        </ol>
+      </div>
 
       {error && (
         <div role="alert" className="max-w-2xl mb-5 p-4 bg-rose-50 border border-rose-200 rounded-2xl flex items-start gap-2.5 text-rose-900 animate-fade-in">
@@ -276,10 +293,14 @@ function BookingWizard() {
 
       <div className="grid lg:grid-cols-[1fr_340px] gap-5 items-start">
         <div className="bg-white rounded-2xl sm:rounded-[24px] border border-slate-200/80 shadow-xl shadow-slate-200/40 p-4 sm:p-7 min-h-0 sm:min-h-[440px] animate-fade-in" key={step}>
+          {/* STEP 1: Select Doctor */}
           {step === 1 && (
             <fieldset className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
-                <legend className="text-[17px] font-bold text-slate-900">Who would you like to see?</legend>
+                <div>
+                  <legend className="text-[17px] font-bold text-slate-900">Who would you like to see?</legend>
+                  <p className="text-xs text-slate-500 mt-0.5">Select a doctor to view their schedule and pick a time.</p>
+                </div>
                 <div className="relative">
                   <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                   <input
@@ -312,32 +333,49 @@ function BookingWizard() {
                       role="radio"
                       aria-checked={selected}
                       onClick={() => handleSelectDoctor(d.id)}
-                      className={`text-left rounded-2xl p-3 sm:p-3.5 border-2 transition-all flex gap-3 items-center active:scale-[.99] min-h-[72px] ${
+                      className={`text-left rounded-2xl p-3 sm:p-3.5 border-2 transition-all flex gap-3 items-center active:scale-[.99] min-h-[82px] relative group ${
                         selected
-                          ? 'border-teal-600 bg-teal-50/70 ring-4 ring-teal-600/10'
+                          ? 'border-teal-600 bg-teal-50/70 ring-4 ring-teal-600/10 shadow-xs'
                           : 'border-slate-100 hover:border-teal-300 bg-white hover:bg-slate-50/50'
                       }`}
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={d.avatarUrl}
-                        alt=""
-                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl object-cover shrink-0 bg-slate-100"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-bold text-slate-900 truncate">{d.name}</p>
-                        <p className="text-xs text-teal-700 font-semibold truncate">{d.specialty.split('(')[0]}</p>
-                        <p className="text-[11px] text-slate-500 mt-0.5 sm:mt-1 truncate">
-                          {d.experienceYears}+ yrs · {d.availableDays.length} days/wk
+                      <div className="relative shrink-0">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={d.avatarUrl}
+                          alt={d.name}
+                          className="w-14 h-14 rounded-2xl object-cover shrink-0 bg-slate-100 border border-slate-200/80"
+                          style={{ width: '56px', height: '56px' }}
+                        />
+                        {selected && (
+                          <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-teal-600 rounded-full border-2 border-white flex items-center justify-center shadow-xs">
+                            <Check className="w-2.5 h-2.5 text-white stroke-[3]" />
+                          </span>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1 pr-1">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <p className="text-sm font-bold text-slate-900 truncate">{d.name}</p>
+                          <span className="text-[10px] text-slate-500 font-medium">· {d.experienceYears}+ yrs</span>
+                        </div>
+                        <p className="text-xs text-teal-700 font-semibold truncate mt-0.5">{d.specialty.split('(')[0]}</p>
+                        <p className="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
+                          <CalendarDays className="w-3 h-3 text-teal-600 shrink-0" />
+                          <span className="truncate">{fmtShortDays(d.availableDays)}</span>
                         </p>
                       </div>
-                      <span
-                        className={`w-6 h-6 rounded-full shrink-0 flex items-center justify-center transition-colors ${
-                          selected ? 'bg-teal-600 text-white' : 'bg-slate-100 text-transparent'
-                        }`}
-                      >
-                        <Check className="w-3.5 h-3.5" />
-                      </span>
+                      <div className="shrink-0 flex items-center">
+                        <span
+                          className={`text-xs font-bold px-2.5 py-1.5 rounded-xl border transition-all flex items-center gap-0.5 ${
+                            selected
+                              ? 'bg-teal-600 text-white border-teal-600 shadow-2xs'
+                              : 'bg-slate-50 group-hover:bg-teal-50 text-slate-700 group-hover:text-teal-800 border-slate-200 group-hover:border-teal-300'
+                          }`}
+                        >
+                          <span>{selected ? 'Selected' : 'Select'}</span>
+                          <ChevronRight className="w-3 h-3" />
+                        </span>
+                      </div>
                     </button>
                   );
                 })}
@@ -350,94 +388,168 @@ function BookingWizard() {
             </fieldset>
           )}
 
-          {step === 2 && (
-            <div className="space-y-5 sm:space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-[17px] font-bold text-slate-900">When works best?</h2>
-                <span className="text-xs text-teal-700 font-medium hidden sm:inline">
-                  Open: {doctor?.availableDays.join(' · ')}
-                </span>
-              </div>
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Select Day <span className="text-slate-400 font-normal">(next 14 days)</span>
-                  </p>
-                  <span className="sm:hidden text-[11px] text-slate-400 font-medium">
-                    Swipe days →
+          {/* STEP 2: Choose Date & Time */}
+          {step === 2 && doctor && (
+            <div className="space-y-5 animate-fade-in">
+              {/* Selected Doctor Summary Card on Step 2 */}
+              <div className="bg-gradient-to-r from-teal-50/90 via-white to-emerald-50/40 border border-teal-200/90 rounded-2xl p-3.5 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-2xs">
+                <div className="relative shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={doctor.avatarUrl}
+                    alt={doctor.name}
+                    className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl object-cover bg-white border border-teal-200/80 shadow-xs"
+                    style={{ width: '52px', height: '52px' }}
+                  />
+                  <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center shadow-xs">
+                    <Check className="w-2.5 h-2.5 text-white stroke-[3]" />
                   </span>
                 </div>
-                <div
-                  className="-mx-4 px-4 sm:-mx-0 sm:px-0 flex gap-2 overflow-x-auto pb-3 pt-1 snap-x scrollbar-none"
-                  role="radiogroup"
-                  aria-label="Days"
-                  style={{ WebkitOverflowScrolling: 'touch' }}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-teal-800 bg-teal-100/90 px-2 py-0.5 rounded-md">
+                      Selected Doctor
+                    </span>
+                    <span className="text-[11px] text-slate-500 font-medium">
+                      {doctor.experienceYears}+ yrs exp
+                    </span>
+                  </div>
+                  <p className="font-bold text-slate-900 text-sm sm:text-base truncate mt-0.5">{doctor.name}</p>
+                  <p className="text-xs text-teal-700 font-semibold truncate">{doctor.specialty.split('(')[0]}</p>
+                  <div className="flex items-center gap-1.5 text-[11px] text-slate-600 mt-1">
+                    <CalendarDays className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                    <span>Available: <strong className="text-slate-800">{fmtShortDays(doctor.availableDays)}</strong></span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setStep(1)}
+                  className="text-xs font-bold text-teal-700 hover:text-teal-800 bg-white hover:bg-teal-50 px-3 py-2 rounded-xl border border-teal-200/90 shadow-xs shrink-0 transition active:scale-95 flex items-center gap-1"
                 >
-                  {days.map((d) => {
-                    const ok = isDayAvailable(d.iso);
-                    const active = date === d.iso;
+                  <span>Change</span>
+                </button>
+              </div>
+
+              {/* Date Selection */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-teal-600" /> Select Date
+                  </p>
+                  <span className="text-[11px] text-slate-500 font-medium">
+                    Available: {fmtShortDays(doctor.availableDays)}
+                  </span>
+                </div>
+                <div className="-mx-4 px-4 sm:mx-0 sm:px-0">
+                  <div
+                    className="flex gap-2 overflow-x-auto pb-2 pt-1 snap-x scrollbar-none px-0.5"
+                    role="radiogroup"
+                    aria-label="Appointment dates"
+                    style={{ WebkitOverflowScrolling: 'touch' }}
+                  >
+                    {days.map((d) => {
+                      const ok = isDayAvailable(d.iso);
+                      const active = date === d.iso;
+                      return (
+                        <button
+                          key={d.iso}
+                          ref={active ? activeDateRef : null}
+                          type="button"
+                          role="radio"
+                          aria-checked={active}
+                          aria-label={`${d.full} ${d.num} ${d.month}`}
+                          disabled={!ok}
+                          onClick={() => setDate(d.iso)}
+                          className={`shrink-0 snap-center w-[64px] sm:w-[70px] py-2.5 sm:py-3 rounded-2xl border-2 text-center transition-all min-h-[74px] sm:min-h-[78px] flex flex-col items-center justify-center ${
+                            active
+                              ? 'border-teal-600 bg-teal-600 text-white shadow-md shadow-teal-600/30 scale-[1.02]'
+                              : ok
+                              ? 'border-slate-200 bg-white hover:border-teal-400 text-slate-800 shadow-2xs active:scale-95'
+                              : 'border-slate-100 bg-slate-50/80 text-slate-400 cursor-not-allowed opacity-45'
+                          }`}
+                        >
+                          <span className={`text-[10px] font-bold uppercase tracking-wider ${active ? 'text-teal-100' : 'text-slate-400'}`}>
+                            {d.dow}
+                          </span>
+                          <span className="text-lg sm:text-xl font-extrabold leading-tight my-0.5">
+                            {d.num}
+                          </span>
+                          <span className={`text-[10px] font-medium ${active ? 'text-teal-100' : 'text-slate-400'}`}>
+                            {d.month}
+                          </span>
+                          {ok ? (
+                            <span className={`w-1.5 h-1.5 rounded-full mt-1 ${active ? 'bg-white' : 'bg-emerald-500'}`} />
+                          ) : (
+                            <span className="text-[9px] text-slate-400 mt-0.5 font-medium">Off</span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                {date && !isDayAvailable(date) && (
+                  <p className="text-[13px] text-amber-800 bg-amber-50 border border-amber-200 rounded-2xl px-3.5 py-2.5 mt-2">
+                    Doctor is not open on {dayName(date)}s — available {fmtShortDays(doctor.availableDays)}.
+                  </p>
+                )}
+              </div>
+
+              {/* Time Slot Selection */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-teal-600" /> Select Time Slot
+                  </p>
+                  <span className="text-[11px] text-slate-500 font-medium">30 min consultation</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2 sm:gap-2.5" role="radiogroup" aria-label="Time slots">
+                  {TIME_SLOTS.map((t) => {
+                    const active = time === t;
                     return (
                       <button
-                        key={d.iso}
+                        key={t}
                         type="button"
                         role="radio"
                         aria-checked={active}
-                        aria-label={`${d.full} ${d.num} ${d.month}`}
-                        disabled={!ok}
-                        onClick={() => setDate(d.iso)}
-                        className={`shrink-0 snap-start w-[68px] sm:w-[72px] py-2.5 sm:py-3 rounded-2xl border-2 text-center transition active:scale-95 min-h-[72px] sm:min-h-[76px] ${
+                        onClick={() => setTime(t)}
+                        className={`py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-bold rounded-xl sm:rounded-2xl border-2 transition-all min-h-[46px] sm:min-h-[50px] flex items-center justify-center active:scale-[.98] ${
                           active
-                            ? 'border-slate-900 bg-slate-900 text-white shadow-lg'
-                            : ok
-                            ? 'border-slate-200 bg-white hover:border-teal-500 text-slate-800'
-                            : 'border-transparent bg-slate-50 opacity-35 cursor-not-allowed text-slate-400'
+                            ? 'bg-teal-600 text-white border-teal-600 shadow-md shadow-teal-600/25 ring-2 ring-teal-600/20'
+                            : 'bg-white border-slate-200/90 text-slate-700 hover:border-teal-400 hover:bg-teal-50/30 shadow-2xs'
                         }`}
                       >
-                        <p className={`text-[10px] font-bold uppercase tracking-wide ${active ? 'text-teal-300' : 'text-slate-400'}`}>
-                          {d.dow}
-                        </p>
-                        <p className="text-lg sm:text-xl font-extrabold leading-tight">{d.num}</p>
-                        <p className={`text-[10px] font-medium ${active ? 'text-slate-300' : 'text-slate-400'}`}>{d.month}</p>
+                        {t}
                       </button>
                     );
                   })}
                 </div>
-                {date && !isDayAvailable(date) && (
-                  <p className="text-[13px] text-amber-800 bg-amber-50 border border-amber-200 rounded-2xl px-3.5 py-2.5 mt-2">
-                    Off on {dayName(date)}s — open {doctor?.availableDays.join(' · ')}.
-                  </p>
-                )}
               </div>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-teal-600" /> Available times
-                </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-2.5" role="radiogroup" aria-label="Time slots">
-                  {TIME_SLOTS.map((t) => (
-                    <button
-                      key={t}
-                      type="button"
-                      role="radio"
-                      aria-checked={time === t}
-                      onClick={() => setTime(t)}
-                      className={`py-3 sm:py-3.5 px-3 text-sm font-bold rounded-xl sm:rounded-2xl border-2 transition active:scale-[.98] min-h-[48px] flex items-center justify-center ${
-                        time === t
-                          ? 'bg-teal-600 text-white border-teal-600 shadow-lg shadow-teal-600/25'
-                          : 'bg-slate-50 border-transparent text-slate-700 hover:bg-white hover:border-teal-400'
-                      }`}
-                    >
-                      {t}
-                    </button>
-                  ))}
+
+              {/* Live Selected Slot Preview Strip */}
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-teal-50/70 to-slate-50 border border-teal-100 flex items-center justify-between text-xs shadow-2xs">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-xl bg-white border border-teal-200/80 text-teal-700 flex items-center justify-center shrink-0 shadow-2xs">
+                    <Clock className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[11px] text-slate-500 font-medium">Selected Slot</p>
+                    <p className="font-bold text-slate-900 truncate text-xs sm:text-sm">
+                      {fmtDate(date)} · {time}
+                    </p>
+                  </div>
                 </div>
+                <span className="text-[11px] font-bold text-teal-700 bg-white px-2.5 py-1 rounded-lg border border-teal-200/70 shadow-2xs shrink-0">
+                  Step 2 of 3
+                </span>
               </div>
             </div>
           )}
 
+          {/* STEP 3: Patient Details */}
           {step === 3 && (
-            <form id="booking-form" onSubmit={submit} className="space-y-4 max-w-xl">
-              {/* Mobile appointment summary banner */}
-              <div className="lg:hidden bg-teal-50/60 border border-teal-100 rounded-2xl p-3.5 text-sm space-y-2.5">
+            <form id="booking-form" onSubmit={submit} className="space-y-4 max-w-xl animate-fade-in">
+              {/* Mobile booking summary card */}
+              <div className="lg:hidden bg-gradient-to-br from-teal-50/80 to-slate-50 border border-teal-100 rounded-2xl p-3.5 text-sm space-y-2.5 shadow-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-teal-800">Booking Summary</span>
                   <button
@@ -450,7 +562,7 @@ function BookingWizard() {
                 </div>
                 <div className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={doctor?.avatarUrl} alt="" className="w-10 h-10 rounded-xl object-cover bg-slate-100 shrink-0" />
+                  <img src={doctor?.avatarUrl} alt="" className="w-11 h-11 rounded-xl object-cover bg-white shadow-xs shrink-0" />
                   <div className="min-w-0 flex-1">
                     <p className="font-bold text-slate-900 text-sm truncate">{doctor?.name}</p>
                     <p className="text-xs text-slate-500 truncate">{doctor?.specialty.split('(')[0]}</p>
@@ -481,7 +593,11 @@ function BookingWizard() {
                 </div>
               </div>
 
-              <h2 className="text-[17px] font-bold text-slate-900">Your details</h2>
+              <div>
+                <h2 className="text-[17px] font-bold text-slate-900">Your details</h2>
+                <p className="text-xs text-slate-500 mt-0.5">Enter your contact information for appointment confirmation.</p>
+              </div>
+
               <div className="grid sm:grid-cols-2 gap-3 sm:gap-3.5">
                 <label className="block">
                   <span className="text-[13px] font-semibold text-slate-700 flex items-center gap-1.5 mb-1.5">
@@ -650,29 +766,46 @@ function BookingWizard() {
 
       {/* Sticky mobile bar — native-feel bottom CTA */}
       {!success && (
-        <div className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
-          {step < 3 ? (
-            <div className="flex gap-2.5">
-              {step > 1 && (
+        <div className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] px-4 pt-2.5 pb-[max(1rem,env(safe-area-inset-bottom))]">
+          {step === 1 ? (
+            <button
+              type="button"
+              onClick={() => setStep(2)}
+              disabled={!canNext1}
+              className="w-full h-[52px] rounded-2xl bg-teal-600 hover:bg-teal-700 disabled:opacity-40 text-white text-[15px] font-bold active:scale-[.99] flex items-center justify-center gap-2 shadow-lg shadow-teal-600/25"
+            >
+              <span>Continue to Date & Time</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          ) : step === 2 ? (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-[11px] px-1 text-slate-600">
+                <span className="truncate">
+                  Booking with <strong className="text-slate-900">{doctor?.name.split(' ').slice(0, 2).join(' ')}</strong>
+                </span>
+                <span className="text-teal-700 font-bold shrink-0">
+                  {fmtDate(date)} · {time}
+                </span>
+              </div>
+              <div className="flex gap-2.5">
                 <button
                   type="button"
-                  onClick={() => setStep(step - 1)}
-                  aria-label="Back"
-                  className="w-[52px] h-[52px] rounded-2xl border border-slate-200 bg-white flex items-center justify-center shrink-0 active:bg-slate-100 shadow-sm"
+                  onClick={() => setStep(1)}
+                  aria-label="Back to doctor selection"
+                  className="w-[52px] h-[52px] rounded-2xl border border-slate-200 bg-white flex items-center justify-center shrink-0 active:bg-slate-100 shadow-xs"
                 >
                   <ChevronLeft className="w-5 h-5 text-slate-700" />
                 </button>
-              )}
-              <button
-                type="button"
-                onClick={() => setStep(step + 1)}
-                disabled={step === 1 ? !canNext1 : !canNext2}
-                className="flex-1 h-[52px] rounded-2xl bg-slate-900 text-white text-[15px] font-bold disabled:opacity-40 active:scale-[.99] flex items-center justify-center gap-1.5 shadow-md"
-              >
-                <span>Continue</span>
-                <ChevronRight className="w-4 h-4" />
-                <span className="text-xs text-slate-400 font-normal">({step}/3)</span>
-              </button>
+                <button
+                  type="button"
+                  onClick={() => setStep(3)}
+                  disabled={!canNext2}
+                  className="flex-1 h-[52px] rounded-2xl bg-teal-600 hover:bg-teal-700 text-white text-[15px] font-bold disabled:opacity-40 active:scale-[.99] flex items-center justify-center gap-1.5 shadow-lg shadow-teal-600/25"
+                >
+                  <span>Continue to Details</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           ) : (
             <div className="flex gap-2.5">
@@ -680,7 +813,7 @@ function BookingWizard() {
                 type="button"
                 onClick={() => setStep(2)}
                 aria-label="Back to time selection"
-                className="w-[52px] h-[52px] rounded-2xl border border-slate-200 bg-white flex items-center justify-center shrink-0 active:bg-slate-100 shadow-sm"
+                className="w-[52px] h-[52px] rounded-2xl border border-slate-200 bg-white flex items-center justify-center shrink-0 active:bg-slate-100 shadow-xs"
               >
                 <ChevronLeft className="w-5 h-5 text-slate-700" />
               </button>
@@ -688,7 +821,7 @@ function BookingWizard() {
                 form="booking-form"
                 type="submit"
                 disabled={loading || !canSubmit}
-                className="flex-1 h-[52px] rounded-2xl bg-teal-600 text-white text-[15px] font-bold disabled:opacity-50 flex items-center justify-center gap-2 active:scale-[.99] shadow-lg shadow-teal-600/25"
+                className="flex-1 h-[52px] rounded-2xl bg-teal-600 hover:bg-teal-700 text-white text-[15px] font-bold disabled:opacity-50 flex items-center justify-center gap-2 active:scale-[.99] shadow-lg shadow-teal-600/25"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
