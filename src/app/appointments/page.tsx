@@ -192,9 +192,9 @@ function BookingWizard() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-36 sm:pb-12 pt-4 sm:pt-10">
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 pb-36 sm:pb-12 pt-4 sm:pt-10 min-w-0 flex flex-col flex-1">
       {/* Hero Header */}
-      <div className="max-w-2xl">
+      <div className="w-full max-w-2xl">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-teal-200/70 text-teal-800 text-xs font-semibold shadow-xs max-w-full">
           <Sparkles className="w-3.5 h-3.5 shrink-0 text-teal-600" />
           <span className="truncate">3 steps · ~1 min · Instant confirmation</span>
@@ -204,7 +204,7 @@ function BookingWizard() {
       </div>
 
       {/* Stepper Progress Indicator */}
-      <div className="mt-4 mb-5" aria-label="Booking progress">
+      <div className="w-full mt-4 mb-5" aria-label="Booking progress">
         {/* Mobile segmented stepper */}
         <div className="sm:hidden">
           <div className="flex items-center justify-between text-xs font-semibold mb-2">
@@ -291,8 +291,8 @@ function BookingWizard() {
         </div>
       )}
 
-      <div className="grid lg:grid-cols-[1fr_340px] gap-5 items-start">
-        <div className="bg-white rounded-2xl sm:rounded-[24px] border border-slate-200/80 shadow-xl shadow-slate-200/40 p-4 sm:p-7 min-h-0 sm:min-h-[440px] animate-fade-in" key={step}>
+      <div className="w-full grid lg:grid-cols-[1fr_340px] gap-5 items-start min-w-0">
+        <div className="w-full min-w-0 bg-white rounded-2xl sm:rounded-[24px] border border-slate-200/80 shadow-xl shadow-slate-200/40 p-4 sm:p-7 min-h-0 sm:min-h-[440px] animate-fade-in overflow-hidden" key={step}>
           {/* STEP 1: Select Doctor */}
           {step === 1 && (
             <fieldset className="space-y-4">
@@ -390,9 +390,9 @@ function BookingWizard() {
 
           {/* STEP 2: Choose Date & Time */}
           {step === 2 && doctor && (
-            <div className="space-y-5 animate-fade-in">
+            <div className="w-full space-y-5 animate-fade-in min-w-0">
               {/* Selected Doctor Summary Card on Step 2 */}
-              <div className="bg-gradient-to-r from-teal-50/90 via-white to-emerald-50/40 border border-teal-200/90 rounded-2xl p-3.5 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-2xs">
+              <div className="w-full bg-gradient-to-r from-teal-50/90 via-white to-emerald-50/40 border border-teal-200/90 rounded-2xl p-3.5 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-2xs min-w-0">
                 <div className="relative shrink-0">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -431,8 +431,8 @@ function BookingWizard() {
               </div>
 
               {/* Date Selection */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
+              <div className="w-full min-w-0">
+                <div className="w-full flex items-center justify-between mb-2">
                   <p className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-teal-600" /> Select Date
                   </p>
@@ -440,9 +440,9 @@ function BookingWizard() {
                     Available: {fmtShortDays(doctor.availableDays)}
                   </span>
                 </div>
-                <div className="-mx-4 px-4 sm:mx-0 sm:px-0">
+                <div className="w-full min-w-0 overflow-hidden">
                   <div
-                    className="flex gap-2 overflow-x-auto pb-2 pt-1 snap-x scrollbar-none px-0.5"
+                    className="w-full flex gap-2 overflow-x-auto pb-2 pt-1 snap-x scrollbar-none px-0.5"
                     role="radiogroup"
                     aria-label="Appointment dates"
                     style={{ WebkitOverflowScrolling: 'touch' }}
@@ -495,14 +495,14 @@ function BookingWizard() {
               </div>
 
               {/* Time Slot Selection */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
+              <div className="w-full min-w-0">
+                <div className="w-full flex items-center justify-between mb-2">
                   <p className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
                     <Clock className="w-3.5 h-3.5 text-teal-600" /> Select Time Slot
                   </p>
                   <span className="text-[11px] text-slate-500 font-medium">30 min consultation</span>
                 </div>
-                <div className="grid grid-cols-3 gap-2 sm:gap-2.5" role="radiogroup" aria-label="Time slots">
+                <div className="w-full grid grid-cols-3 gap-2 sm:gap-2.5" role="radiogroup" aria-label="Time slots">
                   {TIME_SLOTS.map((t) => {
                     const active = time === t;
                     return (
@@ -512,7 +512,7 @@ function BookingWizard() {
                         role="radio"
                         aria-checked={active}
                         onClick={() => setTime(t)}
-                        className={`py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-bold rounded-xl sm:rounded-2xl border-2 transition-all min-h-[46px] sm:min-h-[50px] flex items-center justify-center active:scale-[.98] ${
+                        className={`w-full py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-bold rounded-xl sm:rounded-2xl border-2 transition-all min-h-[46px] sm:min-h-[50px] flex items-center justify-center active:scale-[.98] ${
                           active
                             ? 'bg-teal-600 text-white border-teal-600 shadow-md shadow-teal-600/25 ring-2 ring-teal-600/20'
                             : 'bg-white border-slate-200/90 text-slate-700 hover:border-teal-400 hover:bg-teal-50/30 shadow-2xs'
@@ -526,7 +526,7 @@ function BookingWizard() {
               </div>
 
               {/* Live Selected Slot Preview Strip */}
-              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-teal-50/70 to-slate-50 border border-teal-100 flex items-center justify-between text-xs shadow-2xs">
+              <div className="w-full p-3.5 rounded-2xl bg-gradient-to-r from-teal-50/70 to-slate-50 border border-teal-100 flex items-center justify-between text-xs shadow-2xs min-w-0">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <div className="w-8 h-8 rounded-xl bg-white border border-teal-200/80 text-teal-700 flex items-center justify-center shrink-0 shadow-2xs">
                     <Clock className="w-4 h-4" />
@@ -545,9 +545,10 @@ function BookingWizard() {
             </div>
           )}
 
+
           {/* STEP 3: Patient Details */}
           {step === 3 && (
-            <form id="booking-form" onSubmit={submit} className="space-y-4 max-w-xl animate-fade-in">
+            <form id="booking-form" onSubmit={submit} className="w-full space-y-4 max-w-xl animate-fade-in min-w-0">
               {/* Mobile booking summary card */}
               <div className="lg:hidden bg-gradient-to-br from-teal-50/80 to-slate-50 border border-teal-100 rounded-2xl p-3.5 text-sm space-y-2.5 shadow-xs">
                 <div className="flex items-center justify-between">
@@ -716,7 +717,7 @@ function BookingWizard() {
         </div>
 
         {/* Desktop Sidebar Summary */}
-        <aside className="hidden lg:block bg-white rounded-[24px] border border-slate-200/80 shadow-xl shadow-slate-200/40 p-5 sm:p-6 lg:sticky lg:top-24">
+        <aside className="hidden lg:block w-full bg-white rounded-[24px] border border-slate-200/80 shadow-xl shadow-slate-200/40 p-5 sm:p-6 lg:sticky lg:top-24">
           <p className="text-[11px] font-bold uppercase tracking-widest text-teal-700">Your booking</p>
           {doctor && (
             <div className="flex gap-3 items-center mt-3">
@@ -766,7 +767,7 @@ function BookingWizard() {
 
       {/* Sticky mobile bar — native-feel bottom CTA */}
       {!success && (
-        <div className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] px-4 pt-2.5 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <div className="sm:hidden fixed bottom-0 left-0 right-0 w-full z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] px-4 pt-2.5 pb-[max(1rem,env(safe-area-inset-bottom))] pb-safe">
           {step === 1 ? (
             <button
               type="button"

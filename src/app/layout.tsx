@@ -1,7 +1,20 @@
+import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import { Shield, Activity, Phone } from 'lucide-react';
 import { ClinicNavbar } from '@/components/ClinicNavbar';
 import './globals.css';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1.0,
+  maximumScale: 1.0,
+  userScalable: false,
+};
+
+export const metadata: Metadata = {
+  title: 'Nan Da Wun Healthcare - Specialty Clinic & ERP',
+  description: 'Patient-first multidisciplinary medical care, online appointments, and digital EMR.',
+};
 
 export default function RootLayout({
   children,
@@ -9,11 +22,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
-      <body className="flex min-h-screen flex-col bg-slate-50 text-slate-900 antialiased selection:bg-teal-500 selection:text-white">
+    <html lang="en" className="h-full w-full overflow-x-hidden">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      </head>
+      <body className="flex min-h-screen w-full overflow-x-hidden flex-col bg-slate-50 text-slate-900 antialiased selection:bg-teal-500 selection:text-white">
         {/* Top Emergency & Trust Banner */}
-        <div className="bg-teal-950 text-teal-100 text-xs px-3 sm:px-4 py-2 border-b border-teal-900">
-          <div className="max-w-7xl mx-auto flex flex-col xs:flex-row items-center justify-between gap-1.5 sm:gap-4 text-center xs:text-left">
+        <div className="w-full bg-teal-950 text-teal-100 text-xs px-3 sm:px-4 py-2 border-b border-teal-900">
+          <div className="w-full max-w-7xl mx-auto flex flex-col xs:flex-row items-center justify-between gap-1.5 sm:gap-4 text-center xs:text-left">
             <div className="flex items-center gap-2">
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
               <span>Clinic: Mon - Sat (8am - 8pm)</span>
@@ -35,11 +51,11 @@ export default function RootLayout({
         <ClinicNavbar />
 
         {/* Main Content Area */}
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 w-full min-h-0 overflow-x-hidden flex flex-col">{children}</main>
 
         {/* Global Clinic Footer */}
-        <footer className="bg-slate-900 text-slate-300 border-t border-slate-800 mt-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
+        <footer className="w-full bg-slate-900 text-slate-300 border-t border-slate-800 mt-20">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
             <div className="space-y-3 md:col-span-1">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-teal-600 flex items-center justify-center text-white">
