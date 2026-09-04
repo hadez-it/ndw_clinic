@@ -8,9 +8,41 @@ import {
   Calendar, CheckCircle2, AlertCircle, Clock, User, Mail, Phone,
   ChevronLeft, ChevronRight, Stethoscope, Search, Check, PartyPopper,
   MapPin, ShieldCheck, Sparkles, X, Loader2, CalendarDays,
+  Sun, Sunset, Moon,
 } from 'lucide-react';
 
-const TIME_SLOTS = ['09:00 AM', '10:30 AM', '01:00 PM', '02:30 PM', '04:00 PM', '05:30 PM'];
+interface TimeSlot {
+  time: string;
+  period: 'morning' | 'afternoon' | 'evening';
+  booked?: boolean;
+}
+
+const TIME_SLOTS: TimeSlot[] = [
+  // Morning slots (09:00 AM - 12:00 PM)
+  { time: '09:00 AM', period: 'morning' },
+  { time: '09:30 AM', period: 'morning' },
+  { time: '10:30 AM', period: 'morning' },
+  { time: '11:15 AM', period: 'morning', booked: true },
+  // Afternoon slots (01:00 PM - 05:00 PM)
+  { time: '01:00 PM', period: 'afternoon' },
+  { time: '02:30 PM', period: 'afternoon' },
+  { time: '03:15 PM', period: 'afternoon', booked: true },
+  { time: '04:00 PM', period: 'afternoon' },
+  // Evening slots (05:30 PM - 07:30 PM)
+  { time: '05:30 PM', period: 'evening' },
+  { time: '06:15 PM', period: 'evening' },
+  { time: '07:00 PM', period: 'evening' },
+];
+
+const PERIOD_CONFIG = [
+  { id: 'all', label: 'All', icon: Sparkles, timeRange: '09:00 AM - 07:30 PM' },
+  { id: 'morning', label: 'Morning', icon: Sun, timeRange: '09:00 AM - 12:00 PM' },
+  { id: 'afternoon', label: 'Afternoon', icon: Sunset, timeRange: '01:00 PM - 05:00 PM' },
+  { id: 'evening', label: 'Evening', icon: Moon, timeRange: '05:30 PM - 07:30 PM' },
+] as const;
+
+type PeriodFilter = (typeof PERIOD_CONFIG)[number]['id'];
+
 const STEPS = [
   { n: 1, label: 'Doctor', icon: Stethoscope },
   { n: 2, label: 'Date & Time', icon: Calendar },
@@ -26,6 +58,11 @@ function fmtDate(iso: string) {
   return new Date(iso + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 }
 
+function fmtDateFull(iso: string) {
+  if (!iso) return '';
+  return new Date(iso + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+}
+
 function fmtShortDays(daysArr: string[]) {
   const shortMap: Record<string, string> = {
     Monday: 'Mon',
@@ -39,6 +76,190 @@ function fmtShortDays(daysArr: string[]) {
   return daysArr.map((d) => shortMap[d] || d.slice(0, 3)).join(', ');
 }
 
+interface InteractiveMonthCalendarProps {
+  selectedDate: string;
+  onSelectDate: (iso: string) => void;
+  isDayAvailable: (iso: string) => boolean;
+  doctorName?: string;
+  availableDays?: string[];
+  maxDaysAhead?: number;
+}
+
+function InteractiveMonthCalendar({
+  selectedDate,
+  onSelectDate,
+  isDayAvailable,
+  maxDaysAhead = 60,
+}: InteractiveMonthCalendarProps) {
+  const today = useMemo(() => {
+    const t = new Date();
+    t.setHours(0, 0, 0, 0);
+    return t;
+  }, []);
+
+  const maxDate = useMemo(() => {
+    const m = new Date(today);
+    m.setDate(today.getDate() + maxDaysAhead);
+    return m;
+  }, [today, maxDaysAhead]);
+
+  // View month based on selectedDate or today
+  const [viewDate, setViewDate] = useState(() => {
+    if (selectedDate) {
+      const d = new Date(selectedDate + 'T12:00:00');
+      return new Date(d.getFullYear(), d.getMonth(), 1);
+    }
+    return new Date(today.getFullYear(), today.getMonth(), 1);
+  });
+
+  // Sync viewDate when selectedDate prop changes
+  const [prevSelectedDate, setPrevSelectedDate] = useState(selectedDate);
+  if (selectedDate !== prevSelectedDate) {
+    setPrevSelectedDate(selectedDate);
+    if (selectedDate) {
+      const d = new Date(selectedDate + 'T12:00:00');
+      setViewDate(new Date(d.getFullYear(), d.getMonth(), 1));
+    }
+  }
+
+  const viewYear = viewDate.getFullYear();
+  const viewMonth = viewDate.getMonth();
+
+  const monthLabel = viewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+  const canPrev = viewDate.getFullYear() > today.getFullYear() || viewDate.getMonth() > today.getMonth();
+  const canNext =
+    (viewDate.getFullYear() - today.getFullYear()) * 12 + (viewDate.getMonth() - today.getMonth()) <
+    Math.ceil(maxDaysAhead / 30);
+
+  const prevMonth = () => {
+    if (!canPrev) return;
+    setViewDate(new Date(viewYear, viewMonth - 1, 1));
+  };
+
+  const nextMonth = () => {
+    if (!canNext) return;
+    setViewDate(new Date(viewYear, viewMonth + 1, 1));
+  };
+
+  const { firstDayIndex, totalDays } = useMemo(() => {
+    const first = new Date(viewYear, viewMonth, 1).getDay();
+    const total = new Date(viewYear, viewMonth + 1, 0).getDate();
+    return { firstDayIndex: first, totalDays: total };
+  }, [viewYear, viewMonth]);
+
+  const weekdays = [
+    { s: 'Su', full: 'Sunday' },
+    { s: 'Mo', full: 'Monday' },
+    { s: 'Tu', full: 'Tuesday' },
+    { s: 'We', full: 'Wednesday' },
+    { s: 'Th', full: 'Thursday' },
+    { s: 'Fr', full: 'Friday' },
+    { s: 'Sa', full: 'Saturday' },
+  ];
+
+  return (
+    <div className="w-full select-none">
+      {/* Month Navigator Header */}
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="text-sm font-bold text-slate-900">{monthLabel}</h4>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            disabled={!canPrev}
+            onClick={prevMonth}
+            aria-label="Previous month"
+            className="w-8 h-8 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition active:scale-95 shadow-2xs"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            disabled={!canNext}
+            onClick={nextMonth}
+            aria-label="Next month"
+            className="w-8 h-8 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition active:scale-95 shadow-2xs"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Weekday headers */}
+      <div className="grid grid-cols-7 gap-1 text-center mb-1" role="row">
+        {weekdays.map((w) => (
+          <span key={w.s} className="text-[11px] font-bold text-slate-400 py-1" role="columnheader" aria-label={w.full}>
+            {w.s}
+          </span>
+        ))}
+      </div>
+
+      {/* Days grid */}
+      <div className="grid grid-cols-7 gap-1" role="grid" aria-label={`Calendar for ${monthLabel}`}>
+        {Array.from({ length: firstDayIndex }).map((_, i) => (
+          <div key={`empty-${i}`} className="h-9 sm:h-10" />
+        ))}
+        {Array.from({ length: totalDays }).map((_, idx) => {
+          const dayNum = idx + 1;
+          const iso = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+          const cellDate = new Date(viewYear, viewMonth, dayNum);
+          cellDate.setHours(0, 0, 0, 0);
+
+          const isPast = cellDate < today;
+          const isTooFar = cellDate > maxDate;
+          const isDocAvailable = isDayAvailable(iso);
+          const isSelectable = !isPast && !isTooFar && isDocAvailable;
+          const isSelected = selectedDate === iso;
+          const isToday = cellDate.getTime() === today.getTime();
+
+          return (
+            <button
+              key={iso}
+              type="button"
+              role="gridcell"
+              aria-selected={isSelected}
+              aria-disabled={!isSelectable}
+              aria-label={`${cellDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}${
+                isSelected ? ', selected' : ''
+              }${!isSelectable ? ', unavailable' : ', available'}`}
+              disabled={!isSelectable}
+              onClick={() => onSelectDate(iso)}
+              className={`relative h-9 sm:h-10 w-full rounded-xl text-xs font-semibold flex flex-col items-center justify-center transition-all ${
+                isSelected
+                  ? 'bg-teal-600 text-white font-bold shadow-md shadow-teal-600/30 scale-105 z-10'
+                  : isSelectable
+                  ? 'bg-white text-slate-800 hover:bg-teal-50 hover:border-teal-400 border border-slate-200/80 shadow-2xs active:scale-95'
+                  : 'bg-slate-50/50 text-slate-300 border border-slate-100 cursor-not-allowed opacity-45'
+              } ${isToday && !isSelected ? 'ring-1.5 ring-teal-500/50' : ''}`}
+            >
+              <span>{dayNum}</span>
+              {isSelectable && !isSelected && (
+                <span className="w-1 h-1 rounded-full bg-emerald-500 mt-0.5" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Calendar Legend */}
+      <div className="flex items-center justify-between text-[11px] text-slate-500 pt-3 mt-3 border-t border-slate-200/80">
+        <span className="flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+          <span>Available</span>
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-sm bg-teal-600 shrink-0" />
+          <span>Selected</span>
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-slate-300 shrink-0" />
+          <span>Off / Closed</span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function BookingWizard() {
   const searchParams = useSearchParams();
   const preselected = searchParams.get('doctor');
@@ -46,6 +267,8 @@ function BookingWizard() {
   const [step, setStep] = useState(preselected ? 2 : 1);
   const [doctorId, setDoctorId] = useState(preselected || initialDoctors[0]?.id || '');
   const [query, setQuery] = useState('');
+  const [periodFilter, setPeriodFilter] = useState<PeriodFilter>('all');
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
   const activeDateRef = useRef<HTMLButtonElement | null>(null);
 
   // Scroll to top when moving between wizard steps on mobile
@@ -55,6 +278,23 @@ function BookingWizard() {
 
   const doctor = useMemo(() => initialDoctors.find((d) => d.id === doctorId), [doctorId]);
 
+  // Initial date selected
+  const [date, setDate] = useState(() => {
+    const today = new Date();
+    const doc = initialDoctors.find((d) => d.id === (preselected || initialDoctors[0]?.id));
+    for (let i = 0; i < 60; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+      const dow = d.toLocaleDateString('en-US', { weekday: 'long' });
+      const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      if (!doc || doc.availableDays.includes(dow)) {
+        return iso;
+      }
+    }
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  });
+
+  // Mobile horizontal scroll strip (14 days ahead, dynamically including selected date if further ahead)
   const days = useMemo(() => {
     const out: { iso: string; dow: string; num: string; month: string; full: string }[] = [];
     const today = new Date();
@@ -70,24 +310,20 @@ function BookingWizard() {
         full: d.toLocaleDateString('en-US', { weekday: 'long' }),
       });
     }
-    return out;
-  }, []);
-
-  // Initialize date to first available day for the doctor
-  const [date, setDate] = useState(() => {
-    const today = new Date();
-    const doc = initialDoctors.find((d) => d.id === (preselected || initialDoctors[0]?.id));
-    for (let i = 0; i < 14; i++) {
-      const d = new Date(today);
-      d.setDate(today.getDate() + i);
-      const dow = d.toLocaleDateString('en-US', { weekday: 'long' });
-      const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-      if (!doc || doc.availableDays.includes(dow)) {
-        return iso;
-      }
+    // If selected date is beyond the 14 days, dynamically include it in sorted order
+    if (date && !out.some((d) => d.iso === date)) {
+      const sel = new Date(date + 'T12:00:00');
+      out.push({
+        iso: date,
+        dow: sel.toLocaleDateString('en-US', { weekday: 'short' }),
+        num: String(sel.getDate()),
+        month: sel.toLocaleDateString('en-US', { month: 'short' }),
+        full: sel.toLocaleDateString('en-US', { weekday: 'long' }),
+      });
+      out.sort((a, b) => a.iso.localeCompare(b.iso));
     }
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  });
+    return out;
+  }, [date]);
 
   // Auto-center active date in horizontal carousel
   useEffect(() => {
@@ -127,8 +363,17 @@ function BookingWizard() {
     const selectedDoc = initialDoctors.find((d) => d.id === id);
     if (selectedDoc) {
       if (!selectedDoc.availableDays.includes(dayName(date))) {
-        const nextDay = days.find((d) => selectedDoc.availableDays.includes(dayName(d.iso)));
-        if (nextDay) setDate(nextDay.iso);
+        const today = new Date();
+        for (let i = 0; i < 60; i++) {
+          const d = new Date(today);
+          d.setDate(today.getDate() + i);
+          const dow = d.toLocaleDateString('en-US', { weekday: 'long' });
+          const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+          if (selectedDoc.availableDays.includes(dow)) {
+            setDate(iso);
+            break;
+          }
+        }
       }
     }
     // Instantly advance to Date & Time step
@@ -138,6 +383,21 @@ function BookingWizard() {
   const canNext1 = !!doctorId;
   const canNext2 = !!date && !!time && isDayAvailable(date);
   const canSubmit = name.trim().length >= 2 && /.+@.+\..+/.test(email) && phone.trim().length >= 7;
+
+  // Grouped time slots based on period filter
+  const filteredSlots = useMemo(() => {
+    if (periodFilter === 'all') return TIME_SLOTS;
+    return TIME_SLOTS.filter((s) => s.period === periodFilter);
+  }, [periodFilter]);
+
+  const slotCounts = useMemo(() => {
+    return {
+      all: TIME_SLOTS.filter((s) => !s.booked).length,
+      morning: TIME_SLOTS.filter((s) => s.period === 'morning' && !s.booked).length,
+      afternoon: TIME_SLOTS.filter((s) => s.period === 'afternoon' && !s.booked).length,
+      evening: TIME_SLOTS.filter((s) => s.period === 'evening' && !s.booked).length,
+    };
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -175,7 +435,7 @@ function BookingWizard() {
           <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">{success}</p>
           <div className="bg-teal-50/70 rounded-2xl border border-teal-100 p-4 mt-5 text-left text-sm space-y-1.5">
             <p className="font-bold text-slate-900 text-sm sm:text-base">{doctor.name} <span className="font-medium text-teal-700 text-xs sm:text-sm">· {doctor.specialty.split('(')[0]}</span></p>
-            <p className="text-slate-600 text-xs sm:text-[13px] flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-teal-600 shrink-0" />{fmtDate(date)} · {time}</p>
+            <p className="text-slate-600 text-xs sm:text-[13px] flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-teal-600 shrink-0" />{fmtDateFull(date)} · {time}</p>
             <p className="text-slate-600 text-xs sm:text-[13px] flex items-center gap-1.5"><User className="w-3.5 h-3.5 text-teal-600 shrink-0" />{name} · {phone}</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-5">
@@ -192,7 +452,7 @@ function BookingWizard() {
   }
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 pb-36 sm:pb-12 pt-4 sm:pt-10 min-w-0 flex flex-col flex-1">
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pb-36 sm:pb-12 pt-4 sm:pt-10 min-w-0 flex flex-col flex-1">
       {/* Hero Header */}
       <div className="w-full max-w-2xl">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-teal-200/70 text-teal-800 text-xs font-semibold shadow-xs max-w-full">
@@ -291,8 +551,9 @@ function BookingWizard() {
         </div>
       )}
 
-      <div className="w-full grid lg:grid-cols-[1fr_340px] gap-5 items-start min-w-0">
-        <div className="w-full min-w-0 bg-white rounded-2xl sm:rounded-[24px] border border-slate-200/80 shadow-xl shadow-slate-200/40 p-4 sm:p-7 min-h-0 sm:min-h-[440px] animate-fade-in overflow-hidden" key={step}>
+      {/* Main Form Area + Desktop Sidebar */}
+      <div className={`w-full grid ${step === 2 ? 'xl:grid-cols-[1fr_320px]' : 'lg:grid-cols-[1fr_340px]'} gap-5 items-start min-w-0`}>
+        <div className="w-full min-w-0 bg-white rounded-2xl sm:rounded-[28px] border border-slate-200/80 shadow-xl shadow-slate-200/40 p-4 sm:p-7 min-h-0 sm:min-h-[440px] animate-fade-in overflow-hidden" key={step}>
           {/* STEP 1: Select Doctor */}
           {step === 1 && (
             <fieldset className="space-y-4">
@@ -333,7 +594,7 @@ function BookingWizard() {
                       role="radio"
                       aria-checked={selected}
                       onClick={() => handleSelectDoctor(d.id)}
-                      className={`text-left rounded-2xl p-3 sm:p-3.5 border-2 transition-all flex gap-3 items-center active:scale-[.99] min-h-[82px] relative group ${
+                      className={`text-left rounded-2xl p-3 sm:p-3.5 border-2 transition-all flex gap-3 items-center active:scale-[.99] min-h-[82px] relative group min-w-0 ${
                         selected
                           ? 'border-teal-600 bg-teal-50/70 ring-4 ring-teal-600/10 shadow-xs'
                           : 'border-slate-100 hover:border-teal-300 bg-white hover:bg-slate-50/50'
@@ -360,7 +621,7 @@ function BookingWizard() {
                         </div>
                         <p className="text-xs text-teal-700 font-semibold truncate mt-0.5">{d.specialty.split('(')[0]}</p>
                         <p className="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
-                          <CalendarDays className="w-3 h-3 text-teal-600 shrink-0" />
+                          <CalendarDays className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                           <span className="truncate">{fmtShortDays(d.availableDays)}</span>
                         </p>
                       </div>
@@ -373,7 +634,7 @@ function BookingWizard() {
                           }`}
                         >
                           <span>{selected ? 'Selected' : 'Select'}</span>
-                          <ChevronRight className="w-3 h-3" />
+                          <ChevronRight className="w-3.5 h-3.5" />
                         </span>
                       </div>
                     </button>
@@ -390,161 +651,296 @@ function BookingWizard() {
 
           {/* STEP 2: Choose Date & Time */}
           {step === 2 && doctor && (
-            <div className="w-full space-y-5 animate-fade-in min-w-0">
-              {/* Selected Doctor Summary Card on Step 2 */}
-              <div className="w-full bg-gradient-to-r from-teal-50/90 via-white to-emerald-50/40 border border-teal-200/90 rounded-2xl p-3.5 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-2xs min-w-0">
-                <div className="relative shrink-0">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={doctor.avatarUrl}
-                    alt={doctor.name}
-                    className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl object-cover bg-white border border-teal-200/80 shadow-xs"
-                    style={{ width: '52px', height: '52px' }}
+            <div className="w-full space-y-6 animate-fade-in min-w-0">
+              {/* Desktop lg split layout / Mobile unified stack */}
+              <div className="grid lg:grid-cols-[320px_1fr] gap-6 items-start">
+                {/* Left Column: Interactive Month Calendar (Desktop lg view) */}
+                <div className="hidden lg:block bg-gradient-to-b from-slate-50/90 to-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs lg:sticky lg:top-24">
+                  <div className="flex items-center justify-between mb-3 pb-2.5 border-b border-slate-200/70">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-teal-600" /> Interactive Calendar
+                    </h3>
+                    <span className="text-[11px] font-semibold text-teal-700 bg-teal-50 border border-teal-200/70 px-2 py-0.5 rounded-md">
+                      Next 60 days
+                    </span>
+                  </div>
+                  <InteractiveMonthCalendar
+                    selectedDate={date}
+                    onSelectDate={(newIso) => setDate(newIso)}
+                    isDayAvailable={isDayAvailable}
+                    doctorName={doctor.name}
+                    availableDays={doctor.availableDays}
+                    maxDaysAhead={60}
                   />
-                  <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center shadow-xs">
-                    <Check className="w-2.5 h-2.5 text-white stroke-[3]" />
-                  </span>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-teal-800 bg-teal-100/90 px-2 py-0.5 rounded-md">
-                      Selected Doctor
-                    </span>
-                    <span className="text-[11px] text-slate-500 font-medium">
-                      {doctor.experienceYears}+ yrs exp
-                    </span>
-                  </div>
-                  <p className="font-bold text-slate-900 text-sm sm:text-base truncate mt-0.5">{doctor.name}</p>
-                  <p className="text-xs text-teal-700 font-semibold truncate">{doctor.specialty.split('(')[0]}</p>
-                  <div className="flex items-center gap-1.5 text-[11px] text-slate-600 mt-1">
-                    <CalendarDays className="w-3.5 h-3.5 text-teal-600 shrink-0" />
-                    <span>Available: <strong className="text-slate-800">{fmtShortDays(doctor.availableDays)}</strong></span>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setStep(1)}
-                  className="text-xs font-bold text-teal-700 hover:text-teal-800 bg-white hover:bg-teal-50 px-3 py-2 rounded-xl border border-teal-200/90 shadow-xs shrink-0 transition active:scale-95 flex items-center gap-1"
-                >
-                  <span>Change</span>
-                </button>
-              </div>
 
-              {/* Date Selection */}
-              <div className="w-full min-w-0">
-                <div className="w-full flex items-center justify-between mb-2">
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-teal-600" /> Select Date
-                  </p>
-                  <span className="text-[11px] text-slate-500 font-medium">
-                    Available: {fmtShortDays(doctor.availableDays)}
-                  </span>
-                </div>
-                <div className="w-full min-w-0 overflow-hidden">
-                  <div
-                    className="w-full flex gap-2 overflow-x-auto pb-2 pt-1 snap-x scrollbar-none px-0.5"
-                    role="radiogroup"
-                    aria-label="Appointment dates"
-                    style={{ WebkitOverflowScrolling: 'touch' }}
-                  >
-                    {days.map((d) => {
-                      const ok = isDayAvailable(d.iso);
-                      const active = date === d.iso;
-                      return (
-                        <button
-                          key={d.iso}
-                          ref={active ? activeDateRef : null}
-                          type="button"
-                          role="radio"
-                          aria-checked={active}
-                          aria-label={`${d.full} ${d.num} ${d.month}`}
-                          disabled={!ok}
-                          onClick={() => setDate(d.iso)}
-                          className={`shrink-0 snap-center w-[64px] sm:w-[70px] py-2.5 sm:py-3 rounded-2xl border-2 text-center transition-all min-h-[74px] sm:min-h-[78px] flex flex-col items-center justify-center ${
-                            active
-                              ? 'border-teal-600 bg-teal-600 text-white shadow-md shadow-teal-600/30 scale-[1.02]'
-                              : ok
-                              ? 'border-slate-200 bg-white hover:border-teal-400 text-slate-800 shadow-2xs active:scale-95'
-                              : 'border-slate-100 bg-slate-50/80 text-slate-400 cursor-not-allowed opacity-45'
-                          }`}
-                        >
-                          <span className={`text-[10px] font-bold uppercase tracking-wider ${active ? 'text-teal-100' : 'text-slate-400'}`}>
-                            {d.dow}
-                          </span>
-                          <span className="text-lg sm:text-xl font-extrabold leading-tight my-0.5">
-                            {d.num}
-                          </span>
-                          <span className={`text-[10px] font-medium ${active ? 'text-teal-100' : 'text-slate-400'}`}>
-                            {d.month}
-                          </span>
-                          {ok ? (
-                            <span className={`w-1.5 h-1.5 rounded-full mt-1 ${active ? 'bg-white' : 'bg-emerald-500'}`} />
-                          ) : (
-                            <span className="text-[9px] text-slate-400 mt-0.5 font-medium">Off</span>
-                          )}
-                        </button>
-                      );
-                    })}
+                {/* Right Column: Doctor summary + Mobile Date strip + Categorized Time Slots */}
+                <div className="space-y-5 min-w-0">
+                  {/* Selected Doctor Summary Card */}
+                  <div className="w-full bg-gradient-to-r from-teal-50/90 via-white to-emerald-50/40 border border-teal-200/90 rounded-2xl p-3.5 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-2xs min-w-0">
+                    <div className="relative shrink-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={doctor.avatarUrl}
+                        alt={doctor.name}
+                        className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl object-cover bg-white border border-teal-200/80 shadow-xs"
+                        style={{ width: '52px', height: '52px' }}
+                      />
+                      <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center shadow-xs">
+                        <Check className="w-2.5 h-2.5 text-white stroke-[3]" />
+                      </span>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-teal-800 bg-teal-100/90 px-2 py-0.5 rounded-md">
+                          Selected Doctor
+                        </span>
+                        <span className="text-[11px] text-slate-500 font-medium">
+                          {doctor.experienceYears}+ yrs exp
+                        </span>
+                      </div>
+                      <p className="font-bold text-slate-900 text-sm sm:text-base truncate mt-0.5">{doctor.name}</p>
+                      <p className="text-xs text-teal-700 font-semibold truncate">{doctor.specialty.split('(')[0]}</p>
+                      <div className="flex items-center gap-1.5 text-[11px] text-slate-600 mt-1">
+                        <CalendarDays className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                        <span>Available: <strong className="text-slate-800">{fmtShortDays(doctor.availableDays)}</strong></span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setStep(1)}
+                      className="text-xs font-bold text-teal-700 hover:text-teal-800 bg-white hover:bg-teal-50 px-3 py-2 rounded-xl border border-teal-200/90 shadow-xs shrink-0 transition active:scale-95 flex items-center gap-1"
+                    >
+                      <span>Change</span>
+                    </button>
                   </div>
-                </div>
-                {date && !isDayAvailable(date) && (
-                  <p className="text-[13px] text-amber-800 bg-amber-50 border border-amber-200 rounded-2xl px-3.5 py-2.5 mt-2">
-                    Doctor is not open on {dayName(date)}s — available {fmtShortDays(doctor.availableDays)}.
-                  </p>
-                )}
-              </div>
 
-              {/* Time Slot Selection */}
-              <div className="w-full min-w-0">
-                <div className="w-full flex items-center justify-between mb-2">
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-teal-600" /> Select Time Slot
-                  </p>
-                  <span className="text-[11px] text-slate-500 font-medium">30 min consultation</span>
-                </div>
-                <div className="w-full grid grid-cols-3 gap-2 sm:gap-2.5" role="radiogroup" aria-label="Time slots">
-                  {TIME_SLOTS.map((t) => {
-                    const active = time === t;
-                    return (
+                  {/* Mobile Horizontal Date Strip & Action Button (< lg screens) */}
+                  <div className="lg:hidden w-full min-w-0">
+                    <div className="w-full flex items-center justify-between mb-2">
+                      <p className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-teal-600" /> Select Date
+                      </p>
                       <button
-                        key={t}
                         type="button"
-                        role="radio"
-                        aria-checked={active}
-                        onClick={() => setTime(t)}
-                        className={`w-full py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-bold rounded-xl sm:rounded-2xl border-2 transition-all min-h-[46px] sm:min-h-[50px] flex items-center justify-center active:scale-[.98] ${
-                          active
-                            ? 'bg-teal-600 text-white border-teal-600 shadow-md shadow-teal-600/25 ring-2 ring-teal-600/20'
-                            : 'bg-white border-slate-200/90 text-slate-700 hover:border-teal-400 hover:bg-teal-50/30 shadow-2xs'
-                        }`}
+                        onClick={() => setShowCalendarModal(true)}
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-700 hover:text-teal-800 bg-teal-50 hover:bg-teal-100/80 border border-teal-200/80 px-2.5 py-1.5 rounded-xl transition active:scale-95 shadow-2xs"
                       >
-                        {t}
+                        <CalendarDays className="w-3.5 h-3.5 text-teal-600" />
+                        <span>View full calendar</span>
                       </button>
-                    );
-                  })}
-                </div>
-              </div>
+                    </div>
 
-              {/* Live Selected Slot Preview Strip */}
-              <div className="w-full p-3.5 rounded-2xl bg-gradient-to-r from-teal-50/70 to-slate-50 border border-teal-100 flex items-center justify-between text-xs shadow-2xs min-w-0">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-8 h-8 rounded-xl bg-white border border-teal-200/80 text-teal-700 flex items-center justify-center shrink-0 shadow-2xs">
-                    <Clock className="w-4 h-4" />
+                    <div className="w-full min-w-0 overflow-hidden">
+                      <div
+                        className="w-full flex gap-2 overflow-x-auto pb-2 pt-1 snap-x scrollbar-none px-0.5"
+                        role="radiogroup"
+                        aria-label="Appointment dates"
+                        style={{ WebkitOverflowScrolling: 'touch' }}
+                      >
+                        {days.map((d) => {
+                          const ok = isDayAvailable(d.iso);
+                          const active = date === d.iso;
+                          return (
+                            <button
+                              key={d.iso}
+                              ref={active ? activeDateRef : null}
+                              type="button"
+                              role="radio"
+                              aria-checked={active}
+                              aria-label={`${d.full} ${d.num} ${d.month}`}
+                              disabled={!ok}
+                              onClick={() => setDate(d.iso)}
+                              className={`shrink-0 snap-center w-[64px] sm:w-[70px] py-2.5 sm:py-3 rounded-2xl border-2 text-center transition-all min-h-[74px] sm:min-h-[78px] flex flex-col items-center justify-center ${
+                                active
+                                  ? 'border-teal-600 bg-teal-600 text-white shadow-md shadow-teal-600/30 scale-[1.02]'
+                                  : ok
+                                  ? 'border-slate-200 bg-white hover:border-teal-400 text-slate-800 shadow-2xs active:scale-95'
+                                  : 'border-slate-100 bg-slate-50/80 text-slate-400 cursor-not-allowed opacity-45'
+                              }`}
+                            >
+                              <span className={`text-[10px] font-bold uppercase tracking-wider ${active ? 'text-teal-100' : 'text-slate-400'}`}>
+                                {d.dow}
+                              </span>
+                              <span className="text-lg sm:text-xl font-extrabold leading-tight my-0.5">
+                                {d.num}
+                              </span>
+                              <span className={`text-[10px] font-medium ${active ? 'text-teal-100' : 'text-slate-400'}`}>
+                                {d.month}
+                              </span>
+                              {ok ? (
+                                <span className={`w-1.5 h-1.5 rounded-full mt-1 ${active ? 'bg-white' : 'bg-emerald-500'}`} />
+                              ) : (
+                                <span className="text-[9px] text-slate-400 mt-0.5 font-medium">Off</span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    {date && !isDayAvailable(date) && (
+                      <p className="text-[13px] text-amber-800 bg-amber-50 border border-amber-200 rounded-2xl px-3.5 py-2.5 mt-2">
+                        Doctor is not open on {dayName(date)}s — available {fmtShortDays(doctor.availableDays)}.
+                      </p>
+                    )}
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-[11px] text-slate-500 font-medium">Selected Slot</p>
-                    <p className="font-bold text-slate-900 truncate text-xs sm:text-sm">
-                      {fmtDate(date)} · {time}
-                    </p>
+
+                  {/* Time Slot Selection */}
+                  <div className="w-full min-w-0">
+                    <div className="w-full flex items-center justify-between mb-2">
+                      <p className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-teal-600" /> Select Time Slot
+                      </p>
+                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-teal-800 bg-teal-50 border border-teal-200/70 px-2.5 py-0.5 rounded-full">
+                        30 min consultation
+                      </span>
+                    </div>
+
+                    {/* Period Tabs: All, Morning, Afternoon, Evening */}
+                    <div className="flex items-center gap-1.5 p-1 bg-slate-100/90 rounded-2xl mb-3 overflow-x-auto scrollbar-none" role="tablist" aria-label="Time of day filter">
+                      {PERIOD_CONFIG.map((p) => {
+                        const Icon = p.icon;
+                        const active = periodFilter === p.id;
+                        const count = slotCounts[p.id];
+                        return (
+                          <button
+                            key={p.id}
+                            type="button"
+                            role="tab"
+                            aria-selected={active}
+                            onClick={() => setPeriodFilter(p.id)}
+                            className={`flex-1 py-1.5 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shrink-0 whitespace-nowrap ${
+                              active
+                                ? 'bg-white text-teal-800 shadow-xs'
+                                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                            }`}
+                          >
+                            <Icon className={`w-3.5 h-3.5 ${active ? 'text-teal-600' : 'text-slate-400'}`} />
+                            <span>{p.label}</span>
+                            <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${active ? 'bg-teal-100 text-teal-800' : 'bg-slate-200/70 text-slate-500'}`}>
+                              {count}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Time Slots Display */}
+                    {periodFilter === 'all' ? (
+                      <div className="space-y-3.5">
+                        {(['morning', 'afternoon', 'evening'] as const).map((periodKey) => {
+                          const slotsInGroup = TIME_SLOTS.filter((s) => s.period === periodKey);
+                          const cfg = PERIOD_CONFIG.find((c) => c.id === periodKey)!;
+                          const Icon = cfg.icon;
+
+                          return (
+                            <div key={periodKey} className="space-y-1.5">
+                              <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 px-0.5">
+                                <span className="flex items-center gap-1.5 text-slate-700">
+                                  <Icon className="w-3.5 h-3.5 text-teal-600" />
+                                  <span className="capitalize">{periodKey}</span>
+                                </span>
+                                <span className="text-[10px] font-medium text-slate-400">{cfg.timeRange}</span>
+                              </div>
+                              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label={`${periodKey} time slots`}>
+                                {slotsInGroup.map((slot) => {
+                                  const active = time === slot.time;
+                                  if (slot.booked) {
+                                    return (
+                                      <button
+                                        key={slot.time}
+                                        type="button"
+                                        disabled
+                                        aria-disabled="true"
+                                        title="Slot already booked"
+                                        className="w-full py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-semibold rounded-xl border border-slate-200/80 bg-slate-100/90 text-slate-400 line-through opacity-45 cursor-not-allowed flex items-center justify-center min-h-[46px]"
+                                      >
+                                        {slot.time}
+                                      </button>
+                                    );
+                                  }
+                                  return (
+                                    <button
+                                      key={slot.time}
+                                      type="button"
+                                      role="radio"
+                                      aria-checked={active}
+                                      onClick={() => setTime(slot.time)}
+                                      className={`w-full py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-bold rounded-xl border-2 transition-all min-h-[46px] flex items-center justify-center active:scale-[.98] ${
+                                        active
+                                          ? 'bg-teal-600 text-white border-teal-600 shadow-md shadow-teal-600/25 ring-2 ring-teal-600/20'
+                                          : 'bg-white border-slate-200/90 text-slate-700 hover:border-teal-400 hover:bg-teal-50/40 shadow-2xs'
+                                      }`}
+                                    >
+                                      {slot.time}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Selected time slots">
+                        {filteredSlots.map((slot) => {
+                          const active = time === slot.time;
+                          if (slot.booked) {
+                            return (
+                              <button
+                                key={slot.time}
+                                type="button"
+                                disabled
+                                aria-disabled="true"
+                                title="Slot already booked"
+                                className="w-full py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-semibold rounded-xl border border-slate-200/80 bg-slate-100/90 text-slate-400 line-through opacity-45 cursor-not-allowed flex items-center justify-center min-h-[46px]"
+                              >
+                                {slot.time}
+                              </button>
+                            );
+                          }
+                          return (
+                            <button
+                              key={slot.time}
+                              type="button"
+                              role="radio"
+                              aria-checked={active}
+                              onClick={() => setTime(slot.time)}
+                              className={`w-full py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-bold rounded-xl border-2 transition-all min-h-[46px] flex items-center justify-center active:scale-[.98] ${
+                                active
+                                  ? 'bg-teal-600 text-white border-teal-600 shadow-md shadow-teal-600/25 ring-2 ring-teal-600/20'
+                                  : 'bg-white border-slate-200/90 text-slate-700 hover:border-teal-400 hover:bg-teal-50/40 shadow-2xs'
+                              }`}
+                            >
+                              {slot.time}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Live Selected Slot Preview Strip */}
+                  <div className="w-full p-3.5 rounded-2xl bg-gradient-to-r from-teal-50/80 to-slate-50 border border-teal-100 flex items-center justify-between text-xs shadow-2xs min-w-0">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-xl bg-white border border-teal-200/80 text-teal-700 flex items-center justify-center shrink-0 shadow-2xs">
+                        <Clock className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[11px] text-slate-500 font-medium">Selected Slot</p>
+                        <p className="font-bold text-slate-900 truncate text-xs sm:text-sm">
+                          {fmtDateFull(date)} · {time}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-[11px] font-bold text-teal-700 bg-white px-2.5 py-1 rounded-lg border border-teal-200/70 shadow-2xs shrink-0">
+                      Step 2 of 3
+                    </span>
                   </div>
                 </div>
-                <span className="text-[11px] font-bold text-teal-700 bg-white px-2.5 py-1 rounded-lg border border-teal-200/70 shadow-2xs shrink-0">
-                  Step 2 of 3
-                </span>
               </div>
             </div>
           )}
-
 
           {/* STEP 3: Patient Details */}
           {step === 3 && (
@@ -692,7 +1088,7 @@ function BookingWizard() {
             </form>
           )}
 
-          {/* Desktop nav */}
+          {/* Desktop navigation buttons */}
           {step < 3 && (
             <div className="hidden sm:flex gap-3 pt-6 mt-6 border-t border-slate-100">
               {step > 1 && (
@@ -717,7 +1113,7 @@ function BookingWizard() {
         </div>
 
         {/* Desktop Sidebar Summary */}
-        <aside className="hidden lg:block w-full bg-white rounded-[24px] border border-slate-200/80 shadow-xl shadow-slate-200/40 p-5 sm:p-6 lg:sticky lg:top-24">
+        <aside className={`${step === 2 ? 'hidden xl:block' : 'hidden lg:block'} w-full bg-white rounded-[28px] border border-slate-200/80 shadow-xl shadow-slate-200/40 p-5 sm:p-6 lg:sticky lg:top-24`}>
           <p className="text-[11px] font-bold uppercase tracking-widest text-teal-700">Your booking</p>
           {doctor && (
             <div className="flex gap-3 items-center mt-3">
@@ -743,7 +1139,7 @@ function BookingWizard() {
               <span className="w-8 h-8 rounded-xl bg-teal-50 flex items-center justify-center shrink-0">
                 <Calendar className="w-4 h-4 text-teal-700" />
               </span>
-              {date ? fmtDate(date) : 'Pick a day'} {date && dayName(date) ? `· ${dayName(date).slice(0, 3)}` : ''}
+              {date ? fmtDateFull(date) : 'Pick a day'}
             </p>
             <p className="flex items-center gap-2.5 text-slate-700 font-medium">
               <span className="w-8 h-8 rounded-xl bg-teal-50 flex items-center justify-center shrink-0">
@@ -765,6 +1161,71 @@ function BookingWizard() {
         </aside>
       </div>
 
+      {/* Mobile Month Calendar Modal / Bottom Sheet */}
+      {showCalendarModal && doctor && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="calendar-modal-title"
+          onClick={() => setShowCalendarModal(false)}
+        >
+          <div
+            className="bg-white rounded-t-[28px] sm:rounded-[28px] max-w-md w-full p-5 shadow-2xl border border-slate-200 relative animate-slide-down max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Mobile grab handle */}
+            <div className="w-10 h-1.5 bg-slate-200 rounded-full mx-auto mb-3 sm:hidden" />
+
+            {/* Modal Header */}
+            <div className="flex items-start justify-between mb-4 pb-3 border-b border-slate-100">
+              <div>
+                <h3 id="calendar-modal-title" className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-teal-600" /> Select Appointment Date
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Doctor open: <strong className="text-slate-800">{fmtShortDays(doctor.availableDays)}</strong>
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowCalendarModal(false)}
+                aria-label="Close calendar"
+                className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Interactive Calendar inside modal */}
+            <div className="bg-slate-50/70 rounded-2xl p-3.5 border border-slate-200/80">
+              <InteractiveMonthCalendar
+                selectedDate={date}
+                onSelectDate={(newIso) => {
+                  setDate(newIso);
+                  setShowCalendarModal(false);
+                }}
+                isDayAvailable={isDayAvailable}
+                doctorName={doctor.name}
+                availableDays={doctor.availableDays}
+                maxDaysAhead={60}
+              />
+            </div>
+
+            {/* Done Button */}
+            <div className="mt-4 pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setShowCalendarModal(false)}
+                className="w-full py-3 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow-md shadow-teal-600/25 transition active:scale-98"
+              >
+                Done · {fmtDate(date)}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Sticky mobile bar — native-feel bottom CTA */}
       {!success && (
         <div className="sm:hidden fixed bottom-0 left-0 right-0 w-full z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] px-4 pt-2.5 pb-[max(1rem,env(safe-area-inset-bottom))] pb-safe">
@@ -784,8 +1245,8 @@ function BookingWizard() {
                 <span className="truncate">
                   Booking with <strong className="text-slate-900">{doctor?.name.split(' ').slice(0, 2).join(' ')}</strong>
                 </span>
-                <span className="text-teal-700 font-bold shrink-0">
-                  {fmtDate(date)} · {time}
+                <span className="font-bold text-teal-800 bg-teal-50 border border-teal-200/80 px-2 py-0.5 rounded-lg text-[11px] shrink-0">
+                  {fmtDate(date)} • {time}
                 </span>
               </div>
               <div className="flex gap-2.5">
