@@ -153,8 +153,8 @@ function BookingWizard() {
           const active = step === s.n;
           const done = step > s.n;
           return (
-            <li key={s.n} className="flex items-center gap-2 flex-1 sm:flex-none">
-              <div className={`flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 border text-[13px] font-bold transition w-full sm:w-auto ${
+            <li key={s.n} className="flex items-center gap-2 flex-1 min-w-0 sm:flex-none">
+              <div className={`flex items-center gap-2 rounded-2xl px-2.5 sm:px-3.5 py-2.5 border text-[13px] font-bold transition w-full sm:w-auto min-w-0 ${
                 active ? 'bg-slate-900 text-white border-slate-900 shadow-lg'
                 : done ? 'bg-white text-emerald-700 border-emerald-200'
                 : 'bg-white text-slate-400 border-slate-200'
@@ -164,13 +164,24 @@ function BookingWizard() {
                 }`}>
                   {done ? <Check className="w-3.5 h-3.5" /> : <Icon className="w-3.5 h-3.5" />}
                 </span>
-                <span>{s.n}. {s.label}</span>
+                <span className="hidden min-[420px]:inline truncate">{s.n}. {s.label}</span>
+                <span className="min-[420px]:hidden">{s.n}</span>
               </div>
               {i < 2 && <div className={`hidden sm:block w-10 h-1 rounded-full ${step > s.n ? 'bg-emerald-400' : 'bg-slate-200'}`} />}
             </li>
           );
         })}
       </ol>
+
+      {/* Compact summary strip — mobile only, full aside stays on lg */}
+      {doctor && (
+        <div className="lg:hidden flex items-center gap-2.5 bg-white border border-slate-200/80 rounded-2xl px-3.5 py-2.5 mb-4 shadow-sm text-[13px] font-medium text-slate-700">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={doctor.avatarUrl} alt="" className="w-8 h-8 rounded-xl object-cover bg-slate-100 shrink-0" />
+          <span className="truncate">{doctor.name} · {date ? fmtDate(date) : 'Pick a day'} · {time}</span>
+          {step > 1 && <button onClick={() => setStep(1)} className="ml-auto text-xs font-bold text-teal-700 shrink-0">Change</button>}
+        </div>
+      )}
 
       {error && (
         <div role="alert" className="max-w-2xl mb-5 p-4 bg-rose-50 border border-rose-200 rounded-2xl flex items-start gap-2.5 text-rose-900 animate-fade-in">
@@ -224,13 +235,13 @@ function BookingWizard() {
               <h2 className="text-[17px] font-bold text-slate-900">When works best?</h2>
               <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5">{doctor?.name} · next 14 days</p>
-                <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1" role="radiogroup" aria-label="Days">
+                <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 snap-x" role="radiogroup" aria-label="Days">
                   {days.map((d) => {
                     const ok = isDayAvailable(d.iso);
                     const active = date === d.iso;
                     return (
                       <button key={d.iso} type="button" role="radio" aria-checked={active} aria-label={`${d.full} ${d.num} ${d.month}`} disabled={!ok} onClick={() => setDate(d.iso)}
-                        className={`shrink-0 w-[72px] py-3 rounded-2xl border-2 text-center transition active:scale-95 min-h-[76px] ${
+                        className={`shrink-0 snap-start w-[72px] py-3 rounded-2xl border-2 text-center transition active:scale-95 min-h-[76px] ${
                           active ? 'border-slate-900 bg-slate-900 text-white shadow-lg'
                           : ok ? 'border-slate-200 bg-white hover:border-teal-500'
                           : 'border-transparent bg-slate-50 opacity-35'
@@ -271,23 +282,23 @@ function BookingWizard() {
                 <label className="block">
                   <span className="text-[13px] font-semibold text-slate-700 flex items-center gap-1.5 mb-1.5"><User className="w-3.5 h-3.5 text-teal-600" /> Full name</span>
                   <input required autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Aung Min"
-                    className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-[15px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                    className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-base sm:text-[15px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500" />
                 </label>
                 <label className="block">
                   <span className="text-[13px] font-semibold text-slate-700 flex items-center gap-1.5 mb-1.5"><Phone className="w-3.5 h-3.5 text-teal-600" /> Phone</span>
                   <input required type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="09 xxx xxx xxx"
-                    className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-[15px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                    className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-base sm:text-[15px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500" />
                 </label>
               </div>
               <label className="block">
                 <span className="text-[13px] font-semibold text-slate-700 flex items-center gap-1.5 mb-1.5"><Mail className="w-3.5 h-3.5 text-teal-600" /> Email for confirmation</span>
                 <input required type="email" inputMode="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com"
-                  className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-[15px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                  className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-base sm:text-[15px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500" />
               </label>
               <label className="block">
                 <span className="text-[13px] font-semibold text-slate-700 mb-1.5 block">Reason <span className="text-slate-400 font-normal">(optional)</span></span>
                 <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Symptoms, questions…"
-                  className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-[15px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none" />
+                  className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-base sm:text-[15px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none" />
               </label>
               <button type="submit" disabled={loading || !canSubmit}
                 className="hidden sm:flex w-full bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white font-bold py-4 rounded-2xl text-[15px] shadow-lg shadow-teal-600/25 transition items-center justify-center gap-2 active:scale-[.99]">
@@ -320,7 +331,7 @@ function BookingWizard() {
         </div>
 
         {/* Summary */}
-        <aside className="bg-white rounded-[24px] border border-slate-200/80 shadow-xl shadow-slate-200/40 p-5 sm:p-6 lg:sticky lg:top-24">
+        <aside className="hidden lg:block bg-white rounded-[24px] border border-slate-200/80 shadow-xl shadow-slate-200/40 p-5 sm:p-6 lg:sticky lg:top-24">
           <p className="text-[11px] font-bold uppercase tracking-widest text-teal-700">Your booking</p>
           {doctor && (
             <div className="flex gap-3 items-center mt-3">
