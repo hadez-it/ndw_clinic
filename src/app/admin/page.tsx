@@ -31,6 +31,10 @@ import {
   CheckCircle2,
   AlertCircle,
   Building,
+  Lock,
+  LogIn,
+  Sparkles,
+  ShieldAlert,
 } from 'lucide-react';
 import {
   Appointment,
@@ -41,10 +45,20 @@ import {
   Invoice,
   initialDoctors,
 } from '@/lib/types';
+import {
+  setStoredSession,
+  clearStoredSession,
+  ROLE_CONFIG,
+  DEMO_CREDENTIALS,
+  useClinicAuth,
+  createDemoUser,
+} from '@/lib/auth';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
-  const [authorized, setAuthorized] = useState(false);
+  const currentUser = useClinicAuth();
+  const [previewMode, setPreviewMode] = useState(false);
+  const authorized = !!currentUser || previewMode;
   const [activeTab, setActiveTab] = useState<
     'overview' | 'appointments' | 'patients' | 'pharmacy' | 'billing'
   >('overview');
@@ -186,15 +200,17 @@ export default function AdminDashboardPage() {
   }, []);
 
   useEffect(() => {
-    const role = localStorage.getItem('clinic_user_role');
-    if (role !== 'owner' && role !== 'doctor') {
-      // Allow demo viewing or redirect if strictly unauthenticated
-      setAuthorized(true);
-    } else {
-      setAuthorized(true);
-    }
     fetchAllData();
   }, [fetchAllData]);
+
+  useEffect(() => {
+    if (currentUser) {
+      const config = ROLE_CONFIG[currentUser.role];
+      if (config) {
+        setActiveTab(config.defaultTab);
+      }
+    }
+  }, [currentUser]);
 
   const showNotification = (msg: string) => {
     setFeedbackMessage(msg);
@@ -202,10 +218,19 @@ export default function AdminDashboardPage() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('clinic_auth_token');
-    localStorage.removeItem('clinic_user_role');
-    localStorage.removeItem('clinic_user_data');
+    clearStoredSession();
+    setPreviewMode(false);
     router.push('/login');
+  };
+
+  const handleDirectDemoLogin = (demo: (typeof DEMO_CREDENTIALS)[number]) => {
+    const mockUser = createDemoUser(demo);
+    setStoredSession(mockUser, `demo-token-${demo.role}`);
+    const config = ROLE_CONFIG[demo.role];
+    if (config) {
+      setActiveTab(config.defaultTab);
+    }
+    showNotification(`Signed in as ${mockUser.name} (${config?.label || demo.role})`);
   };
 
   // Appointment Status Updates
@@ -486,8 +511,82 @@ export default function AdminDashboardPage() {
 
   if (!authorized) {
     return (
-      <div className="max-w-4xl mx-auto py-24 text-center text-slate-500">
-        Verifying administrative credentials...
+      <div className="max-w-3xl mx-auto px-4 py-12 sm:py-16">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-6 sm:p-10 text-center space-y-6">
+          <div className="w-16 h-16 bg-teal-50 border border-teal-200 text-teal-600 rounded-2xl flex items-center justify-center mx-auto shadow-xs">
+            <Lock className="w-8 h-8 text-teal-600" />
+          </div>
+
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold">
+              <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
+              <span>Clinic Staff Authentication Required</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Nan Da Wun Clinic ERP Command Center
+            </h1>
+            <p className="text-slate-600 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed">
+              This administrative portal controls patient electronic health records (EMR), live consultation queues, pharmacy inventory, and cashier accounts. Please authenticate with your staff account to continue.
+            </p>
+          </div>
+
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/login?redirect=/admin"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white font-bold py-3 px-6 rounded-xl text-sm transition shadow-sm"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Sign In to Staff Portal</span>
+            </Link>
+            <button
+              type="button"
+              onClick={() => setPreviewMode(true)}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 px-6 rounded-xl text-sm transition cursor-pointer"
+            >
+              <span>Continue in Preview Mode</span>
+            </button>
+          </div>
+
+          {/* 1-Click Evaluation Sign-in */}
+          <div className="pt-6 border-t border-slate-100 text-left space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-amber-500" />
+                <span>1-Click Instant Demo Access:</span>
+              </span>
+              <span className="text-[11px] text-slate-400">Select any role to test</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+              {DEMO_CREDENTIALS.map((demo) => (
+                <button
+                  key={demo.role}
+                  type="button"
+                  onClick={() => handleDirectDemoLogin(demo)}
+                  className="p-3 rounded-2xl border border-slate-200 hover:border-teal-400 hover:bg-teal-50/40 text-left transition group cursor-pointer"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-800 group-hover:text-teal-800">
+                      {demo.roleLabel.split('/')[0]}
+                    </span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium capitalize">
+                      {demo.role}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 mt-1 line-clamp-2">
+                    {demo.description}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-2 text-center">
+            <Link href="/" className="text-xs text-teal-600 hover:underline">
+              ← Return to Clinic Public Portal
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
@@ -532,6 +631,25 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
+          {currentUser && (
+            <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+              <div className="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                {currentUser.name.charAt(0)}
+              </div>
+              <div className="text-left">
+                <div className="font-bold text-slate-900 leading-tight truncate max-w-[140px]">
+                  {currentUser.name}
+                </div>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[10px] text-teal-700 font-semibold uppercase tracking-wider">
+                    {ROLE_CONFIG[currentUser.role]?.shortLabel || currentUser.role}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
           <Link
             href="/queue"
             target="_blank"
@@ -553,14 +671,14 @@ export default function AdminDashboardPage() {
           <button
             onClick={fetchAllData}
             title="Refresh ERP Datasets"
-            className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition"
+            className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition cursor-pointer"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-teal-600' : ''}`} />
           </button>
 
           <button
             onClick={handleLogout}
-            className="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition"
+            className="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200 border border-transparent text-slate-700 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
             <span className="hidden xs:inline">Sign Out</span>
@@ -652,10 +770,10 @@ export default function AdminDashboardPage() {
         <div className="space-y-8 animate-fade-in">
           {/* Metrics Row */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-xs hover-lift">
+            <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-xs hover-lift">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
-                  Today's Appointments
+                  Today&apos;s Appointments
                 </span>
                 <Calendar className="w-5 h-5 text-teal-600" />
               </div>
@@ -665,7 +783,7 @@ export default function AdminDashboardPage() {
               </p>
             </div>
 
-            <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-xs hover-lift">
+            <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-xs hover-lift">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
                   Total Revenue (MMK)
@@ -680,7 +798,7 @@ export default function AdminDashboardPage() {
               </p>
             </div>
 
-            <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-xs hover-lift">
+            <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-xs hover-lift">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
                   Registered Patients
@@ -691,7 +809,7 @@ export default function AdminDashboardPage() {
               <p className="text-xs text-teal-700 font-medium mt-1">Master EMR Indexed</p>
             </div>
 
-            <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-xs hover-lift">
+            <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-xs hover-lift">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
                   Pharmacy Stock Alert
@@ -755,7 +873,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Consultation Rooms Status */}
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 space-y-4 shadow-xs">
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 shadow-xs">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-base font-bold text-slate-900">
@@ -878,7 +996,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Appointments Table */}
-          <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
@@ -1050,7 +1168,7 @@ export default function AdminDashboardPage() {
               .map((pat) => (
                 <div
                   key={pat.id}
-                  className="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-xs space-y-4 hover:border-teal-300 transition"
+                  className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs space-y-4 hover:border-teal-300 transition"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
@@ -1166,7 +1284,7 @@ export default function AdminDashboardPage() {
               {prescriptions.map((rx) => (
                 <div
                   key={rx.id}
-                  className="bg-white rounded-3xl border border-slate-200 p-5 space-y-4 shadow-xs"
+                  className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4 shadow-xs"
                 >
                   <div className="flex items-start justify-between">
                     <div>
@@ -1263,7 +1381,7 @@ export default function AdminDashboardPage() {
             )}
 
             {/* Medicine Inventory Table */}
-            <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
@@ -1402,7 +1520,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Invoices Table */}
-          <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
@@ -1494,7 +1612,7 @@ export default function AdminDashboardPage() {
       {/* ========================================================================= */}
       {showNewApptModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl animate-fade-in">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-lg font-bold text-slate-900">Book Walk-in / Phone Visit</h3>
               <button
@@ -1609,7 +1727,7 @@ export default function AdminDashboardPage() {
       {/* ========================================================================= */}
       {showNewPatientModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl animate-fade-in">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-lg font-bold text-slate-900">Register Master Patient Record</h3>
               <button
@@ -1742,7 +1860,7 @@ export default function AdminDashboardPage() {
       {/* ========================================================================= */}
       {showNewEMRModal && selectedPatientForEMR && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-5 shadow-2xl my-8 animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 space-y-5 shadow-2xl my-8 animate-fade-in">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
                 <h3 className="text-lg font-bold text-slate-900">
@@ -1959,7 +2077,7 @@ export default function AdminDashboardPage() {
       {/* ========================================================================= */}
       {showNewMedicineModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl animate-fade-in">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-lg font-bold text-slate-900">Add Medicine to Catalog</h3>
               <button
@@ -2093,7 +2211,7 @@ export default function AdminDashboardPage() {
       {/* ========================================================================= */}
       {showNewInvoiceModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl animate-fade-in">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-lg font-bold text-slate-900">Generate Cashier Invoice</h3>
               <button
@@ -2201,7 +2319,7 @@ export default function AdminDashboardPage() {
       {/* ========================================================================= */}
       {payingInvoice && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 shadow-2xl animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 sm:p-8 space-y-5 shadow-2xl animate-fade-in">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
                 <h3 className="text-lg font-bold text-slate-900">Process Patient Payment</h3>
@@ -2278,7 +2396,7 @@ export default function AdminDashboardPage() {
       {/* ========================================================================= */}
       {printPrescription && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-8 space-y-6 shadow-2xl animate-fade-in border border-slate-200">
+          <div className="bg-white rounded-2xl max-w-xl w-full p-8 space-y-6 shadow-2xl animate-fade-in border border-slate-200">
             {/* Prescription Header */}
             <div className="flex items-center justify-between border-b-2 border-teal-600 pb-4">
               <div>
@@ -2368,7 +2486,7 @@ export default function AdminDashboardPage() {
       {/* ========================================================================= */}
       {printInvoice && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-8 space-y-5 shadow-2xl animate-fade-in border border-slate-200">
+          <div className="bg-white rounded-2xl max-w-md w-full p-8 space-y-5 shadow-2xl animate-fade-in border border-slate-200">
             {/* Header */}
             <div className="text-center border-b border-slate-200 pb-4 space-y-1">
               <h3 className="font-black text-slate-900 text-lg tracking-tight">NAN DA WUN CLINIC</h3>

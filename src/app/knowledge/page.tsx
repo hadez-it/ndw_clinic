@@ -2,7 +2,21 @@
 
 import { useState, useEffect } from 'react';
 import { HealthTopic, initialTopics } from '@/lib/types';
-import { BookOpen, PlusCircle, ShieldCheck, Tag, User, Calendar, CheckCircle2, AlertCircle, Lock, X, Filter } from 'lucide-react';
+import {
+  BookOpen,
+  PlusCircle,
+  ShieldCheck,
+  Tag,
+  User,
+  Calendar,
+  CheckCircle2,
+  AlertCircle,
+  Lock,
+  X,
+  Filter,
+  ArrowRight,
+  Stethoscope,
+} from 'lucide-react';
 
 export default function HealthKnowledgePage() {
   const [topics, setTopics] = useState<HealthTopic[]>(initialTopics);
@@ -89,7 +103,6 @@ export default function HealthKnowledgePage() {
       setExcerpt('');
       setContent('');
       setAuthorPin('');
-      // Refresh list
       fetchTopics();
       setTimeout(() => {
         setIsModalOpen(false);
@@ -119,34 +132,34 @@ export default function HealthKnowledgePage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200">
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold mb-2">
-            <ShieldCheck className="w-4 h-4 text-teal-600 shrink-0" />
+            <ShieldCheck className="w-3.5 h-3.5 text-teal-600 shrink-0" />
             <span>Physician Verified Knowledge Base</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Health Knowledge & Medical Insights
+            Health Knowledge and Medical Insights
           </h1>
-          <p className="text-slate-600 text-xs sm:text-sm max-w-xl mt-1">
-            Clinical articles, preventative care guidelines, and wellness recommendations published by Nan Da Wun Healthcare medical doctors.
+          <p className="text-slate-600 text-xs sm:text-sm max-w-xl mt-1 leading-relaxed">
+            Clinical articles, preventative care guidelines, and wellness recommendations written directly by Nan Da Wun Healthcare physicians.
           </p>
         </div>
 
-        {/* Doctor / Owner Post Button - Visible ONLY when logged in as Doctor or Owner */}
+        {/* Doctor / Owner Post Button */}
         {(userRole === 'doctor' || userRole === 'owner') && (
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-sm shadow-teal-600/30 transition w-full sm:w-auto shrink-0"
+              className="inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition w-full sm:w-auto shrink-0 cursor-pointer"
             >
               <PlusCircle className="w-4 h-4 text-white shrink-0" />
-              <span>{userRole === 'owner' ? 'Owner: Post Topic' : 'Doctor: Post Topic'}</span>
+              <span>{userRole === 'owner' ? 'Owner: Post Article' : 'Doctor: Post Article'}</span>
             </button>
           </div>
         )}
       </div>
 
-      {/* Categories Filter - Responsive for all screen sizes */}
+      {/* Categories Filter Bar */}
       <div className="space-y-3">
-        {/* Mobile Dropdown View (for extra small screens < 640px) */}
+        {/* Mobile Dropdown View */}
         <div className="sm:hidden">
           <div className="relative flex items-center">
             <div className="absolute left-3.5 pointer-events-none text-teal-600">
@@ -155,28 +168,25 @@ export default function HealthKnowledgePage() {
             <select
               value={activeCategory}
               onChange={(e) => setActiveCategory(e.target.value)}
-              className="w-full pl-10 pr-9 py-3 rounded-2xl bg-white border border-slate-200 text-slate-800 text-xs font-semibold shadow-xs focus:ring-2 focus:ring-teal-500 focus:outline-none appearance-none"
+              className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs font-semibold shadow-xs focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:outline-none appearance-none"
             >
               {categories.map((cat) => {
                 const count = cat === 'All' ? topics.length : topics.filter((t) => t.category === cat).length;
                 return (
                   <option key={cat} value={cat}>
-                    {cat === 'All' ? 'အားလုံး (All Topics)' : cat} ({count})
+                    {cat === 'All' ? 'All Topics / အားလုံး' : cat} ({count})
                   </option>
                 );
               })}
             </select>
-            <div className="absolute right-3.5 pointer-events-none text-slate-400 text-xs">
-              ▼
-            </div>
           </div>
         </div>
 
-        {/* Desktop & Tablet Scrollable/Pill Tabs View (sm screens and above) */}
+        {/* Desktop & Tablet Scrollable Tabs */}
         <div className="hidden sm:flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0">
             <Filter className="w-3.5 h-3.5 text-teal-600 shrink-0" />
-            <span>ကဏ္ဍများ:</span>
+            <span>Categories:</span>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
@@ -187,16 +197,16 @@ export default function HealthKnowledgePage() {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                  className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
                     isActive
-                      ? 'bg-teal-700 text-white shadow-md shadow-teal-700/20 scale-102'
-                      : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300'
+                      ? 'bg-teal-600 text-white shadow-xs'
+                      : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                   }`}
                 >
-                  <span>{cat === 'All' ? 'အားလုံး (All)' : cat}</span>
+                  <span>{cat === 'All' ? 'All Topics' : cat}</span>
                   <span
-                    className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono ${
-                      isActive ? 'bg-teal-800 text-teal-100' : 'bg-slate-100 text-slate-500'
+                    className={`px-1.5 py-0.2 rounded-md text-[10px] font-mono ${
+                      isActive ? 'bg-teal-700 text-white' : 'bg-slate-100 text-slate-500'
                     }`}
                   >
                     {count}
@@ -210,14 +220,14 @@ export default function HealthKnowledgePage() {
         {/* Results counter indicator */}
         <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
           <p>
-            ဖော်ပြထားသော ဆောင်းပါး <span className="font-bold text-slate-900">{filteredTopics.length}</span> ပုဒ်
+            Showing <span className="font-bold text-slate-900">{filteredTopics.length}</span> published medical articles
           </p>
           {activeCategory !== 'All' && (
             <button
               onClick={() => setActiveCategory('All')}
               className="text-xs font-semibold text-teal-600 hover:text-teal-800 underline cursor-pointer"
             >
-              အားလုံးပြန်ကြည့်ရန် (Reset)
+              Reset to All Topics
             </button>
           )}
         </div>
@@ -229,30 +239,29 @@ export default function HealthKnowledgePage() {
           <article
             key={topic.id}
             onClick={() => setSelectedTopic(topic)}
-            className="cursor-pointer bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs hover-lift hover:border-teal-400 transition-all flex flex-col justify-between group"
+            className="cursor-pointer bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover-lift hover:border-teal-400 transition-all flex flex-col justify-between group"
           >
-            {/* Featured Image */}
             {topic.imageUrl && (
               <div className="overflow-hidden h-48 sm:h-52 bg-slate-100 relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={topic.imageUrl}
                   alt={topic.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute top-3 left-3">
-                  <span className="px-2.5 py-1 rounded-lg font-semibold bg-white/90 backdrop-blur-md text-teal-800 text-xs shadow-xs">
+                  <span className="px-2.5 py-1 rounded-md font-semibold bg-white/95 text-teal-900 text-xs shadow-xs">
                     {topic.category}
                   </span>
                 </div>
               </div>
             )}
 
-            <div className="p-6 flex-1 flex flex-col justify-between">
+            <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
                   {!topic.imageUrl && (
-                    <span className="px-2.5 py-0.5 rounded-full font-semibold bg-teal-50 text-teal-700">
+                    <span className="px-2 py-0.5 rounded-md font-semibold bg-teal-50 text-teal-700">
                       {topic.category}
                     </span>
                   )}
@@ -261,7 +270,7 @@ export default function HealthKnowledgePage() {
                     <span>{topic.createdAt}</span>
                   </span>
                 </div>
-                <h2 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-teal-600 transition-colors">
+                <h2 className="text-base sm:text-lg font-bold text-slate-900 leading-snug group-hover:text-teal-600 transition-colors line-clamp-2">
                   {topic.title}
                 </h2>
                 <p className="text-xs text-slate-600 mt-2.5 line-clamp-3 leading-relaxed">
@@ -274,8 +283,9 @@ export default function HealthKnowledgePage() {
                   <User className="w-3.5 h-3.5 text-teal-600" />
                   <span>{topic.authorName}</span>
                 </div>
-                <span className="text-teal-600 font-semibold group-hover:translate-x-1 transition-transform inline-block">
-                  ဖတ်ရှုရန် →
+                <span className="text-teal-600 font-semibold inline-flex items-center gap-1">
+                  <span>Read Article</span>
+                  <ArrowRight className="w-3 h-3" />
                 </span>
               </div>
             </div>
@@ -283,23 +293,23 @@ export default function HealthKnowledgePage() {
         ))}
       </div>
 
-      {/* Reading Article View - WordPress Clean Blog Post Layout */}
+      {/* Reading Article Modal */}
       {selectedTopic && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-xs p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 relative my-auto animate-slide-down">
-            {/* WordPress Post Header Toolbar */}
-            <div className="sticky top-0 z-10 bg-slate-50 border-b border-slate-200 px-6 py-3 flex items-center justify-between text-xs text-slate-500">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-3 sm:p-6 overflow-y-auto animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 relative my-auto">
+            {/* Modal Header Bar */}
+            <div className="sticky top-0 z-10 bg-white/95 backdrop-blur border-b border-slate-200 px-5 sm:px-6 py-3.5 flex items-center justify-between text-xs text-slate-500">
               <div className="flex items-center gap-2">
-                <span className="font-serif italic font-semibold text-slate-700">WordPress Reader</span>
-                <span>•</span>
-                <span className="bg-slate-200 text-slate-700 px-2 py-0.5 rounded font-mono text-[11px]">
+                <span className="font-semibold text-slate-900">Clinical Article Reader</span>
+                <span>&bull;</span>
+                <span className="bg-teal-50 text-teal-800 px-2 py-0.5 rounded font-medium text-[11px]">
                   {selectedTopic.category}
                 </span>
               </div>
               <button
                 onClick={() => setSelectedTopic(null)}
                 aria-label="Close Article"
-                className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition"
+                className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -307,7 +317,7 @@ export default function HealthKnowledgePage() {
 
             {/* Featured Image in Reader */}
             {selectedTopic.imageUrl && (
-              <div className="w-full h-64 sm:h-80 overflow-hidden bg-slate-100">
+              <div className="w-full h-60 sm:h-72 overflow-hidden bg-slate-100">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={selectedTopic.imageUrl}
@@ -317,10 +327,9 @@ export default function HealthKnowledgePage() {
               </div>
             )}
 
-            {/* WordPress Editorial Post Content */}
-            <article className="p-6 sm:p-12 space-y-6">
-              {/* Category & Date Meta */}
-              <div className="space-y-3 pb-6 border-b border-slate-100">
+            {/* Article Content */}
+            <article className="p-5 sm:p-8 space-y-5">
+              <div className="space-y-3 pb-4 border-b border-slate-100">
                 <div className="flex items-center gap-3 text-xs text-slate-400">
                   <span className="text-teal-700 font-bold uppercase tracking-wider">
                     {selectedTopic.category}
@@ -332,46 +341,45 @@ export default function HealthKnowledgePage() {
                   </span>
                 </div>
 
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 leading-tight tracking-tight">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 leading-tight tracking-tight">
                   {selectedTopic.title}
                 </h1>
 
-                {/* Author Byline */}
-                <div className="flex items-center gap-3 pt-2">
-                  <div className="w-10 h-10 rounded-full bg-teal-100 border border-teal-200 text-teal-800 flex items-center justify-center font-bold text-sm font-serif">
-                    {selectedTopic.authorName.charAt(3) || 'D'}
+                {/* Author Info */}
+                <div className="flex items-center gap-3 pt-1">
+                  <div className="w-9 h-9 rounded-full bg-teal-100 border border-teal-200 text-teal-800 flex items-center justify-center font-bold text-xs">
+                    <Stethoscope className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-900">{selectedTopic.authorName}</p>
-                    <p className="text-xs text-slate-500">ဆရာဝန်ကြီးများ၏ ကျန်းမာရေးဆိုင်ရာ လမ်းညွှန်ချက်များ</p>
+                    <p className="text-xs sm:text-sm font-bold text-slate-900">{selectedTopic.authorName}</p>
+                    <p className="text-[11px] text-slate-500">Nan Da Wun Healthcare Medical Specialist</p>
                   </div>
                 </div>
               </div>
 
-              {/* Excerpt / Pull-quote */}
-              <div className="p-4 sm:p-5 bg-teal-50/50 border-l-4 border-teal-600 rounded-r-xl text-slate-700 text-sm sm:text-base italic font-serif leading-relaxed">
-                &ldquo;{selectedTopic.excerpt}&rdquo;
+              {/* Excerpt / Lead */}
+              <div className="p-4 bg-teal-50/60 border-l-3 border-teal-600 rounded-r-xl text-slate-700 text-xs sm:text-sm leading-relaxed font-medium">
+                {selectedTopic.excerpt}
               </div>
 
-              {/* Article Main Body */}
-              <div className="font-serif text-slate-800 text-base sm:text-lg leading-relaxed whitespace-pre-line space-y-4 pt-2">
+              {/* Main Body */}
+              <div className="text-slate-800 text-sm sm:text-base leading-relaxed whitespace-pre-line space-y-3 pt-1">
                 {selectedTopic.content}
               </div>
 
-              {/* Post Footer Tags & Actions */}
-              <div className="pt-8 mt-8 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4 text-xs">
-                <div className="flex items-center gap-2 text-slate-500">
-                  <span className="font-semibold">Tagged:</span>
-                  <span className="bg-slate-100 px-2.5 py-1 rounded-full">#Healthcare</span>
-                  <span className="bg-slate-100 px-2.5 py-1 rounded-full">#{selectedTopic.category}</span>
-                  <span className="bg-slate-100 px-2.5 py-1 rounded-full">#Wellness</span>
+              {/* Footer Actions */}
+              <div className="pt-6 mt-6 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-1.5 text-slate-500">
+                  <span className="font-semibold">Category:</span>
+                  <span className="bg-slate-100 px-2.5 py-1 rounded-md text-[11px]">{selectedTopic.category}</span>
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => setSelectedTopic(null)}
-                  className="px-5 py-2 rounded-xl bg-slate-900 hover:bg-black text-white font-sans font-semibold text-xs transition"
+                  className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition cursor-pointer"
                 >
-                  Finished Reading
+                  Close Article
                 </button>
               </div>
             </article>
@@ -379,193 +387,166 @@ export default function HealthKnowledgePage() {
         </div>
       )}
 
-      {/* Doctor / Owner Publish Modal - WordPress Block / Gutenberg Style Editor */}
+      {/* Doctor / Owner Publish Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-3 sm:p-6 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-hidden shadow-2xl border border-slate-200 flex flex-col my-auto">
-            {/* WordPress Admin Top Bar */}
-            <div className="bg-slate-900 text-white px-4 sm:px-6 py-3 flex items-center justify-between text-xs shrink-0">
-              <div className="flex items-center gap-3">
-                <span className="w-6 h-6 rounded-full bg-white text-slate-900 flex items-center justify-center font-serif font-black text-xs">
-                  W
-                </span>
-                <span className="font-semibold hidden xs:inline">Nan Da Wun &gt; Add New Post</span>
-                <span className="bg-slate-800 text-teal-300 px-2 py-0.5 rounded text-[11px] font-mono">
-                  Gutenberg Editor Mode
-                </span>
+          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-hidden shadow-2xl border border-slate-200 flex flex-col my-auto">
+            {/* Modal Top Bar */}
+            <div className="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between text-xs shrink-0">
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-teal-400" />
+                <span className="font-semibold">Publish Medical Article to Knowledge Base</span>
               </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="text-slate-400 hover:text-white px-2.5 py-1 rounded"
-                >
-                  Discard
-                </button>
-                <button
-                  type="submit"
-                  form="wp-post-form"
-                  disabled={submitting}
-                  className="bg-teal-500 hover:bg-teal-600 active:bg-teal-700 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs transition disabled:opacity-50"
-                >
-                  {submitting ? 'Publishing...' : 'Publish Post'}
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="text-slate-400 hover:text-white transition cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
-            {/* Editor Body with Main Canvas & Document Settings Sidebar */}
-            <div className="flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-12">
-              {/* Main Document Canvas */}
-              <div className="lg:col-span-8 p-6 sm:p-10 border-b lg:border-b-0 lg:border-r border-slate-200 space-y-6">
-                {postSuccess && (
-                  <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-xs text-emerald-800">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>{postSuccess}</span>
-                  </div>
-                )}
-
-                {postError && (
-                  <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2 text-xs text-rose-800">
-                    <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
-                    <span>{postError}</span>
-                  </div>
-                )}
-
-                <form id="wp-post-form" onSubmit={handlePostSubmit} className="space-y-6">
-                  {/* Gutenberg Style Big Title */}
-                  <div>
-                    <input
-                      type="text"
-                      required
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      placeholder="Add post title..."
-                      className="w-full text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 border-0 border-b border-slate-200 pb-3 focus:outline-none focus:border-teal-600 placeholder:text-slate-300"
-                    />
-                  </div>
-
-                  {/* Gutenberg Style Excerpt */}
-                  <div>
-                    <label className="block text-xs font-mono uppercase text-slate-400 mb-1.5">
-                      Post Excerpt / Lead Paragraph
-                    </label>
-                    <textarea
-                      rows={2}
-                      required
-                      value={excerpt}
-                      onChange={(e) => setExcerpt(e.target.value)}
-                      placeholder="Write a brief excerpt to hook clinic readers..."
-                      className="w-full p-3 font-serif text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:outline-none placeholder:text-slate-300"
-                    />
-                  </div>
-
-                  {/* Gutenberg Main Content Area */}
-                  <div>
-                    <label className="block text-xs font-mono uppercase text-slate-400 mb-1.5">
-                      Document Content (Paragraphs, clinical bullet points)
-                    </label>
-                    <textarea
-                      rows={9}
-                      required
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      placeholder="Type / or start writing clinical medical advice..."
-                      className="w-full p-4 font-serif text-base leading-relaxed border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:outline-none placeholder:text-slate-300"
-                    />
-                  </div>
-                </form>
-              </div>
-
-              {/* WordPress Document Sidebar (Meta, Category, PIN) */}
-              <div className="lg:col-span-4 bg-slate-50 p-6 space-y-6 text-xs text-slate-700">
-                <div className="border-b border-slate-200 pb-4">
-                  <h4 className="font-bold text-slate-900 text-sm">Post Settings</h4>
-                  <p className="text-[11px] text-slate-500">Status: Ready to publish immediately</p>
+            {/* Modal Body */}
+            <div className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-5">
+              {postSuccess && (
+                <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-xs text-emerald-800">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>{postSuccess}</span>
                 </div>
+              )}
 
-                {/* Author Selection */}
+              {postError && (
+                <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2 text-xs text-rose-800">
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                  <span>{postError}</span>
+                </div>
+              )}
+
+              <form id="post-article-form" onSubmit={handlePostSubmit} className="space-y-4">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[11px]">
-                    Author
+                  <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                    Article Title
                   </label>
-                  <select
-                    value={authorName}
-                    onChange={(e) => setAuthorName(e.target.value)}
-                    form="wp-post-form"
-                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                  >
-                    <option value="Dr. Sarah Jenkins">Dr. Sarah Jenkins</option>
-                    <option value="Dr. Marcus Vance">Dr. Marcus Vance</option>
-                    <option value="Dr. Elena Rostova">Dr. Elena Rostova</option>
-                    <option value="Dr. Alexander Patel">Dr. Alexander Patel</option>
-                    <option value="Clinic Executive Owner">Clinic Executive Owner</option>
-                  </select>
+                  <input
+                    type="text"
+                    required
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Enter informative clinical article title..."
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:outline-none"
+                  />
                 </div>
 
-                {/* Category Selection */}
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[11px]">
-                    Category (ကဏ္ဍ)
-                  </label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    form="wp-post-form"
-                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                  >
-                    <option value="နှလုံးနှင့်သွေးကြော (Cardiology)">နှလုံးနှင့်သွေးကြော (Cardiology)</option>
-                    <option value="ကလေးကျန်းမာရေး (Pediatrics)">ကလေးကျန်းမာရေး (Pediatrics)</option>
-                    <option value="ဆီးချိုနှင့်ဟော်မုန်း (Endocrinology)">ဆီးချိုနှင့်ဟော်မုန်း (Endocrinology)</option>
-                    <option value="အရိုးနှင့်အကြော (Orthopedics)">အရိုးနှင့်အကြော (Orthopedics)</option>
-                    <option value="အထွေထွေကျန်းမာရေး (General Health)">အထွေထွေကျန်းမာရေး (General Health)</option>
-                  </select>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                      Author Name
+                    </label>
+                    <select
+                      value={authorName}
+                      onChange={(e) => setAuthorName(e.target.value)}
+                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:outline-none"
+                    >
+                      <option value="Dr. Sarah Jenkins">Dr. Sarah Jenkins (Cardiology)</option>
+                      <option value="Dr. Aung Myat Min">Dr. Aung Myat Min (Pediatrics)</option>
+                      <option value="Dr. Elena Rostova">Dr. Elena Rostova (Internal Med)</option>
+                      <option value="Dr. Marcus Vance">Dr. Marcus Vance (Orthopedics)</option>
+                      <option value="Clinic Executive Owner">Clinic Executive Owner</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                      Category
+                    </label>
+                    <select
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:outline-none"
+                    >
+                      <option value="နှလုံးနှင့်သွေးကြော (Cardiology)">နှလုံးနှင့်သွေးကြော (Cardiology)</option>
+                      <option value="ကလေးကျန်းမာရေး (Pediatrics)">ကလေးကျန်းမာရေး (Pediatrics)</option>
+                      <option value="ဆီးချိုနှင့်ဟော်မုန်း (Endocrinology)">ဆီးချိုနှင့်ဟော်မုန်း (Endocrinology)</option>
+                      <option value="အရိုးနှင့်အကြော (Orthopedics)">အရိုးနှင့်အကြော (Orthopedics)</option>
+                      <option value="အထွေထွေကျန်းမာရေး (General Health)">အထွေထွေကျန်းမာရေး (General Health)</option>
+                    </select>
+                  </div>
                 </div>
 
-                {/* Featured Image URL */}
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[11px]">
-                    Featured Image URL (ဓာတ်ပုံလင့်ခ်)
+                  <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                    Header Image URL (Optional)
                   </label>
                   <input
                     type="url"
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
-                    form="wp-post-form"
                     placeholder="https://images.unsplash.com/..."
-                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                    className="w-full px-3.5 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:outline-none"
                   />
-                  <p className="text-[10px] text-slate-400 mt-1">
-                    Unsplash သို့မဟုတ် ဆေးပညာဆိုင်ရာ ပုံလင့်ခ် ထည့်သွင်းနိုင်ပါသည်။
-                  </p>
                 </div>
 
-                {/* Security Verification Key */}
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[11px] flex items-center gap-1">
+                  <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                    Summary / Excerpt
+                  </label>
+                  <textarea
+                    rows={2}
+                    required
+                    value={excerpt}
+                    onChange={(e) => setExcerpt(e.target.value)}
+                    placeholder="Brief 1-2 sentence overview for patient preview..."
+                    className="w-full p-3 text-xs sm:text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                    Full Article Content
+                  </label>
+                  <textarea
+                    rows={7}
+                    required
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    placeholder="Write detailed medical advice, guidelines, symptoms, and recommendations..."
+                    className="w-full p-3 text-xs sm:text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider flex items-center gap-1">
                     <Lock className="w-3.5 h-3.5 text-teal-600" />
-                    <span>Doctor PIN / Owner Pass</span>
+                    <span>Doctor PIN / Security Key</span>
                   </label>
                   <input
                     type="password"
                     required
                     value={authorPin}
                     onChange={(e) => setAuthorPin(e.target.value)}
-                    form="wp-post-form"
-                    placeholder="doctor1234 or owner2026!"
-                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none font-mono"
+                    placeholder="Enter doctor PIN or owner password..."
+                    className="w-full sm:w-64 px-3.5 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:outline-none font-mono"
                   />
-                  <p className="text-[10px] text-slate-400 mt-1">
-                    Protected by server-side verification.
-                  </p>
                 </div>
 
-                <div className="pt-4 border-t border-slate-200 text-center">
-                  <span className="text-[11px] text-slate-400 italic">
-                    WP Gutenberg Theme • Nan Da Wun CMS
-                  </span>
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="px-4 py-2 text-xs text-slate-600 hover:text-slate-800 rounded-xl border border-slate-200 cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white font-semibold px-5 py-2 rounded-xl text-xs transition disabled:opacity-50 cursor-pointer"
+                  >
+                    {submitting ? 'Publishing...' : 'Publish Article'}
+                  </button>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>

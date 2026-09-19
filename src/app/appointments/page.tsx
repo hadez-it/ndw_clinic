@@ -780,7 +780,7 @@ function BookingWizard() {
                     </div>
                     {date && !isDayAvailable(date) && (
                       <p className="text-[13px] text-amber-800 bg-amber-50 border border-amber-200 rounded-2xl px-3.5 py-2.5 mt-2">
-                        Doctor is not open on {dayName(date)}s — available {fmtShortDays(doctor.availableDays)}.
+                        Doctor is not open on {dayName(date)}s: available {fmtShortDays(doctor.availableDays)}.
                       </p>
                     )}
                   </div>
@@ -1226,7 +1226,7 @@ function BookingWizard() {
         </div>
       )}
 
-      {/* Sticky mobile bar — native-feel bottom CTA */}
+      {/* Sticky mobile bar: native-feel bottom CTA */}
       {!success && (
         <div className="sm:hidden fixed bottom-0 left-0 right-0 w-full z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] px-4 pt-2.5 pb-[max(1rem,env(safe-area-inset-bottom))] pb-safe">
           {step === 1 ? (

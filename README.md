@@ -40,6 +40,17 @@ A comprehensive, production-ready Healthcare ERP and Clinic Management platform 
   - Multi-payment support: Cash, **KBZPay (KPay)**, **WavePay**, and debit/credit cards.
   - Printable patient thermal/A4 receipt with itemized charges, discounts, and cashier timestamp.
 
+### 4. 🔐 Clinic Staff Authentication & Role Access (`/login`)
+- **Multi-Role Authentication**: Secure sign-in supporting all 5 outpatient clinic operational roles:
+  - **Clinic Owner / Executive Admin**: Full operational oversight, billing analytics, and all ERP modules (`admin` / `owner2026!`).
+  - **Doctor / Consulting Physician**: Patient EMR notes, vitals calculator, e-prescriptions, live queue caller (`Dr. Sarah Jenkins` / PIN `doctor1234`).
+  - **Receptionist / Front Desk**: Patient intake, walk-in appointments, waiting queue tokens (`reception` / `staff1234`).
+  - **Pharmacist / Dispensary**: Drug catalog, stock management, prescription dispensing (`pharmacist` / `pharma1234`).
+  - **Cashier / Billing Desk**: Invoice collection, POS cashiering, receipt generation (`cashier` / `cashier1234`).
+- **1-Click Demo Logins**: Instant credential autofill & login buttons for immediate review and testing.
+- **Session Persistence**: HTTP cookies (`clinic_auth`) and synchronized client storage with automatic reactive navbar updates.
+- **ERP Protection Gate**: Protects `/admin` with an authenticated command center gate, live status badges, and preview mode.
+
 ---
 
 ## 🛡️ Security & Row Level Security (RLS)

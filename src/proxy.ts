@@ -55,7 +55,9 @@ export function proxy(req: NextRequest) {
     const windowMs = 60 * 1000;
 
     if (pathname.startsWith('/api/auth/login')) {
-      maxRequests = 6; // max 6 login attempts per minute (anti-brute force)
+      maxRequests = 12; // max 12 login attempts per minute (anti-brute force with friendly demo allowance)
+    } else if (pathname.startsWith('/api/auth')) {
+      maxRequests = 30; // session and logout endpoints
     } else if (['POST', 'PATCH', 'DELETE'].includes(method)) {
       maxRequests = 15; // max 15 write operations per minute (anti-spam)
     }
