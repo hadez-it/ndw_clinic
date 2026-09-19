@@ -7,7 +7,7 @@ import { initialDoctors } from '@/lib/types';
 import {
   Calendar, CheckCircle2, AlertCircle, Clock, User, Mail, Phone,
   ChevronLeft, ChevronRight, Stethoscope, Search, Check, PartyPopper,
-  MapPin, ShieldCheck, Sparkles, X, Loader2, CalendarDays,
+  MapPin, ShieldCheck, X, Loader2, CalendarDays,
   Sun, Sunset, Moon,
 } from 'lucide-react';
 
@@ -35,7 +35,7 @@ const TIME_SLOTS: TimeSlot[] = [
 ];
 
 const PERIOD_CONFIG = [
-  { id: 'all', label: 'All', icon: Sparkles, timeRange: '09:00 AM - 07:30 PM' },
+  { id: 'all', label: 'All', icon: CalendarDays, timeRange: '09:00 AM - 07:30 PM' },
   { id: 'morning', label: 'Morning', icon: Sun, timeRange: '09:00 AM - 12:00 PM' },
   { id: 'afternoon', label: 'Afternoon', icon: Sunset, timeRange: '01:00 PM - 05:00 PM' },
   { id: 'evening', label: 'Evening', icon: Moon, timeRange: '05:30 PM - 07:30 PM' },
@@ -431,7 +431,7 @@ function BookingWizard() {
           <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30">
             <PartyPopper className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
-          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 mt-4 sm:mt-5">You&apos;re booked!</h1>
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 mt-4 sm:mt-5">You&apos;re booked</h1>
           <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">{success}</p>
           <div className="bg-teal-50/70 rounded-2xl border border-teal-100 p-4 mt-5 text-left text-sm space-y-1.5">
             <p className="font-bold text-slate-900 text-sm sm:text-base">{doctor.name} <span className="font-medium text-teal-700 text-xs sm:text-sm">· {doctor.specialty.split('(')[0]}</span></p>
@@ -455,93 +455,44 @@ function BookingWizard() {
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pb-36 sm:pb-12 pt-4 sm:pt-10 min-w-0 flex flex-col flex-1">
       {/* Hero Header */}
       <div className="w-full max-w-2xl">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-teal-200/70 text-teal-800 text-xs font-semibold shadow-xs max-w-full">
-          <Sparkles className="w-3.5 h-3.5 shrink-0 text-teal-600" />
-          <span className="truncate">3 steps · ~1 min · Instant confirmation</span>
-        </div>
-        <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mt-2 sm:mt-3">Book your visit</h1>
-        <p className="text-xs sm:text-[15px] text-slate-500 mt-0.5 sm:mt-1">Choose a doctor, pick a time, add your details.</p>
+        <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900">Book your visit</h1>
+        <p className="text-xs sm:text-[15px] text-slate-500 mt-0.5 sm:mt-1">Pick a doctor, time, and your details.</p>
       </div>
 
       {/* Stepper Progress Indicator */}
       <div className="w-full mt-4 mb-5" aria-label="Booking progress">
-        {/* Mobile segmented stepper */}
-        <div className="sm:hidden">
-          <div className="flex items-center justify-between text-xs font-semibold mb-2">
-            <span className="flex items-center gap-1.5 text-slate-900 font-bold">
-              <span className="w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center text-[11px]">
-                {step}
-              </span>
-              <span>Step {step} of 3: {STEPS[step - 1].label}</span>
+        <div className="flex items-center justify-between text-xs font-semibold mb-2">
+          <span className="flex items-center gap-1.5 text-slate-900 font-bold">
+            <span className="w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center text-[11px]">
+              {step}
             </span>
-            {step > 1 && (
-              <button
-                type="button"
-                onClick={() => setStep(step - 1)}
-                className="text-teal-700 font-bold inline-flex items-center gap-0.5 active:opacity-70 text-xs"
-              >
-                <ChevronLeft className="w-3.5 h-3.5" /> Back
-              </button>
-            )}
-          </div>
-          <div className="grid grid-cols-3 gap-1.5 h-1.5">
-            {STEPS.map((s) => {
-              const done = step > s.n;
-              const active = step === s.n;
-              return (
-                <button
-                  key={s.n}
-                  type="button"
-                  disabled={!done}
-                  onClick={() => done && setStep(s.n)}
-                  aria-label={`Step ${s.n}: ${s.label}`}
-                  className={`rounded-full h-full transition-all ${
-                    done
-                      ? 'bg-emerald-500 cursor-pointer'
-                      : active
-                      ? 'bg-teal-600'
-                      : 'bg-slate-200 cursor-not-allowed'
-                  }`}
-                />
-              );
-            })}
-          </div>
+            <span>Step {step} of 3 · {STEPS[step - 1].label}</span>
+          </span>
+          {step > 1 && (
+            <button
+              type="button"
+              onClick={() => setStep(step - 1)}
+              className="text-teal-700 font-bold inline-flex items-center gap-0.5 active:opacity-70 text-xs"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" /> Back
+            </button>
+          )}
         </div>
-
-        {/* Desktop stepper */}
-        <ol className="hidden sm:flex items-center gap-2">
-          {STEPS.map((s, i) => {
-            const Icon = s.icon;
-            const active = step === s.n;
+        <div className="grid grid-cols-3 gap-1.5 h-1.5">
+          {STEPS.map((s) => {
             const done = step > s.n;
+            const active = step === s.n;
             return (
-              <li key={s.n} className="flex items-center gap-2">
-                <button
-                  type="button"
-                  disabled={!done}
-                  onClick={() => done && setStep(s.n)}
-                  className={`flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 border text-[13px] font-bold transition text-left ${
-                    active
-                      ? 'bg-slate-900 text-white border-slate-900 shadow-lg cursor-default'
-                      : done
-                      ? 'bg-white text-emerald-700 border-emerald-200 hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer'
-                      : 'bg-white text-slate-400 border-slate-200 cursor-not-allowed opacity-75'
-                  }`}
-                >
-                  <span
-                    className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
-                      active ? 'bg-teal-400 text-slate-900' : done ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'
-                    }`}
-                  >
-                    {done ? <Check className="w-3.5 h-3.5" /> : <Icon className="w-3.5 h-3.5" />}
-                  </span>
-                  <span>{s.n}. {s.label}</span>
-                </button>
-                {i < 2 && <div className={`w-10 h-1 rounded-full ${step > s.n ? 'bg-emerald-400' : 'bg-slate-200'}`} />}
-              </li>
+              <div
+                key={s.n}
+                aria-label={`Step ${s.n}: ${s.label}`}
+                className={`rounded-full h-full transition-all ${
+                  done ? 'bg-emerald-500' : active ? 'bg-teal-600' : 'bg-slate-200'
+                }`}
+              />
             );
           })}
-        </ol>
+        </div>
       </div>
 
       {error && (
@@ -558,10 +509,7 @@ function BookingWizard() {
           {step === 1 && (
             <fieldset className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
-                <div>
-                  <legend className="text-[17px] font-bold text-slate-900">Who would you like to see?</legend>
-                  <p className="text-xs text-slate-500 mt-0.5">Select a doctor to view their schedule and pick a time.</p>
-                </div>
+                <legend className="text-[17px] font-bold text-slate-900">Who would you like to see?</legend>
                 <div className="relative">
                   <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                   <input
@@ -615,28 +563,14 @@ function BookingWizard() {
                         )}
                       </div>
                       <div className="min-w-0 flex-1 pr-1">
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <p className="text-sm font-bold text-slate-900 truncate">{d.name}</p>
-                          <span className="text-[10px] text-slate-500 font-medium">· {d.experienceYears}+ yrs</span>
-                        </div>
+                        <p className="text-sm font-bold text-slate-900 truncate">{d.name}</p>
                         <p className="text-xs text-teal-700 font-semibold truncate mt-0.5">{d.specialty.split('(')[0]}</p>
                         <p className="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
                           <CalendarDays className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                           <span className="truncate">{fmtShortDays(d.availableDays)}</span>
                         </p>
                       </div>
-                      <div className="shrink-0 flex items-center">
-                        <span
-                          className={`text-xs font-bold px-2.5 py-1.5 rounded-xl border transition-all flex items-center gap-0.5 ${
-                            selected
-                              ? 'bg-teal-600 text-white border-teal-600 shadow-2xs'
-                              : 'bg-slate-50 group-hover:bg-teal-50 text-slate-700 group-hover:text-teal-800 border-slate-200 group-hover:border-teal-300'
-                          }`}
-                        >
-                          <span>{selected ? 'Selected' : 'Select'}</span>
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </span>
-                      </div>
+                      <ChevronRight className={`w-4 h-4 shrink-0 ${selected ? 'text-teal-600' : 'text-slate-300'}`} />
                     </button>
                   );
                 })}
@@ -654,16 +588,8 @@ function BookingWizard() {
             <div className="w-full space-y-6 animate-fade-in min-w-0">
               {/* Desktop lg split layout / Mobile unified stack */}
               <div className="grid lg:grid-cols-[320px_1fr] gap-6 items-start">
-                {/* Left Column: Interactive Month Calendar (Desktop lg view) */}
-                <div className="hidden lg:block bg-gradient-to-b from-slate-50/90 to-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs lg:sticky lg:top-24">
-                  <div className="flex items-center justify-between mb-3 pb-2.5 border-b border-slate-200/70">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-teal-600" /> Interactive Calendar
-                    </h3>
-                    <span className="text-[11px] font-semibold text-teal-700 bg-teal-50 border border-teal-200/70 px-2 py-0.5 rounded-md">
-                      Next 60 days
-                    </span>
-                  </div>
+                {/* Left Column: Month Calendar (desktop) */}
+                <div className="hidden lg:block bg-slate-50/70 border border-slate-200/90 rounded-2xl p-4 shadow-xs lg:sticky lg:top-24">
                   <InteractiveMonthCalendar
                     selectedDate={date}
                     onSelectDate={(newIso) => setDate(newIso)}
@@ -677,57 +603,40 @@ function BookingWizard() {
                 {/* Right Column: Doctor summary + Mobile Date strip + Categorized Time Slots */}
                 <div className="space-y-5 min-w-0">
                   {/* Selected Doctor Summary Card */}
-                  <div className="w-full bg-gradient-to-r from-teal-50/90 via-white to-emerald-50/40 border border-teal-200/90 rounded-2xl p-3.5 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-2xs min-w-0">
+                  <div className="w-full bg-teal-50/60 border border-teal-100 rounded-2xl p-3 flex items-center gap-3 min-w-0">
                     <div className="relative shrink-0">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={doctor.avatarUrl}
                         alt={doctor.name}
-                        className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl object-cover bg-white border border-teal-200/80 shadow-xs"
-                        style={{ width: '52px', height: '52px' }}
+                        className="w-11 h-11 rounded-xl object-cover bg-white border border-teal-200/80"
+                        style={{ width: '44px', height: '44px' }}
                       />
-                      <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center shadow-xs">
-                        <Check className="w-2.5 h-2.5 text-white stroke-[3]" />
-                      </span>
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-teal-800 bg-teal-100/90 px-2 py-0.5 rounded-md">
-                          Selected Doctor
-                        </span>
-                        <span className="text-[11px] text-slate-500 font-medium">
-                          {doctor.experienceYears}+ yrs exp
-                        </span>
-                      </div>
-                      <p className="font-bold text-slate-900 text-sm sm:text-base truncate mt-0.5">{doctor.name}</p>
-                      <p className="text-xs text-teal-700 font-semibold truncate">{doctor.specialty.split('(')[0]}</p>
-                      <div className="flex items-center gap-1.5 text-[11px] text-slate-600 mt-1">
-                        <CalendarDays className="w-3.5 h-3.5 text-teal-600 shrink-0" />
-                        <span>Available: <strong className="text-slate-800">{fmtShortDays(doctor.availableDays)}</strong></span>
-                      </div>
+                      <p className="font-bold text-slate-900 text-sm truncate">{doctor.name}</p>
+                      <p className="text-xs text-teal-700 font-semibold truncate">{doctor.specialty.split('(')[0]} · {fmtShortDays(doctor.availableDays)}</p>
                     </div>
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="text-xs font-bold text-teal-700 hover:text-teal-800 bg-white hover:bg-teal-50 px-3 py-2 rounded-xl border border-teal-200/90 shadow-xs shrink-0 transition active:scale-95 flex items-center gap-1"
+                      className="text-xs font-bold text-teal-700 hover:text-teal-800 shrink-0 transition px-1"
                     >
-                      <span>Change</span>
+                      Change
                     </button>
                   </div>
 
                   {/* Mobile Horizontal Date Strip & Action Button (< lg screens) */}
                   <div className="lg:hidden w-full min-w-0">
                     <div className="w-full flex items-center justify-between mb-2">
-                      <p className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-teal-600" /> Select Date
-                      </p>
+                      <p className="text-xs font-bold uppercase tracking-wider text-slate-700">Pick a day</p>
                       <button
                         type="button"
                         onClick={() => setShowCalendarModal(true)}
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-700 hover:text-teal-800 bg-teal-50 hover:bg-teal-100/80 border border-teal-200/80 px-2.5 py-1.5 rounded-xl transition active:scale-95 shadow-2xs"
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200/80 px-2.5 py-1.5 rounded-xl transition active:scale-95"
                       >
                         <CalendarDays className="w-3.5 h-3.5 text-teal-600" />
-                        <span>View full calendar</span>
+                        <span>Calendar</span>
                       </button>
                     </div>
 
@@ -787,14 +696,7 @@ function BookingWizard() {
 
                   {/* Time Slot Selection */}
                   <div className="w-full min-w-0">
-                    <div className="w-full flex items-center justify-between mb-2">
-                      <p className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-teal-600" /> Select Time Slot
-                      </p>
-                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-teal-800 bg-teal-50 border border-teal-200/70 px-2.5 py-0.5 rounded-full">
-                        30 min consultation
-                      </span>
-                    </div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Pick a time</p>
 
                     {/* Period Tabs: All, Morning, Afternoon, Evening */}
                     <div className="flex items-center gap-1.5 p-1 bg-slate-100/90 rounded-2xl mb-3 overflow-x-auto scrollbar-none" role="tablist" aria-label="Time of day filter">
@@ -826,116 +728,41 @@ function BookingWizard() {
                     </div>
 
                     {/* Time Slots Display */}
-                    {periodFilter === 'all' ? (
-                      <div className="space-y-3.5">
-                        {(['morning', 'afternoon', 'evening'] as const).map((periodKey) => {
-                          const slotsInGroup = TIME_SLOTS.filter((s) => s.period === periodKey);
-                          const cfg = PERIOD_CONFIG.find((c) => c.id === periodKey)!;
-                          const Icon = cfg.icon;
-
-                          return (
-                            <div key={periodKey} className="space-y-1.5">
-                              <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 px-0.5">
-                                <span className="flex items-center gap-1.5 text-slate-700">
-                                  <Icon className="w-3.5 h-3.5 text-teal-600" />
-                                  <span className="capitalize">{periodKey}</span>
-                                </span>
-                                <span className="text-[10px] font-medium text-slate-400">{cfg.timeRange}</span>
-                              </div>
-                              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label={`${periodKey} time slots`}>
-                                {slotsInGroup.map((slot) => {
-                                  const active = time === slot.time;
-                                  if (slot.booked) {
-                                    return (
-                                      <button
-                                        key={slot.time}
-                                        type="button"
-                                        disabled
-                                        aria-disabled="true"
-                                        title="Slot already booked"
-                                        className="w-full py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-semibold rounded-xl border border-slate-200/80 bg-slate-100/90 text-slate-400 line-through opacity-45 cursor-not-allowed flex items-center justify-center min-h-[46px]"
-                                      >
-                                        {slot.time}
-                                      </button>
-                                    );
-                                  }
-                                  return (
-                                    <button
-                                      key={slot.time}
-                                      type="button"
-                                      role="radio"
-                                      aria-checked={active}
-                                      onClick={() => setTime(slot.time)}
-                                      className={`w-full py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-bold rounded-xl border-2 transition-all min-h-[46px] flex items-center justify-center active:scale-[.98] ${
-                                        active
-                                          ? 'bg-teal-600 text-white border-teal-600 shadow-md shadow-teal-600/25 ring-2 ring-teal-600/20'
-                                          : 'bg-white border-slate-200/90 text-slate-700 hover:border-teal-400 hover:bg-teal-50/40 shadow-2xs'
-                                      }`}
-                                    >
-                                      {slot.time}
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Selected time slots">
-                        {filteredSlots.map((slot) => {
-                          const active = time === slot.time;
-                          if (slot.booked) {
-                            return (
-                              <button
-                                key={slot.time}
-                                type="button"
-                                disabled
-                                aria-disabled="true"
-                                title="Slot already booked"
-                                className="w-full py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-semibold rounded-xl border border-slate-200/80 bg-slate-100/90 text-slate-400 line-through opacity-45 cursor-not-allowed flex items-center justify-center min-h-[46px]"
-                              >
-                                {slot.time}
-                              </button>
-                            );
-                          }
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Available time slots">
+                      {filteredSlots.map((slot) => {
+                        const active = time === slot.time;
+                        if (slot.booked) {
                           return (
                             <button
                               key={slot.time}
                               type="button"
-                              role="radio"
-                              aria-checked={active}
-                              onClick={() => setTime(slot.time)}
-                              className={`w-full py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-bold rounded-xl border-2 transition-all min-h-[46px] flex items-center justify-center active:scale-[.98] ${
-                                active
-                                  ? 'bg-teal-600 text-white border-teal-600 shadow-md shadow-teal-600/25 ring-2 ring-teal-600/20'
-                                  : 'bg-white border-slate-200/90 text-slate-700 hover:border-teal-400 hover:bg-teal-50/40 shadow-2xs'
-                              }`}
+                              disabled
+                              aria-disabled="true"
+                              title="Slot already booked"
+                              className="w-full py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-semibold rounded-xl border border-slate-200/80 bg-slate-100/90 text-slate-400 line-through opacity-45 cursor-not-allowed flex items-center justify-center min-h-[46px]"
                             >
                               {slot.time}
                             </button>
                           );
-                        })}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Live Selected Slot Preview Strip */}
-                  <div className="w-full p-3.5 rounded-2xl bg-gradient-to-r from-teal-50/80 to-slate-50 border border-teal-100 flex items-center justify-between text-xs shadow-2xs min-w-0">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-8 h-8 rounded-xl bg-white border border-teal-200/80 text-teal-700 flex items-center justify-center shrink-0 shadow-2xs">
-                        <Clock className="w-4 h-4" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-[11px] text-slate-500 font-medium">Selected Slot</p>
-                        <p className="font-bold text-slate-900 truncate text-xs sm:text-sm">
-                          {fmtDateFull(date)} · {time}
-                        </p>
-                      </div>
+                        }
+                        return (
+                          <button
+                            key={slot.time}
+                            type="button"
+                            role="radio"
+                            aria-checked={active}
+                            onClick={() => setTime(slot.time)}
+                            className={`w-full py-2.5 sm:py-3 px-1.5 text-xs sm:text-sm font-bold rounded-xl border-2 transition-all min-h-[46px] flex items-center justify-center active:scale-[.98] ${
+                              active
+                                ? 'bg-teal-600 text-white border-teal-600 shadow-md shadow-teal-600/25 ring-2 ring-teal-600/20'
+                                : 'bg-white border-slate-200/90 text-slate-700 hover:border-teal-400 hover:bg-teal-50/40 shadow-2xs'
+                            }`}
+                          >
+                            {slot.time}
+                          </button>
+                        );
+                      })}
                     </div>
-                    <span className="text-[11px] font-bold text-teal-700 bg-white px-2.5 py-1 rounded-lg border border-teal-200/70 shadow-2xs shrink-0">
-                      Step 2 of 3
-                    </span>
                   </div>
                 </div>
               </div>
@@ -992,26 +819,25 @@ function BookingWizard() {
 
               <div>
                 <h2 className="text-[17px] font-bold text-slate-900">Your details</h2>
-                <p className="text-xs text-slate-500 mt-0.5">Enter your contact information for appointment confirmation.</p>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-3 sm:gap-3.5">
                 <label className="block">
                   <span className="text-[13px] font-semibold text-slate-700 flex items-center gap-1.5 mb-1.5">
-                    <User className="w-3.5 h-3.5 text-teal-600" /> Full name
+                    <User className="w-3.5 h-3.5 text-teal-600" /> Name
                   </span>
                   <input
                     required
                     autoComplete="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Aung Min"
+                    placeholder="Your name"
                     className="w-full px-4 py-3 sm:py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-base sm:text-[15px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
                   />
                 </label>
                 <label className="block">
                   <span className="text-[13px] font-semibold text-slate-700 flex items-center gap-1.5 mb-1.5">
-                    <Phone className="w-3.5 h-3.5 text-teal-600" /> Phone number
+                    <Phone className="w-3.5 h-3.5 text-teal-600" /> Phone
                   </span>
                   <input
                     required
@@ -1027,7 +853,7 @@ function BookingWizard() {
               </div>
               <label className="block">
                 <span className="text-[13px] font-semibold text-slate-700 flex items-center gap-1.5 mb-1.5">
-                  <Mail className="w-3.5 h-3.5 text-teal-600" /> Email for confirmation
+                  <Mail className="w-3.5 h-3.5 text-teal-600" /> Email
                 </span>
                 <input
                   required
@@ -1042,20 +868,20 @@ function BookingWizard() {
               </label>
               <label className="block">
                 <span className="text-[13px] font-semibold text-slate-700 mb-1.5 block">
-                  Reason <span className="text-slate-400 font-normal">(optional)</span>
+                  Notes <span className="text-slate-400 font-normal">(optional)</span>
                 </span>
                 <textarea
                   rows={3}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Symptoms, questions…"
+                  placeholder="Anything the doctor should know…"
                   className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-base sm:text-[15px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
                 />
               </label>
 
               {!canSubmit && (
                 <p className="text-xs text-amber-800 bg-amber-50/80 border border-amber-200/80 rounded-xl px-3.5 py-2.5 text-center">
-                  Please fill in your name, valid email and phone number to confirm.
+                  Add your name, email, and phone to confirm.
                 </p>
               )}
 
@@ -1067,12 +893,12 @@ function BookingWizard() {
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
-                    <Loader2 className="w-4.5 h-4.5 animate-spin" /> Securing your slot…
+                    <Loader2 className="w-4.5 h-4.5 animate-spin" /> Booking…
                   </span>
                 ) : (
                   <>
                     <CheckCircle2 className="w-4.5 h-4.5" />
-                    Confirm · {doctor?.name.split(' ').slice(0, 2).join(' ')} · {fmtDate(date)} {time}
+                    Confirm booking
                   </>
                 )}
               </button>
@@ -1181,10 +1007,10 @@ function BookingWizard() {
             <div className="flex items-start justify-between mb-4 pb-3 border-b border-slate-100">
               <div>
                 <h3 id="calendar-modal-title" className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-teal-600" /> Select Appointment Date
+                  <Calendar className="w-4 h-4 text-teal-600" /> Pick a day
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Doctor open: <strong className="text-slate-800">{fmtShortDays(doctor.availableDays)}</strong>
+                  Open: <strong className="text-slate-800">{fmtShortDays(doctor.availableDays)}</strong>
                 </p>
               </div>
               <button
@@ -1287,7 +1113,7 @@ function BookingWizard() {
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
-                    <Loader2 className="w-4.5 h-4.5 animate-spin" /> Securing…
+                    <Loader2 className="w-4.5 h-4.5 animate-spin" /> Booking…
                   </span>
                 ) : (
                   <>
