@@ -50,14 +50,14 @@ export default function DoctorsPage() {
   }, [selectedSpecialty, searchQuery]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-10">
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-10 space-y-5 sm:space-y-8 min-w-0 overflow-x-hidden">
       {/* Header Section */}
-      <div className="text-center max-w-2xl mx-auto space-y-2.5">
+      <div className="text-center max-w-2xl mx-auto space-y-2 px-1">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold">
           <ShieldCheck className="w-3.5 h-3.5 text-teal-600 shrink-0" />
           <span>Board Certified Clinical Specialists</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight break-words">
           Meet Our Dedicated Medical Specialists
         </h1>
         <p className="text-slate-600 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
@@ -65,10 +65,10 @@ export default function DoctorsPage() {
         </p>
       </div>
 
-      {/* Filter and Search Bar (Mobile-first layout) */}
-      <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 shadow-xs space-y-3 sm:space-y-0 sm:flex sm:items-center sm:justify-between sm:gap-4">
-        {/* Specialty Filter Pills (Smooth Touch Carousel) */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none w-full sm:w-auto -mx-1 px-1">
+      {/* Filter and Search Bar (Mobile-first layout with zero overflow) */}
+      <div className="w-full min-w-0 bg-white p-3 sm:p-4 rounded-2xl border border-slate-200/90 shadow-xs space-y-3 sm:space-y-0 sm:flex sm:items-center sm:justify-between sm:gap-4 overflow-hidden">
+        {/* Specialty Filter Pills (Smooth Touch Carousel with safe bounds) */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none w-full sm:w-auto min-w-0">
           {SPECIALTY_OPTIONS.map((spec) => {
             const isSelected = selectedSpecialty === spec.id;
             const count =
@@ -83,7 +83,7 @@ export default function DoctorsPage() {
                 key={spec.id}
                 type="button"
                 onClick={() => setSelectedSpecialty(spec.id)}
-                className={`px-3 py-2 sm:py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer active:scale-95 ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer active:scale-95 ${
                   isSelected
                     ? 'bg-teal-600 text-white shadow-xs'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80'
@@ -103,7 +103,7 @@ export default function DoctorsPage() {
         </div>
 
         {/* Doctor Search (Font size 16px on mobile to prevent iOS Safari auto-zoom) */}
-        <div className="relative w-full sm:w-72 shrink-0">
+        <div className="relative w-full sm:w-72 shrink-0 min-w-0">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
@@ -116,7 +116,7 @@ export default function DoctorsPage() {
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded-md"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded-md cursor-pointer"
               aria-label="Clear search"
             >
               <X className="w-3.5 h-3.5" />
@@ -126,7 +126,7 @@ export default function DoctorsPage() {
       </div>
 
       {/* Results Header on Mobile */}
-      <div className="flex items-center justify-between text-xs text-slate-500 px-1">
+      <div className="flex items-center justify-between text-xs text-slate-500 px-0.5">
         <span>
           Showing <strong className="text-slate-900">{filteredDoctors.length}</strong> specialist{filteredDoctors.length === 1 ? '' : 's'}
         </span>
@@ -163,17 +163,17 @@ export default function DoctorsPage() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 w-full min-w-0">
           {filteredDoctors.map((doctor) => {
             const isAvailableToday = doctor.availableDays.includes(todayDayName);
 
             return (
               <div
                 key={doctor.id}
-                className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover-lift flex flex-col sm:flex-row group"
+                className="w-full min-w-0 bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover-lift flex flex-col sm:flex-row group"
               >
                 {/* Doctor Portrait Header (Strict fixed height to prevent mobile Safari collapse) */}
-                <div className="sm:w-2/5 relative bg-slate-100 h-52 sm:h-auto sm:min-h-[240px] shrink-0 overflow-hidden">
+                <div className="w-full sm:w-2/5 relative bg-slate-100 h-52 sm:h-auto sm:min-h-[240px] shrink-0 overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={doctor.avatarUrl}
@@ -195,19 +195,19 @@ export default function DoctorsPage() {
                 </div>
 
                 {/* Doctor Details Body */}
-                <div className="sm:w-3/5 p-4 sm:p-6 flex flex-col justify-between space-y-3.5">
-                  <div>
+                <div className="w-full sm:w-3/5 p-4 sm:p-5 flex flex-col justify-between space-y-3 min-w-0">
+                  <div className="min-w-0">
                     <span className="text-[11px] font-bold text-teal-700 uppercase tracking-wider block">
                       {doctor.specialty}
                     </span>
-                    <h2 className="text-base sm:text-lg font-bold text-slate-900 mt-1 leading-snug group-hover:text-teal-600 transition-colors">
+                    <h2 className="text-base sm:text-lg font-bold text-slate-900 mt-1 leading-snug group-hover:text-teal-600 transition-colors truncate">
                       {doctor.name}
                     </h2>
-                    <p className="text-xs text-slate-500 font-medium mt-0.5">
+                    <p className="text-xs text-slate-500 font-medium mt-0.5 truncate">
                       {doctor.qualification}
                     </p>
 
-                    <p className="text-xs text-slate-600 mt-2.5 leading-relaxed line-clamp-3">
+                    <p className="text-xs text-slate-600 mt-2 leading-relaxed line-clamp-3">
                       {doctor.bio}
                     </p>
 
@@ -215,10 +215,10 @@ export default function DoctorsPage() {
                     <div className="mt-3 pt-3 border-t border-slate-100">
                       <div className="text-[11px] font-medium text-slate-400 mb-1.5 flex items-center justify-between">
                         <span className="flex items-center gap-1">
-                          <Clock className="w-3.5 h-3.5 text-teal-600" />
-                          <span>Clinic Consultation Days:</span>
+                          <Clock className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                          <span>Consultation Days:</span>
                         </span>
-                        <span className="text-[10px] text-teal-700 font-semibold">
+                        <span className="text-[10px] text-teal-700 font-semibold shrink-0">
                           {doctor.availableDays.length} Days / Wk
                         </span>
                       </div>
@@ -243,14 +243,14 @@ export default function DoctorsPage() {
                     </div>
                   </div>
 
-                  {/* Primary CTA (Mobile thumb-friendly minimum 44px height) */}
+                  {/* Primary CTA (Fits cleanly on all screens without overflowing) */}
                   <div className="pt-3 border-t border-slate-100">
                     <Link
                       href={`/appointments?doctor=${encodeURIComponent(doctor.id)}`}
-                      className="w-full inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-4 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition active:scale-98"
+                      className="w-full inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-4 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition active:scale-98 text-center"
                     >
-                      <Calendar className="w-4 h-4" />
-                      <span>Book Consultation with {doctor.name.split(' ').slice(0, 2).join(' ')}</span>
+                      <Calendar className="w-4 h-4 shrink-0" />
+                      <span>Book Consultation</span>
                     </Link>
                   </div>
                 </div>
@@ -261,10 +261,10 @@ export default function DoctorsPage() {
       )}
 
       {/* Quick Mobile Assistance Strip */}
-      <div className="p-4 rounded-2xl bg-teal-50/80 border border-teal-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2.5 text-teal-950 text-center sm:text-left">
+      <div className="p-3.5 sm:p-4 rounded-2xl bg-teal-50/80 border border-teal-200/80 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs w-full min-w-0">
+        <div className="flex items-center gap-2.5 text-teal-950 text-center sm:text-left min-w-0">
           <Phone className="w-4 h-4 text-teal-600 shrink-0" />
-          <span>
+          <span className="leading-normal">
             Need help selecting the right physician or urgent consultation? Call our reception desk at{' '}
             <a href="tel:+18005550199" className="font-bold text-teal-800 underline">
               (800) 555-0199
@@ -273,19 +273,19 @@ export default function DoctorsPage() {
         </div>
         <Link
           href="/appointments"
-          className="bg-teal-700 hover:bg-teal-800 text-white font-semibold px-4 py-2 rounded-xl shrink-0 transition"
+          className="w-full sm:w-auto text-center bg-teal-700 hover:bg-teal-800 text-white font-semibold px-4 py-2.5 sm:py-2 rounded-xl shrink-0 transition"
         >
           General Appointment &rarr;
         </Link>
       </div>
 
       {/* Clinic Ethics and Clinical Credentials Standard (Compact responsive grid) */}
-      <div className="bg-slate-100/90 rounded-2xl p-5 sm:p-8 border border-slate-200/90 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-        <div className="flex items-start gap-3">
+      <div className="w-full min-w-0 bg-slate-100/90 rounded-2xl p-4 sm:p-8 border border-slate-200/90 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        <div className="flex items-start gap-3 min-w-0">
           <div className="p-2.5 bg-white rounded-xl text-teal-600 shadow-xs shrink-0">
             <Award className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
-          <div>
+          <div className="min-w-0">
             <h3 className="text-xs sm:text-sm font-bold text-slate-900">Double-Board Certified</h3>
             <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
               Every clinician holds active clinical certifications in their discipline and participates in continuous medical research.
@@ -293,11 +293,11 @@ export default function DoctorsPage() {
           </div>
         </div>
 
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-3 min-w-0">
           <div className="p-2.5 bg-white rounded-xl text-teal-600 shadow-xs shrink-0">
             <Stethoscope className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
-          <div>
+          <div className="min-w-0">
             <h3 className="text-xs sm:text-sm font-bold text-slate-900">Multidisciplinary Review</h3>
             <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
               Cross-functional physician boards review complex cases to guarantee complete diagnostic accuracy.
@@ -305,11 +305,11 @@ export default function DoctorsPage() {
           </div>
         </div>
 
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-3 min-w-0">
           <div className="p-2.5 bg-white rounded-xl text-teal-600 shadow-xs shrink-0">
             <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
-          <div>
+          <div className="min-w-0">
             <h3 className="text-xs sm:text-sm font-bold text-slate-900">Patient-Centered Outcomes</h3>
             <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
               We prioritize preventative intervention, clear treatment plans, and compassionate long-term health.
