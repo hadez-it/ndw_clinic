@@ -243,19 +243,6 @@ export default function PatientPortalPage() {
                 </div>
               </div>
             </div>
-
-            <div className="px-5 sm:px-7 py-3.5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-              <span className="text-slate-500">
-                Track live consultation progress on our real-time board:
-              </span>
-              <Link
-                href="/queue"
-                className="text-teal-700 hover:text-teal-800 font-semibold flex items-center gap-1"
-              >
-                <span>View Waiting Room TV Board</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
           </div>
 
           {/* Digital Prescription & Medical Summary */}

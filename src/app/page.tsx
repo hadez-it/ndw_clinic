@@ -330,7 +330,7 @@ export default function HomePage() {
               Ready to schedule your clinical consultation?
             </h3>
             <p className="text-teal-100 text-xs sm:text-sm max-w-xl">
-              Choose your physician, pick a convenient date, and receive your digital confirmation immediately with live queue updates.
+              Choose your physician, pick a convenient date, and receive your digital confirmation immediately.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3 shrink-0">

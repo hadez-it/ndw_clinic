@@ -442,8 +442,8 @@ function BookingWizard() {
             <button onClick={() => { setSuccess(null); setStep(1); setNotes(''); }} className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 sm:py-3.5 rounded-2xl text-sm transition active:scale-[.98]">
               Book another
             </button>
-            <Link href="/queue" className="bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 sm:py-3.5 rounded-2xl text-sm transition text-center active:scale-[.98] flex items-center justify-center">
-              Track live queue
+            <Link href="/patient-portal" className="bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 sm:py-3.5 rounded-2xl text-sm transition text-center active:scale-[.98] flex items-center justify-center">
+              View patient portal
             </Link>
           </div>
         </div>

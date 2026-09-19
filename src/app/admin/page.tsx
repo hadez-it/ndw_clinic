@@ -18,7 +18,6 @@ import {
   Pill,
   FileText,
   Printer,
-  ChevronRight,
   AlertTriangle,
   Stethoscope,
   Activity,
@@ -651,15 +650,6 @@ export default function AdminDashboardPage() {
           )}
 
           <Link
-            href="/queue"
-            target="_blank"
-            className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-teal-300 px-4 py-2.5 rounded-xl text-xs font-semibold shadow-sm transition"
-          >
-            <Activity className="w-4 h-4 text-teal-400" />
-            <span>Open Queue TV Screen</span>
-          </Link>
-
-          <Link
             href="/patient-portal"
             target="_blank"
             className="inline-flex items-center gap-2 bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 px-4 py-2.5 rounded-xl text-xs font-semibold transition"
@@ -883,14 +873,6 @@ export default function AdminDashboardPage() {
                   Real-time occupancy across clinical consultation wings.
                 </p>
               </div>
-              <Link
-                href="/queue"
-                target="_blank"
-                className="text-xs font-bold text-teal-600 hover:text-teal-700 flex items-center gap-1"
-              >
-                <span>Full TV Screen</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </Link>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

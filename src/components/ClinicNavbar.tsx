@@ -11,7 +11,6 @@ import {
   Users,
   BookOpen,
   Home,
-  Tv,
   FileSearch,
   LayoutDashboard,
   LogIn,
@@ -19,6 +18,13 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { clearStoredSession, ROLE_CONFIG, useClinicAuth } from '@/lib/auth';
+
+interface NavItem {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  highlight?: boolean;
+}
 
 export function ClinicNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -31,10 +37,9 @@ export function ClinicNavbar() {
     router.push('/login');
   };
 
-  const navLinks = [
+  const navLinks: NavItem[] = [
     { href: '/', label: 'Home', icon: Home },
     { href: '/doctors', label: 'Doctors', icon: Users },
-    { href: '/queue', label: 'Queue TV', icon: Tv, highlight: true },
     { href: '/patient-portal', label: 'Patient Portal', icon: FileSearch },
     { href: '/knowledge', label: 'Health Topics', icon: BookOpen },
     { href: '/admin', label: 'Clinic ERP', icon: LayoutDashboard },

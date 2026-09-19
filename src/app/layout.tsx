@@ -99,11 +99,6 @@ export default function RootLayout({
                   </Link>
                 </li>
                 <li>
-                  <Link href="/queue" className="hover:text-teal-300 transition-colors flex items-center gap-1">
-                    <span>Waiting Room Queue TV</span>
-                  </Link>
-                </li>
-                <li>
                   <Link href="/patient-portal" className="hover:text-teal-300 transition-colors flex items-center gap-1">
                     <span>My Health Records & Rx</span>
                   </Link>
