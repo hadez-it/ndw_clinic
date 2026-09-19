@@ -1,0 +1,9 @@
+# Netlify deploys this Next.js 16 app with zero config via its OpenNext
+# adapter (auto-installed, do not pin @netlify/plugin-nextjs).
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "true"

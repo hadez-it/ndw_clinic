@@ -87,3 +87,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 npm run build
 npm start
 ```
+
+### 4. Deploy to Netlify
+1. Push this repo to GitHub and connect it in the Netlify Dashboard (Add new site → Import an existing project).
+2. Build settings are pre-configured in [`netlify.toml`](./netlify.toml) (`npm run build` → `.next`, Node 22). No plugin install needed — Netlify's Next.js adapter applies automatically.
+3. Set these environment variables in Site settings → Environment variables (then redeploy):
+   ```
+   NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY,
+   SUPABASE_SERVICE_ROLE_KEY, DOCTOR_SECRET_PIN,
+   CLINIC_OWNER_USER, CLINIC_OWNER_PASSWORD,
+   RECEPTION_PASSWORD, PHARMACIST_PASSWORD, CASHIER_PASSWORD
+   ```
