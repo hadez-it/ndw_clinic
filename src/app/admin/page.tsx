@@ -510,79 +510,69 @@ export default function AdminDashboardPage() {
 
   if (!authorized) {
     return (
-      <div className="w-full max-w-3xl mx-auto px-3 sm:px-4 py-6 sm:py-16 min-w-0 overflow-x-hidden">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-4 sm:p-10 text-center space-y-5 sm:space-y-6 min-w-0">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 bg-teal-50 border border-teal-200 text-teal-600 rounded-2xl flex items-center justify-center mx-auto shadow-xs">
-            <Lock className="w-7 h-7 sm:w-8 sm:h-8 text-teal-600" />
+      <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 py-6 sm:py-16 min-w-0 overflow-x-hidden">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-5 sm:p-10 text-center space-y-5 min-w-0">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-teal-50 border border-teal-200 text-teal-600 rounded-2xl flex items-center justify-center mx-auto shadow-xs">
+            <Lock className="w-6 h-6 sm:w-7 sm:h-7 text-teal-600" />
           </div>
 
-          <div className="space-y-2 px-1">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold max-w-full">
-              <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
-              <span className="truncate">Clinic Staff Authentication Required</span>
-            </div>
-            <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight break-words">
-              Nan Da Wun Clinic ERP Command Center
+          <div className="space-y-1.5 px-1">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+              Staff Portal Sign In
             </h1>
-            <p className="text-slate-600 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed">
-              This administrative portal controls patient electronic health records (EMR), live consultation queues, pharmacy inventory, and cashier accounts. Please authenticate with your staff account to continue.
+            <p className="text-slate-500 text-xs sm:text-sm max-w-sm mx-auto">
+              Sign in with your clinic credentials to manage records, pharmacy, and billing.
             </p>
           </div>
 
-          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5">
             <Link
               href="/login?redirect=/admin"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white font-bold py-3 px-6 rounded-xl text-xs sm:text-sm transition shadow-sm active:scale-98"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white font-bold py-2.5 px-5 rounded-xl text-xs sm:text-sm transition shadow-sm active:scale-98"
             >
               <LogIn className="w-4 h-4" />
-              <span>Sign In to Staff Portal</span>
+              <span>Sign In</span>
             </Link>
             <button
               type="button"
               onClick={() => setPreviewMode(true)}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 px-6 rounded-xl text-xs sm:text-sm transition cursor-pointer active:scale-98"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 px-5 rounded-xl text-xs sm:text-sm transition cursor-pointer active:scale-98"
             >
-              <span>Continue in Preview Mode</span>
+              <span>Preview Mode</span>
             </button>
           </div>
 
-          {/* 1-Click Evaluation Sign-in */}
-          <div className="pt-5 sm:pt-6 border-t border-slate-100 text-left space-y-2.5 sm:space-y-3">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-700">
+          {/* Quick Demo Accounts */}
+          <div className="pt-4 border-t border-slate-100 text-left space-y-2">
+            <div className="flex items-center justify-between text-xs font-semibold text-slate-600">
               <span className="flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
-                <span>1-Click Instant Demo Access:</span>
+                <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                <span>Quick Test Accounts</span>
               </span>
-              <span className="text-[11px] text-slate-400 font-normal">Tap any role to test</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {DEMO_CREDENTIALS.map((demo) => (
                 <button
                   key={demo.role}
                   type="button"
                   onClick={() => handleDirectDemoLogin(demo)}
-                  className="p-3 rounded-xl border border-slate-200 hover:border-teal-400 hover:bg-teal-50/40 text-left transition group cursor-pointer active:scale-98 min-w-0"
+                  className="p-2.5 rounded-xl border border-slate-200 hover:border-teal-400 hover:bg-teal-50/40 text-left transition group cursor-pointer active:scale-98 min-w-0"
                 >
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-xs font-bold text-slate-800 group-hover:text-teal-800 truncate">
-                      {demo.roleLabel.split('/')[0]}
-                    </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium capitalize shrink-0">
-                      {demo.role}
-                    </span>
+                  <div className="font-bold text-xs text-slate-800 group-hover:text-teal-800 truncate">
+                    {demo.roleLabel.split('/')[0]}
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-1 line-clamp-2">
-                    {demo.description}
-                  </p>
+                  <div className="text-[10px] text-slate-400 font-mono mt-0.5 capitalize truncate">
+                    {demo.role}
+                  </div>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="pt-2 text-center">
+          <div className="pt-1 text-center">
             <Link href="/" className="text-xs text-teal-600 hover:underline">
-              ← Return to Clinic Public Portal
+              ← Return to Home
             </Link>
           </div>
         </div>
@@ -605,46 +595,39 @@ export default function AdminDashboardPage() {
   const lowStockMedicines = medicines.filter((m) => m.currentStock <= m.reorderLevel);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-10 space-y-4 sm:space-y-8 font-sans min-w-0 overflow-x-hidden">
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-4 sm:space-y-6 font-sans min-w-0 overflow-x-hidden">
       {/* Toast Feedback Notification */}
       {feedbackMessage && (
-        <div className="fixed bottom-6 right-3 sm:right-6 left-3 sm:left-auto z-50 bg-slate-900 text-white px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700 animate-slide-down">
-          <CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0" />
+        <div className="fixed bottom-6 right-3 sm:right-6 left-3 sm:left-auto z-50 bg-slate-900 text-white px-4 sm:px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 border border-slate-700 animate-slide-down">
+          <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
           <span className="text-xs sm:text-sm font-medium">{feedbackMessage}</span>
         </div>
       )}
 
       {/* Top Admin Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-6 border-b border-slate-200 min-w-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 sm:pb-4 border-b border-slate-200 min-w-0">
         <div className="min-w-0">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold mb-1.5 max-w-full">
-            <ShieldCheck className="w-4 h-4 text-teal-600 shrink-0" />
-            <span className="truncate">Nan Da Wun Healthcare ERP Command Center</span>
-          </div>
-          <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight break-words">
-            Clinic Operations & Practice Management
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight truncate">
+            Clinic Operations
           </h1>
-          <p className="text-slate-600 text-xs sm:text-sm mt-1 leading-relaxed">
-            Complete management of patient appointments, waiting queues, EMR clinical notes, pharmacy stock, and cashier billing.
+          <p className="text-slate-500 text-xs mt-0.5">
+            Nan Da Wun Primary Care & EMR Center
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 min-w-0">
+        <div className="flex flex-wrap items-center gap-2 min-w-0">
           {currentUser && (
             <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs min-w-0">
-              <div className="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0">
+              <div className="w-6 h-6 rounded-lg bg-teal-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
                 {currentUser.name.charAt(0)}
               </div>
               <div className="text-left min-w-0">
-                <div className="font-bold text-slate-900 leading-tight truncate max-w-[110px] sm:max-w-[140px]">
+                <span className="font-bold text-slate-800 text-xs truncate block max-w-[120px]">
                   {currentUser.name}
-                </div>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                  <span className="text-[10px] text-teal-700 font-semibold uppercase tracking-wider truncate">
-                    {ROLE_CONFIG[currentUser.role]?.shortLabel || currentUser.role}
-                  </span>
-                </div>
+                </span>
+                <span className="text-[10px] text-teal-700 font-semibold uppercase tracking-wider block">
+                  {ROLE_CONFIG[currentUser.role]?.shortLabel || currentUser.role}
+                </span>
               </div>
             </div>
           )}
@@ -652,38 +635,40 @@ export default function AdminDashboardPage() {
           <Link
             href="/patient-portal"
             target="_blank"
-            className="inline-flex items-center gap-1.5 bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-semibold transition shrink-0"
+            className="inline-flex items-center gap-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 px-3 py-2 rounded-xl text-xs font-semibold transition shrink-0"
           >
-            <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal-600 shrink-0" />
-            <span>Patient Portal</span>
+            <Eye className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+            <span>Portal</span>
           </Link>
 
           <button
             onClick={fetchAllData}
-            title="Refresh ERP Datasets"
-            aria-label="Refresh ERP Datasets"
-            className="p-2 sm:p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition cursor-pointer shrink-0"
+            title="Refresh"
+            aria-label="Refresh"
+            className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition cursor-pointer shrink-0"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-teal-600' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-teal-600' : ''}`} />
           </button>
 
           <button
             onClick={handleLogout}
-            className="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200 border border-transparent text-slate-700 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer shrink-0"
+            title="Sign Out"
+            aria-label="Sign Out"
+            className="inline-flex items-center gap-1 bg-slate-50 hover:bg-rose-50 hover:text-rose-700 border border-slate-200 text-slate-600 px-3 py-2 rounded-xl text-xs font-medium transition cursor-pointer shrink-0"
           >
-            <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-            <span>Sign Out</span>
+            <LogOut className="w-3.5 h-3.5 shrink-0" />
+            <span>Exit</span>
           </button>
         </div>
       </div>
 
       {/* Module Navigation Tabs */}
-      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-2 border-b border-slate-200 scrollbar-none text-xs sm:text-sm font-semibold w-full min-w-0">
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 border-b border-slate-200 scrollbar-none text-xs sm:text-sm font-semibold w-full min-w-0">
         <button
           onClick={() => setActiveTab('overview')}
-          className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
+          className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
             activeTab === 'overview'
-              ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/30'
+              ? 'bg-teal-600 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
@@ -693,46 +678,46 @@ export default function AdminDashboardPage() {
 
         <button
           onClick={() => setActiveTab('appointments')}
-          className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
+          className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
             activeTab === 'appointments'
-              ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/30'
+              ? 'bg-teal-600 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Calendar className="w-4 h-4 shrink-0" />
           <span>Appointments</span>
-          <span className="px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">
+          <span className="px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">
             {appointments.length}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('patients')}
-          className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
+          className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
             activeTab === 'patients'
-              ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/30'
+              ? 'bg-teal-600 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Stethoscope className="w-4 h-4 shrink-0" />
-          <span>Patients & EMR</span>
-          <span className="px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">
+          <span>Patients</span>
+          <span className="px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">
             {patients.length}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('pharmacy')}
-          className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
+          className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
             activeTab === 'pharmacy'
-              ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/30'
+              ? 'bg-teal-600 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Pill className="w-4 h-4 shrink-0" />
-          <span>Pharmacy & Rx</span>
+          <span>Pharmacy</span>
           {lowStockMedicines.length > 0 && (
-            <span className="px-1.5 py-0.5 rounded-full bg-rose-100 text-rose-700 text-[10px] font-bold">
+            <span className="px-1.5 py-0.2 rounded-full bg-rose-100 text-rose-700 text-[10px] font-bold">
               {lowStockMedicines.length} Low
             </span>
           )}
@@ -740,15 +725,15 @@ export default function AdminDashboardPage() {
 
         <button
           onClick={() => setActiveTab('billing')}
-          className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
+          className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
             activeTab === 'billing'
-              ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/30'
+              ? 'bg-teal-600 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <CreditCard className="w-4 h-4 shrink-0" />
-          <span>Cashier & Accounts</span>
-          <span className="px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+          <span>Billing</span>
+          <span className="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
             {invoices.length}
           </span>
         </button>
@@ -758,125 +743,110 @@ export default function AdminDashboardPage() {
       {/* TAB 1: OVERVIEW & KPIS */}
       {/* ========================================================================= */}
       {activeTab === 'overview' && (
-        <div className="space-y-6 sm:space-y-8 animate-fade-in min-w-0">
+        <div className="space-y-4 sm:space-y-6 animate-fade-in min-w-0">
           {/* Metrics Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 min-w-0">
-            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs hover-lift min-w-0">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 min-w-0">
+            <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-xs min-w-0">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider">
-                  Today&apos;s Appointments
+                <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">
+                  Appointments
                 </span>
-                <Calendar className="w-5 h-5 text-teal-600 shrink-0" />
+                <Calendar className="w-4 h-4 text-teal-600 shrink-0" />
               </div>
-              <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 sm:mt-3 truncate">{appointments.length}</p>
-              <p className="text-[11px] sm:text-xs text-emerald-700 font-medium mt-1 flex items-center gap-1">
-                <CheckCircle className="w-3.5 h-3.5 shrink-0" /> Active in Consultation Desk
+              <p className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2 truncate">
+                {appointments.length}
+              </p>
+              <p className="text-[11px] text-teal-700 font-medium mt-0.5">
+                Active today
               </p>
             </div>
 
-            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs hover-lift min-w-0">
+            <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-xs min-w-0">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider">
-                  Total Revenue (MMK)
+                <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">
+                  Revenue
                 </span>
-                <DollarSign className="w-5 h-5 text-emerald-600 shrink-0" />
+                <DollarSign className="w-4 h-4 text-emerald-600 shrink-0" />
               </div>
-              <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 sm:mt-3 truncate">
-                {billingMetrics.totalRevenueMMK.toLocaleString()} <span className="text-sm font-semibold text-slate-500">Ks</span>
+              <p className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2 truncate">
+                {billingMetrics.totalRevenueMMK.toLocaleString()} <span className="text-xs font-normal text-slate-500">Ks</span>
               </p>
-              <p className="text-[11px] sm:text-xs text-slate-500 mt-1 truncate">
+              <p className="text-[11px] text-slate-500 mt-0.5 truncate">
                 Pending: {billingMetrics.pendingRevenueMMK.toLocaleString()} Ks
               </p>
             </div>
 
-            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs hover-lift min-w-0">
+            <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-xs min-w-0">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider">
-                  Registered Patients
+                <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">
+                  Patients
                 </span>
-                <Users className="w-5 h-5 text-teal-600 shrink-0" />
+                <Users className="w-4 h-4 text-teal-600 shrink-0" />
               </div>
-              <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 sm:mt-3 truncate">{patients.length}</p>
-              <p className="text-[11px] sm:text-xs text-teal-700 font-medium mt-1">Master EMR Indexed</p>
+              <p className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2 truncate">{patients.length}</p>
+              <p className="text-[11px] text-slate-400 font-medium mt-0.5">Master records</p>
             </div>
 
-            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs hover-lift min-w-0">
+            <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-xs min-w-0">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider">
-                  Pharmacy Stock Alert
+                <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">
+                  Stock Alerts
                 </span>
-                <Pill className="w-5 h-5 text-amber-600 shrink-0" />
+                <Pill className="w-4 h-4 text-amber-600 shrink-0" />
               </div>
-              <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 sm:mt-3 truncate">
+              <p className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2 truncate">
                 {lowStockMedicines.length}
               </p>
-              <p className="text-[11px] sm:text-xs text-amber-700 font-medium mt-1 truncate">
-                {lowStockMedicines.length > 0 ? 'Need Reorder Attention' : 'Healthy Inventory'}
+              <p className="text-[11px] text-amber-700 font-medium mt-0.5 truncate">
+                {lowStockMedicines.length > 0 ? 'Reorder needed' : 'Normal'}
               </p>
             </div>
           </div>
 
           {/* Quick Action Hub */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 min-w-0">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 min-w-0">
             <button
               onClick={() => setShowNewApptModal(true)}
-              className="p-4 sm:p-5 rounded-2xl bg-teal-50 border border-teal-200 text-teal-900 hover:bg-teal-100 transition text-left space-y-1.5 flex flex-col justify-between active:scale-98 cursor-pointer min-w-0"
+              className="p-3 sm:p-4 rounded-xl bg-teal-50 border border-teal-200 text-teal-900 hover:bg-teal-100 transition flex items-center justify-between active:scale-98 cursor-pointer min-w-0"
             >
-              <div className="flex items-center justify-between w-full">
-                <span className="font-bold text-sm">Book Walk-In</span>
-                <Plus className="w-4 h-4 text-teal-700 shrink-0" />
-              </div>
-              <p className="text-xs text-teal-700">Assign token and room immediately.</p>
+              <span className="font-bold text-xs sm:text-sm">Book Visit</span>
+              <Plus className="w-4 h-4 text-teal-700 shrink-0" />
             </button>
 
             <button
               onClick={() => setShowNewPatientModal(true)}
-              className="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 hover:bg-slate-100 transition text-left space-y-1.5 flex flex-col justify-between active:scale-98 cursor-pointer min-w-0"
+              className="p-3 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 hover:bg-slate-100 transition flex items-center justify-between active:scale-98 cursor-pointer min-w-0"
             >
-              <div className="flex items-center justify-between w-full">
-                <span className="font-bold text-sm">Register Patient</span>
-                <Users className="w-4 h-4 text-slate-700 shrink-0" />
-              </div>
-              <p className="text-xs text-slate-500">Create new HN and medical file.</p>
+              <span className="font-bold text-xs sm:text-sm">New Patient</span>
+              <Users className="w-4 h-4 text-slate-600 shrink-0" />
             </button>
 
             <button
               onClick={() => setShowNewMedicineModal(true)}
-              className="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 hover:bg-slate-100 transition text-left space-y-1.5 flex flex-col justify-between active:scale-98 cursor-pointer min-w-0"
+              className="p-3 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 hover:bg-slate-100 transition flex items-center justify-between active:scale-98 cursor-pointer min-w-0"
             >
-              <div className="flex items-center justify-between w-full">
-                <span className="font-bold text-sm">Add Drug Catalog</span>
-                <Pill className="w-4 h-4 text-slate-700 shrink-0" />
-              </div>
-              <p className="text-xs text-slate-500">Register new medicine or batch.</p>
+              <span className="font-bold text-xs sm:text-sm">Add Drug</span>
+              <Pill className="w-4 h-4 text-slate-600 shrink-0" />
             </button>
 
             <button
               onClick={() => setShowNewInvoiceModal(true)}
-              className="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 hover:bg-slate-100 transition text-left space-y-1.5 flex flex-col justify-between active:scale-98 cursor-pointer min-w-0"
+              className="p-3 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 hover:bg-slate-100 transition flex items-center justify-between active:scale-98 cursor-pointer min-w-0"
             >
-              <div className="flex items-center justify-between w-full">
-                <span className="font-bold text-sm">Cashier Invoice</span>
-                <CreditCard className="w-4 h-4 text-slate-700 shrink-0" />
-              </div>
-              <p className="text-xs text-slate-500">Generate bill & collect fee.</p>
+              <span className="font-bold text-xs sm:text-sm">New Invoice</span>
+              <CreditCard className="w-4 h-4 text-slate-600 shrink-0" />
             </button>
           </div>
 
           {/* Consultation Rooms Status */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-xs min-w-0">
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-3 shadow-xs min-w-0">
             <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm sm:text-base font-bold text-slate-900">
-                  Live Clinic Rooms & Doctors Status
-                </h3>
-                <p className="text-xs text-slate-500">
-                  Real-time occupancy across clinical consultation wings.
-                </p>
-              </div>
+              <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                Rooms & Doctors
+              </h3>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 min-w-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 min-w-0">
               {initialDoctors.map((doc, idx) => {
                 const roomName = `Room 10${idx + 1}`;
                 const activeAppt = appointments.find(
@@ -885,14 +855,14 @@ export default function AdminDashboardPage() {
                 return (
                   <div
                     key={doc.id}
-                    className={`p-3.5 sm:p-4 rounded-2xl border transition min-w-0 ${
+                    className={`p-3 rounded-xl border transition min-w-0 ${
                       activeAppt
                         ? 'bg-teal-50/50 border-teal-200'
-                        : 'bg-slate-50 border-slate-200'
+                        : 'bg-slate-50/60 border-slate-200'
                     }`}
                   >
-                    <div className="flex items-center justify-between text-xs mb-2">
-                      <span className="font-bold text-teal-800 uppercase">{roomName}</span>
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="font-bold text-teal-800">{roomName}</span>
                       <span
                         className={`px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${
                           activeAppt
@@ -903,21 +873,16 @@ export default function AdminDashboardPage() {
                         {activeAppt ? 'Consulting' : 'Ready'}
                       </span>
                     </div>
-                    <div className="font-bold text-slate-900 text-sm truncate">{doc.name}</div>
+                    <div className="font-semibold text-slate-900 text-xs sm:text-sm truncate">{doc.name}</div>
                     <div className="text-[11px] text-slate-500 truncate">{doc.specialty}</div>
 
-                    <div className="mt-2.5 pt-2.5 border-t border-slate-200/60 text-xs">
+                    <div className="mt-2 pt-2 border-t border-slate-200/60 text-xs">
                       {activeAppt ? (
-                        <div className="space-y-0.5">
-                          <span className="text-[10px] text-slate-400 font-semibold uppercase">
-                            Serving Token
-                          </span>
-                          <p className="font-mono font-bold text-teal-700 truncate">
-                            {activeAppt.tokenNumber} ({activeAppt.patientName})
-                          </p>
-                        </div>
+                        <p className="font-mono font-bold text-teal-700 truncate text-[11px]">
+                          Token: {activeAppt.tokenNumber} ({activeAppt.patientName})
+                        </p>
                       ) : (
-                        <span className="text-slate-400 text-[11px]">Waiting room idle</span>
+                        <span className="text-slate-400 text-[11px]">Available</span>
                       )}
                     </div>
                   </div>
@@ -932,23 +897,18 @@ export default function AdminDashboardPage() {
       {/* TAB 2: APPOINTMENT DESK & QUEUE MANAGEMENT */}
       {/* ========================================================================= */}
       {activeTab === 'appointments' && (
-        <div className="space-y-4 sm:space-y-6 animate-fade-in min-w-0">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 min-w-0">
-            <div className="min-w-0">
-              <h2 className="text-lg sm:text-xl font-bold text-slate-900 truncate">
-                Reception Appointment Desk & Queue
-              </h2>
-              <p className="text-xs text-slate-500">
-                Monitor incoming patient slots, assign consultation tokens, and call patients.
-              </p>
-            </div>
+        <div className="space-y-3 sm:space-y-4 animate-fade-in min-w-0">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 min-w-0">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 truncate">
+              Appointments
+            </h2>
 
             <button
               onClick={() => setShowNewApptModal(true)}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-4 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition shrink-0 active:scale-98 cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition shrink-0 active:scale-98 cursor-pointer"
             >
               <Plus className="w-4 h-4 shrink-0" />
-              <span>New Walk-in Booking</span>
+              <span>Book Visit</span>
             </button>
           </div>
 
@@ -960,18 +920,26 @@ export default function AdminDashboardPage() {
                   st === 'all'
                     ? appointments.length
                     : appointments.filter((a) => a.status === st).length;
+                const label =
+                  st === 'all'
+                    ? 'All'
+                    : st === 'in_consultation'
+                    ? 'Consulting'
+                    : st === 'confirmed'
+                    ? 'Waiting'
+                    : st.charAt(0).toUpperCase() + st.slice(1);
                 return (
                   <button
                     key={st}
                     onClick={() => setApptStatusFilter(st)}
-                    className={`px-3 py-1.5 rounded-xl font-semibold transition capitalize flex items-center gap-1.5 shrink-0 cursor-pointer active:scale-95 ${
+                    className={`px-3 py-1 rounded-xl font-semibold transition flex items-center gap-1 shrink-0 cursor-pointer active:scale-95 ${
                       apptStatusFilter === st
                         ? 'bg-slate-900 text-white shadow-xs'
                         : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                     }`}
                   >
-                    <span>{st.replace('_', ' ')}</span>
-                    <span className="text-[10px] opacity-70">({count})</span>
+                    <span>{label}</span>
+                    <span className="text-[10px] opacity-70 font-mono">({count})</span>
                   </button>
                 );
               }
@@ -985,79 +953,76 @@ export default function AdminDashboardPage() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
                   <tr>
-                    <th className="py-3.5 px-4">Token #</th>
-                    <th className="py-3.5 px-4">Patient Details</th>
-                    <th className="py-3.5 px-4">Doctor & Room</th>
-                    <th className="py-3.5 px-4">Time Slot</th>
-                    <th className="py-3.5 px-4">Status</th>
-                    <th className="py-3.5 px-4 text-right">Workflow Actions</th>
+                    <th className="py-3 px-4">Token</th>
+                    <th className="py-3 px-4">Patient</th>
+                    <th className="py-3 px-4">Doctor & Room</th>
+                    <th className="py-3 px-4">Time</th>
+                    <th className="py-3 px-4">Status</th>
+                    <th className="py-3 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {filteredAppointments.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-10 text-center text-slate-400">
-                        No appointments found matching current filter.
+                      <td colSpan={6} className="py-8 text-center text-slate-400">
+                        No appointments.
                       </td>
                     </tr>
                   ) : (
                     filteredAppointments.map((appt) => (
                       <tr key={appt.id} className="hover:bg-slate-50/70 transition">
-                        <td className="py-3.5 px-4">
-                          <span className="font-mono font-bold text-sm text-teal-800 bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-200">
+                        <td className="py-3 px-4">
+                          <span className="font-mono font-bold text-xs text-teal-800 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
                             {appt.tokenNumber || '---'}
                           </span>
                         </td>
 
-                        <td className="py-3.5 px-4">
-                          <div className="font-bold text-slate-900 text-sm">{appt.patientName}</div>
-                          <div className="text-slate-500 flex items-center gap-2 mt-0.5">
-                            <span>📞 {appt.patientPhone}</span>
-                          </div>
+                        <td className="py-3 px-4">
+                          <div className="font-bold text-slate-900">{appt.patientName}</div>
+                          <div className="text-slate-400 text-[11px]">{appt.patientPhone}</div>
                         </td>
 
-                        <td className="py-3.5 px-4">
+                        <td className="py-3 px-4">
                           <div className="font-medium text-slate-800">{appt.doctorName}</div>
-                          <div className="text-[11px] text-teal-700 font-semibold">
+                          <div className="text-[11px] text-teal-700 font-medium">
                             {appt.roomNumber || 'Room 101'}
                           </div>
                         </td>
 
-                        <td className="py-3.5 px-4 text-slate-600">
-                          <div>{appt.appointmentDate}</div>
-                          <div className="font-medium text-slate-800">{appt.appointmentTime}</div>
+                        <td className="py-3 px-4 text-slate-600">
+                          <div>{appt.appointmentTime}</div>
+                          <div className="text-[11px] text-slate-400">{appt.appointmentDate}</div>
                         </td>
 
-                        <td className="py-3.5 px-4">
+                        <td className="py-3 px-4">
                           {appt.status === 'in_consultation' && (
-                            <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-teal-100 text-teal-800 animate-pulse inline-flex items-center gap-1">
-                              <span className="w-1.5 h-1.5 rounded-full bg-teal-600" />
-                              In Consult
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-100 text-teal-800 animate-pulse">
+                              Consulting
                             </span>
                           )}
                           {appt.status === 'confirmed' && (
-                            <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-100 text-blue-800 inline-flex items-center gap-1">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">
                               Waiting
                             </span>
                           )}
                           {appt.status === 'pending' && (
-                            <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
                               Pending
                             </span>
                           )}
                           {appt.status === 'completed' && (
-                            <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">
-                              Completed
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                              Done
                             </span>
                           )}
                           {appt.status === 'cancelled' && (
-                            <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500">
                               Cancelled
                             </span>
                           )}
                         </td>
 
-                        <td className="py-3.5 px-4 text-right">
+                        <td className="py-3 px-4 text-right">
                           <div className="inline-flex items-center gap-1.5">
                             {appt.status === 'pending' && (
                               <button
@@ -1072,7 +1037,7 @@ export default function AdminDashboardPage() {
                                 onClick={() => updateAppointmentStatus(appt.id, 'in_consultation')}
                                 className="px-2.5 py-1 bg-teal-700 hover:bg-teal-800 text-white rounded-lg text-[11px] font-semibold transition"
                               >
-                                Call Into Room
+                                Call In
                               </button>
                             )}
                             {appt.status === 'in_consultation' && (
@@ -1080,7 +1045,7 @@ export default function AdminDashboardPage() {
                                 onClick={() => updateAppointmentStatus(appt.id, 'completed')}
                                 className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[11px] font-semibold transition"
                               >
-                                Finish Visit
+                                Complete
                               </button>
                             )}
                             {appt.status !== 'cancelled' && appt.status !== 'completed' && (
@@ -1104,29 +1069,30 @@ export default function AdminDashboardPage() {
             <div className="sm:hidden divide-y divide-slate-100">
               {filteredAppointments.length === 0 ? (
                 <div className="p-6 text-center text-slate-400 text-xs">
-                  No appointments found matching current filter.
+                  No appointments.
                 </div>
               ) : (
                 filteredAppointments.map((appt) => (
-                  <div key={appt.id} className="p-4 space-y-3 min-w-0">
+                  <div key={appt.id} className="p-3.5 space-y-2.5 min-w-0">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <span className="font-mono font-bold text-xs text-teal-800 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200 inline-block">
-                          Token: {appt.tokenNumber || '---'}
-                        </span>
-                        <h3 className="font-bold text-slate-900 text-sm mt-1 truncate">{appt.patientName}</h3>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-mono font-bold text-xs text-teal-800 bg-teal-50 px-1.5 py-0.2 rounded border border-teal-200">
+                            {appt.tokenNumber || '---'}
+                          </span>
+                          <span className="font-bold text-slate-900 text-sm truncate">{appt.patientName}</span>
+                        </div>
                         {appt.patientPhone && (
-                          <a href={`tel:${appt.patientPhone}`} className="text-xs text-teal-700 font-medium flex items-center gap-1 mt-0.5">
-                            <span>📞 {appt.patientPhone}</span>
+                          <a href={`tel:${appt.patientPhone}`} className="text-xs text-slate-400 font-mono mt-0.5 block">
+                            {appt.patientPhone}
                           </a>
                         )}
                       </div>
 
                       <div className="shrink-0">
                         {appt.status === 'in_consultation' && (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-100 text-teal-800 animate-pulse inline-flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-teal-600" />
-                            In Consult
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-100 text-teal-800 animate-pulse">
+                            Consulting
                           </span>
                         )}
                         {appt.status === 'confirmed' && (
@@ -1141,7 +1107,7 @@ export default function AdminDashboardPage() {
                         )}
                         {appt.status === 'completed' && (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                            Completed
+                            Done
                           </span>
                         )}
                         {appt.status === 'cancelled' && (
@@ -1152,25 +1118,17 @@ export default function AdminDashboardPage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2 bg-slate-50 rounded-xl p-2.5 text-xs text-slate-600">
-                      <div>
-                        <span className="text-[10px] uppercase font-semibold text-slate-400 block">Doctor & Room</span>
-                        <span className="font-medium text-slate-800 truncate block">{appt.doctorName}</span>
-                        <span className="text-[11px] text-teal-700 font-bold block">{appt.roomNumber || 'Room 101'}</span>
-                      </div>
-                      <div>
-                        <span className="text-[10px] uppercase font-semibold text-slate-400 block">Schedule</span>
-                        <span className="text-slate-700 block truncate">{appt.appointmentDate}</span>
-                        <span className="font-semibold text-slate-900 block">{appt.appointmentTime}</span>
-                      </div>
+                    <div className="flex items-center justify-between text-xs text-slate-600 bg-slate-50 rounded-lg px-2.5 py-1.5">
+                      <span className="font-medium text-slate-800 truncate">{appt.doctorName} • {appt.roomNumber || 'R101'}</span>
+                      <span className="font-semibold text-slate-700 shrink-0 ml-2">{appt.appointmentTime}</span>
                     </div>
 
                     {/* Mobile Workflow Actions */}
-                    <div className="flex items-center gap-2 pt-1">
+                    <div className="flex items-center gap-2 pt-0.5">
                       {appt.status === 'pending' && (
                         <button
                           onClick={() => updateAppointmentStatus(appt.id, 'confirmed')}
-                          className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-xl text-xs font-semibold shadow-xs transition active:scale-98 text-center"
+                          className="flex-1 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-semibold transition"
                         >
                           Confirm
                         </button>
@@ -1178,23 +1136,23 @@ export default function AdminDashboardPage() {
                       {appt.status === 'confirmed' && (
                         <button
                           onClick={() => updateAppointmentStatus(appt.id, 'in_consultation')}
-                          className="flex-1 py-2.5 bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white rounded-xl text-xs font-semibold shadow-xs transition active:scale-98 text-center"
+                          className="flex-1 py-2 bg-teal-700 hover:bg-teal-800 text-white rounded-xl text-xs font-semibold transition"
                         >
-                          Call Into Room
+                          Call In
                         </button>
                       )}
                       {appt.status === 'in_consultation' && (
                         <button
                           onClick={() => updateAppointmentStatus(appt.id, 'completed')}
-                          className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-semibold shadow-xs transition active:scale-98 text-center"
+                          className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition"
                         >
-                          Finish Visit
+                          Complete
                         </button>
                       )}
                       {appt.status !== 'cancelled' && appt.status !== 'completed' && (
                         <button
                           onClick={() => updateAppointmentStatus(appt.id, 'cancelled')}
-                          className="px-3 py-2.5 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 rounded-xl text-xs font-medium transition active:scale-98"
+                          className="px-3 py-2 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 rounded-xl text-xs font-medium transition"
                         >
                           Cancel
                         </button>
@@ -1212,23 +1170,18 @@ export default function AdminDashboardPage() {
       {/* TAB 3: PATIENTS & EMR CONSULTATION */}
       {/* ========================================================================= */}
       {activeTab === 'patients' && (
-        <div className="space-y-4 sm:space-y-6 animate-fade-in min-w-0">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 min-w-0">
-            <div className="min-w-0">
-              <h2 className="text-lg sm:text-xl font-bold text-slate-900 truncate">
-                Electronic Medical Records (EMR) & Patient Files
-              </h2>
-              <p className="text-xs text-slate-500">
-                Search master patient database, view allergies, and record physician clinical encounters.
-              </p>
-            </div>
+        <div className="space-y-3 sm:space-y-4 animate-fade-in min-w-0">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 min-w-0">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 truncate">
+              Patients
+            </h2>
 
             <button
               onClick={() => setShowNewPatientModal(true)}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-4 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition shrink-0 active:scale-98 cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition shrink-0 active:scale-98 cursor-pointer"
             >
               <Plus className="w-4 h-4 shrink-0" />
-              <span>Register New Patient</span>
+              <span>New Patient</span>
             </button>
           </div>
 
@@ -1239,13 +1192,13 @@ export default function AdminDashboardPage() {
               type="text"
               value={patientSearch}
               onChange={(e) => setPatientSearch(e.target.value)}
-              placeholder="Search by HN, patient name, or phone..."
-              className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-base sm:text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
+              placeholder="Search by name, HN, phone..."
+              className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-base sm:text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
             />
           </div>
 
           {/* Patient Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 min-w-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 min-w-0">
             {patients
               .filter(
                 (p) =>
@@ -1257,21 +1210,21 @@ export default function AdminDashboardPage() {
               .map((pat) => (
                 <div
                   key={pat.id}
-                  className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-xs space-y-3.5 hover:border-teal-300 transition min-w-0"
+                  className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs space-y-3 hover:border-teal-300 transition min-w-0"
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5 min-w-0">
+                  <div className="flex items-start justify-between gap-2 min-w-0">
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono text-xs font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200 shrink-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono text-xs font-bold text-teal-700 bg-teal-50 px-1.5 py-0.2 rounded border border-teal-200 shrink-0">
                           {pat.hn}
                         </span>
                         <span className="text-xs text-slate-400 font-medium">
-                          {pat.gender}, {pat.age} yrs
+                          {pat.gender}, {pat.age}y
                         </span>
                       </div>
-                      <h3 className="text-base sm:text-lg font-bold text-slate-900 mt-1 truncate">{pat.name}</h3>
-                      <a href={`tel:${pat.phone}`} className="text-xs text-slate-500 hover:text-teal-700 transition flex items-center gap-1 mt-0.5">
-                        <span>📞 {pat.phone}</span>
+                      <h3 className="text-sm sm:text-base font-bold text-slate-900 mt-1 truncate">{pat.name}</h3>
+                      <a href={`tel:${pat.phone}`} className="text-xs text-slate-500 hover:text-teal-700 font-mono block mt-0.5">
+                        {pat.phone}
                       </a>
                     </div>
 
@@ -1280,73 +1233,54 @@ export default function AdminDashboardPage() {
                         setSelectedPatientForEMR(pat);
                         setShowNewEMRModal(true);
                       }}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-2 sm:py-1.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-xl text-xs font-semibold shadow-xs transition shrink-0 active:scale-98"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-semibold transition shrink-0"
                     >
                       <Stethoscope className="w-3.5 h-3.5 shrink-0" />
-                      <span>New Consult Note</span>
+                      <span>Consult</span>
                     </button>
                   </div>
 
-                  {/* Medical Badges */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs min-w-0">
-                    <div>
-                      <span className="text-[10px] text-slate-400 font-semibold uppercase block">
-                        Blood Group
+                  {/* Medical Tags */}
+                  <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+                    <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 font-semibold border border-rose-100">
+                      Blood {pat.bloodType}
+                    </span>
+                    {pat.allergies.length > 0 && (
+                      <span className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200">
+                        Allergy: {pat.allergies.join(', ')}
                       </span>
-                      <span className="font-bold text-rose-700">{pat.bloodType}</span>
-                    </div>
-
-                    <div>
-                      <span className="text-[10px] text-slate-400 font-semibold uppercase block">
-                        Known Drug Allergies
+                    )}
+                    {pat.chronicConditions.length > 0 && (
+                      <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
+                        {pat.chronicConditions.join(', ')}
                       </span>
-                      <span className="font-medium text-slate-800 break-words">
-                        {pat.allergies.join(', ') || 'No known drug allergies'}
-                      </span>
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <span className="text-[10px] text-slate-400 font-semibold uppercase block">
-                        Chronic Conditions
-                      </span>
-                      <span className="text-slate-700 break-words">
-                        {pat.chronicConditions.join(', ') || 'None recorded'}
-                      </span>
-                    </div>
+                    )}
                   </div>
 
                   {/* Past Visits / EMR History */}
-                  <div className="pt-2 border-t border-slate-100">
-                    <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-2">
-                      Clinical Visit History
-                    </span>
-                    {emrRecords.filter((e) => e.patientId === pat.id || e.patientHn === pat.hn)
-                      .length === 0 ? (
-                      <p className="text-xs text-slate-400">No previous clinical notes recorded.</p>
-                    ) : (
-                      <div className="space-y-2">
-                        {emrRecords
-                          .filter((e) => e.patientId === pat.id || e.patientHn === pat.hn)
-                          .map((rec) => (
-                            <div
-                              key={rec.id}
-                              className="p-3 bg-teal-50/40 rounded-xl border border-teal-100 text-xs space-y-1 min-w-0"
-                            >
-                              <div className="flex items-center justify-between text-[11px]">
-                                <span className="font-bold text-teal-900">{rec.date}</span>
-                                <span className="text-slate-500 truncate ml-2">{rec.doctorName}</span>
-                              </div>
-                              <p className="font-semibold text-slate-900 truncate">{rec.diagnosis}</p>
-                              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-600">
-                                <span>BP: {rec.vitals.bloodPressure}</span>
-                                <span>HR: {rec.vitals.heartRate} bpm</span>
-                                <span>BMI: {rec.vitals.bmi}</span>
-                              </div>
+                  {emrRecords.filter((e) => e.patientId === pat.id || e.patientHn === pat.hn).length > 0 && (
+                    <div className="pt-2 border-t border-slate-100 space-y-1.5">
+                      {emrRecords
+                        .filter((e) => e.patientId === pat.id || e.patientHn === pat.hn)
+                        .slice(0, 1)
+                        .map((rec) => (
+                          <div
+                            key={rec.id}
+                            className="p-2.5 bg-teal-50/40 rounded-xl border border-teal-100 text-xs space-y-1 min-w-0"
+                          >
+                            <div className="flex items-center justify-between text-[11px]">
+                              <span className="font-bold text-teal-900">{rec.date}</span>
+                              <span className="text-slate-500 truncate ml-2">{rec.doctorName}</span>
                             </div>
-                          ))}
-                      </div>
-                    )}
-                  </div>
+                            <p className="font-semibold text-slate-900 truncate">{rec.diagnosis}</p>
+                            <div className="flex items-center gap-2 text-[10px] text-slate-500 font-mono">
+                              <span>BP: {rec.vitals.bloodPressure}</span>
+                              <span>HR: {rec.vitals.heartRate}</span>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
                 </div>
               ))}
           </div>
@@ -1357,52 +1291,49 @@ export default function AdminDashboardPage() {
       {/* TAB 4: PHARMACY & DIGITAL PRESCRIPTIONS */}
       {/* ========================================================================= */}
       {activeTab === 'pharmacy' && (
-        <div className="space-y-6 sm:space-y-8 animate-fade-in min-w-0">
+        <div className="space-y-4 sm:space-y-6 animate-fade-in min-w-0">
           {/* Section 1: Prescription Dispensing Counter */}
-          <div className="space-y-3 sm:space-y-4 min-w-0">
-            <div>
-              <h2 className="text-lg sm:text-xl font-bold text-slate-900">
-                Doctor Prescriptions & Dispensary Desk
-              </h2>
-              <p className="text-xs text-slate-500">
-                Dispense electronic prescriptions to patients and auto-deduct pharmacy stock.
-              </p>
-            </div>
+          <div className="space-y-2.5 sm:space-y-3 min-w-0">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900">
+              Prescriptions
+            </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 min-w-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 min-w-0">
               {prescriptions.map((rx) => (
                 <div
                   key={rx.id}
-                  className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-3.5 shadow-xs min-w-0"
+                  className="bg-white rounded-2xl border border-slate-200 p-4 space-y-3 shadow-xs min-w-0"
                 >
                   <div className="flex items-start justify-between gap-2 min-w-0">
                     <div className="min-w-0">
-                      <span className="font-mono text-xs font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded border border-teal-200 inline-block">
-                        {rx.prescriptionNumber}
-                      </span>
-                      <h3 className="text-sm sm:text-base font-bold text-slate-900 mt-1 truncate">{rx.patientName}</h3>
-                      <p className="text-xs text-slate-500 truncate">
-                        Prescribed by {rx.doctorName} on {rx.date}
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono text-xs font-bold text-teal-800 bg-teal-50 px-1.5 py-0.2 rounded border border-teal-200">
+                          {rx.prescriptionNumber}
+                        </span>
+                        <h3 className="text-sm sm:text-base font-bold text-slate-900 truncate">{rx.patientName}</h3>
+                      </div>
+                      <p className="text-xs text-slate-400 mt-0.5 truncate">
+                        {rx.doctorName} • {rx.date}
                       </p>
                     </div>
 
                     <div className="flex items-center gap-1.5 shrink-0">
                       <button
                         onClick={() => setPrintPrescription(rx)}
-                        className="p-2 sm:p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium cursor-pointer"
-                        title="Print Official Rx Slip"
-                        aria-label="Print Rx Slip"
+                        className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs cursor-pointer"
+                        title="Print Rx"
+                        aria-label="Print Rx"
                       >
-                        <Printer className="w-4 h-4" />
+                        <Printer className="w-3.5 h-3.5" />
                       </button>
                       {rx.status === 'dispensed' ? (
-                        <span className="px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-emerald-100 text-emerald-800">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
                           Dispensed
                         </span>
                       ) : (
                         <button
                           onClick={() => handleDispenseRx(rx.id)}
-                          className="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-xl text-xs font-bold shadow-xs transition active:scale-98"
+                          className="px-2.5 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow-xs transition"
                         >
                           Dispense
                         </button>
@@ -1413,14 +1344,14 @@ export default function AdminDashboardPage() {
                   {/* Medications in Rx */}
                   <div className="divide-y divide-slate-100 text-xs">
                     {rx.items.map((it, idx) => (
-                      <div key={idx} className="py-2 flex items-center justify-between gap-2 min-w-0">
+                      <div key={idx} className="py-1.5 flex items-center justify-between gap-2 min-w-0">
                         <div className="min-w-0">
                           <p className="font-bold text-slate-900 truncate">{it.medicineName}</p>
                           <p className="text-[11px] text-slate-500 truncate">
                             {it.frequency} • {it.duration}
                           </p>
                         </div>
-                        <span className="font-mono font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded shrink-0">
+                        <span className="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded shrink-0">
                           Qty: {it.quantity}
                         </span>
                       </div>
@@ -1432,40 +1363,35 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Section 2: Medicine Inventory Catalog */}
-          <div className="space-y-4 pt-6 border-t border-slate-200 min-w-0">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 min-w-0">
-              <div className="min-w-0">
-                <h3 className="text-base sm:text-lg font-bold text-slate-900 truncate">
-                  Pharmacy Drug Catalog & Inventory Stock
-                </h3>
-                <p className="text-xs text-slate-500">
-                  Manage medicine prices, monitor stock quantities, and restock units.
-                </p>
-              </div>
+          <div className="space-y-3 pt-4 border-t border-slate-200 min-w-0">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 min-w-0">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 truncate">
+                Inventory
+              </h3>
 
               <button
                 onClick={() => setShowNewMedicineModal(true)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white px-4 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-sm transition shrink-0 active:scale-98"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition shrink-0 active:scale-98"
               >
                 <Plus className="w-4 h-4 shrink-0" />
-                <span>Add New Medicine</span>
+                <span>Add Medicine</span>
               </button>
             </div>
 
             {/* Low Stock Banner */}
             {lowStockMedicines.length > 0 && (
-              <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-w-0">
+              <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 min-w-0">
                 <div className="flex items-center gap-2 min-w-0">
                   <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span className="leading-normal">
-                    <strong>Warning:</strong> {lowStockMedicines.length} medicine(s) have reached reorder threshold (e.g. {lowStockMedicines[0]?.brandName}).
+                  <span>
+                    <strong>Low Stock:</strong> {lowStockMedicines.length} medicine(s) below reorder level.
                   </span>
                 </div>
                 <button
                   onClick={() => handleStockUpdate(lowStockMedicines[0]?.id || '', 50)}
-                  className="w-full sm:w-auto text-center px-3 py-2 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white rounded-xl font-bold text-xs shrink-0 transition"
+                  className="px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shrink-0 transition"
                 >
-                  Quick Restock +50
+                  Restock +50
                 </button>
               </div>
             )}
@@ -1477,13 +1403,13 @@ export default function AdminDashboardPage() {
                 <table className="w-full text-left text-xs">
                   <thead className="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
                     <tr>
-                      <th className="py-3 px-4">Code</th>
-                      <th className="py-3 px-4">Brand / Generic Name</th>
-                      <th className="py-3 px-4">Dosage / Form</th>
-                      <th className="py-3 px-4">Stock Level</th>
-                      <th className="py-3 px-4">Unit Price (MMK)</th>
-                      <th className="py-3 px-4">Expiry Date</th>
-                      <th className="py-3 px-4 text-right">Stock Adjust</th>
+                      <th className="py-2.5 px-4">Code</th>
+                      <th className="py-2.5 px-4">Brand / Generic</th>
+                      <th className="py-2.5 px-4">Form</th>
+                      <th className="py-2.5 px-4">Stock</th>
+                      <th className="py-2.5 px-4">Price</th>
+                      <th className="py-2.5 px-4">Expiry</th>
+                      <th className="py-2.5 px-4 text-right">Adjust</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -1491,17 +1417,17 @@ export default function AdminDashboardPage() {
                       const isLow = med.currentStock <= med.reorderLevel;
                       return (
                         <tr key={med.id} className="hover:bg-slate-50/70 transition">
-                          <td className="py-3 px-4 font-mono font-bold text-slate-700">
+                          <td className="py-2.5 px-4 font-mono font-bold text-slate-600">
                             {med.code}
                           </td>
-                          <td className="py-3 px-4">
-                            <div className="font-bold text-slate-900 text-sm">{med.brandName}</div>
-                            <div className="text-slate-500 text-[11px]">{med.genericName}</div>
+                          <td className="py-2.5 px-4">
+                            <div className="font-bold text-slate-900">{med.brandName}</div>
+                            <div className="text-slate-400 text-[11px]">{med.genericName}</div>
                           </td>
-                          <td className="py-3 px-4 text-slate-600">
-                            {med.strength} ({med.dosageForm})
+                          <td className="py-2.5 px-4 text-slate-600">
+                            {med.strength} • {med.dosageForm}
                           </td>
-                          <td className="py-3 px-4">
+                          <td className="py-2.5 px-4">
                             <span
                               className={`font-mono font-bold text-xs px-2 py-0.5 rounded ${
                                 isLow
@@ -1509,29 +1435,24 @@ export default function AdminDashboardPage() {
                                   : 'bg-emerald-50 text-emerald-800'
                               }`}
                             >
-                              {med.currentStock} units
+                              {med.currentStock}
                             </span>
-                            {isLow && (
-                              <span className="block text-[10px] text-rose-600 font-semibold mt-0.5">
-                                Reorder alert!
-                              </span>
-                            )}
                           </td>
-                          <td className="py-3 px-4 font-mono font-bold text-slate-900">
+                          <td className="py-2.5 px-4 font-mono font-bold text-slate-900">
                             {med.unitPrice.toLocaleString()} Ks
                           </td>
-                          <td className="py-3 px-4 text-slate-500">{med.expiryDate}</td>
-                          <td className="py-3 px-4 text-right">
+                          <td className="py-2.5 px-4 text-slate-500">{med.expiryDate}</td>
+                          <td className="py-2.5 px-4 text-right">
                             <div className="inline-flex items-center gap-1">
                               <button
                                 onClick={() => handleStockUpdate(med.id, 10)}
-                                className="px-2 py-1 bg-slate-100 hover:bg-teal-50 hover:text-teal-700 rounded text-[11px] font-bold transition"
+                                className="px-2 py-0.5 bg-slate-100 hover:bg-teal-50 hover:text-teal-700 rounded text-xs font-bold transition"
                               >
                                 +10
                               </button>
                               <button
                                 onClick={() => handleStockUpdate(med.id, 50)}
-                                className="px-2 py-1 bg-slate-100 hover:bg-teal-50 hover:text-teal-700 rounded text-[11px] font-bold transition"
+                                className="px-2 py-0.5 bg-slate-100 hover:bg-teal-50 hover:text-teal-700 rounded text-xs font-bold transition"
                               >
                                 +50
                               </button>
@@ -1549,18 +1470,15 @@ export default function AdminDashboardPage() {
                 {filteredMedicines.map((med) => {
                   const isLow = med.currentStock <= med.reorderLevel;
                   return (
-                    <div key={med.id} className="p-4 space-y-2.5 min-w-0">
+                    <div key={med.id} className="p-3 space-y-1.5 min-w-0">
                       <div className="flex items-start justify-between gap-2 min-w-0">
                         <div className="min-w-0">
-                          <span className="font-mono text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
-                            {med.code}
-                          </span>
-                          <h4 className="font-bold text-slate-900 text-sm mt-0.5 truncate">{med.brandName}</h4>
-                          <p className="text-xs text-slate-500 truncate">{med.genericName} • {med.strength}</p>
+                          <h4 className="font-bold text-slate-900 text-sm truncate">{med.brandName}</h4>
+                          <p className="text-xs text-slate-400 truncate">{med.genericName} • {med.strength}</p>
                         </div>
                         <div className="text-right shrink-0">
                           <span
-                            className={`font-mono font-bold text-xs px-2 py-0.5 rounded block ${
+                            className={`font-mono font-bold text-xs px-2 py-0.5 rounded inline-block ${
                               isLow
                                 ? 'bg-rose-100 text-rose-700 border border-rose-200'
                                 : 'bg-emerald-50 text-emerald-800'
@@ -1568,25 +1486,24 @@ export default function AdminDashboardPage() {
                           >
                             {med.currentStock} units
                           </span>
-                          <span className="font-mono font-bold text-xs text-slate-900 mt-1 block">
+                          <span className="font-mono font-bold text-xs text-slate-900 mt-0.5 block">
                             {med.unitPrice.toLocaleString()} Ks
                           </span>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-1 border-t border-slate-50 text-xs">
-                        <span className="text-[11px] text-slate-400">Exp: {med.expiryDate}</span>
+                      <div className="flex items-center justify-between pt-1 text-xs">
+                        <span className="text-[11px] text-slate-400 font-mono">Exp: {med.expiryDate}</span>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[11px] text-slate-500 mr-1">Restock:</span>
                           <button
                             onClick={() => handleStockUpdate(med.id, 10)}
-                            className="px-2.5 py-1 bg-slate-100 hover:bg-teal-50 hover:text-teal-700 active:bg-teal-100 text-slate-700 font-bold rounded-lg text-xs transition"
+                            className="px-2 py-0.5 bg-slate-100 text-slate-700 font-bold rounded text-xs"
                           >
                             +10
                           </button>
                           <button
                             onClick={() => handleStockUpdate(med.id, 50)}
-                            className="px-2.5 py-1 bg-slate-100 hover:bg-teal-50 hover:text-teal-700 active:bg-teal-100 text-slate-700 font-bold rounded-lg text-xs transition"
+                            className="px-2 py-0.5 bg-slate-100 text-slate-700 font-bold rounded text-xs"
                           >
                             +50
                           </button>
@@ -1605,61 +1522,55 @@ export default function AdminDashboardPage() {
       {/* TAB 5: BILLING, INVOICING & CASHIER POS */}
       {/* ========================================================================= */}
       {activeTab === 'billing' && (
-        <div className="space-y-4 sm:space-y-6 animate-fade-in min-w-0">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 min-w-0">
-            <div className="min-w-0">
-              <h2 className="text-lg sm:text-xl font-bold text-slate-900 truncate">
-                Clinic Cashier Point of Sale (POS) & Invoicing
-              </h2>
-              <p className="text-xs text-slate-500">
-                Generate itemized bills, process cash / mobile payments (KBZPay, Wave), and print receipts.
-              </p>
-            </div>
+        <div className="space-y-4 sm:space-y-5 animate-fade-in min-w-0">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 min-w-0">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 truncate">
+              Billing & Invoices
+            </h2>
 
             <button
               onClick={() => setShowNewInvoiceModal(true)}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-4 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition shrink-0 active:scale-98 cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition shrink-0 active:scale-98 cursor-pointer"
             >
               <Plus className="w-4 h-4 shrink-0" />
-              <span>Create New Invoice / Bill</span>
+              <span>New Invoice</span>
             </button>
           </div>
 
           {/* Daily Cashier Financial Summary */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 min-w-0">
-            <div className="bg-emerald-50 border border-emerald-200 p-4 sm:p-5 rounded-2xl min-w-0">
-              <span className="text-[11px] sm:text-xs font-bold uppercase text-emerald-800 tracking-wider block">
-                Collected Revenue (Paid)
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 min-w-0">
+            <div className="bg-emerald-50 border border-emerald-200 p-3.5 sm:p-4 rounded-2xl min-w-0">
+              <span className="text-[11px] font-bold uppercase text-emerald-800 tracking-wider block">
+                Paid Revenue
               </span>
-              <p className="text-xl sm:text-2xl font-black text-emerald-950 mt-1 truncate">
+              <p className="text-lg sm:text-xl font-black text-emerald-950 mt-1 truncate">
                 {billingMetrics.totalRevenueMMK.toLocaleString()} MMK
               </p>
-              <p className="text-[11px] text-emerald-700 mt-1">
-                {billingMetrics.paidCount} settled transactions
+              <p className="text-[11px] text-emerald-700 mt-0.5">
+                {billingMetrics.paidCount} settled bills
               </p>
             </div>
 
-            <div className="bg-amber-50 border border-amber-200 p-4 sm:p-5 rounded-2xl min-w-0">
-              <span className="text-[11px] sm:text-xs font-bold uppercase text-amber-800 tracking-wider block">
-                Outstanding (Pending Collection)
+            <div className="bg-amber-50 border border-amber-200 p-3.5 sm:p-4 rounded-2xl min-w-0">
+              <span className="text-[11px] font-bold uppercase text-amber-800 tracking-wider block">
+                Pending Collection
               </span>
-              <p className="text-xl sm:text-2xl font-black text-amber-950 mt-1 truncate">
+              <p className="text-lg sm:text-xl font-black text-amber-950 mt-1 truncate">
                 {billingMetrics.pendingRevenueMMK.toLocaleString()} MMK
               </p>
-              <p className="text-[11px] text-amber-700 mt-1">
-                {billingMetrics.unpaidCount} unpaid patient bills
+              <p className="text-[11px] text-amber-700 mt-0.5">
+                {billingMetrics.unpaidCount} unpaid bills
               </p>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 p-4 sm:p-5 rounded-2xl min-w-0">
-              <span className="text-[11px] sm:text-xs font-bold uppercase text-slate-700 tracking-wider block">
-                Supported Pay Methods
+            <div className="bg-slate-50 border border-slate-200 p-3.5 sm:p-4 rounded-2xl min-w-0">
+              <span className="text-[11px] font-bold uppercase text-slate-600 tracking-wider block">
+                Payment Methods
               </span>
-              <p className="text-xs sm:text-sm font-bold text-slate-900 mt-1.5 flex items-center gap-1.5 flex-wrap">
-                <span>Cash</span> • <span className="text-blue-600">KBZPay</span> •{' '}
-                <span className="text-amber-600">WavePay</span> • <span>Cards</span>
+              <p className="text-xs sm:text-sm font-bold text-slate-800 mt-1 truncate">
+                Cash • KBZPay • WavePay • Cards
               </p>
-              <p className="text-[11px] text-slate-500 mt-1">Cash drawer reconciled</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">Instant drawer reconciliation</p>
             </div>
           </div>
 
@@ -1670,76 +1581,72 @@ export default function AdminDashboardPage() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
                   <tr>
-                    <th className="py-3.5 px-4">Invoice #</th>
-                    <th className="py-3.5 px-4">Patient Name</th>
-                    <th className="py-3.5 px-4">Date</th>
-                    <th className="py-3.5 px-4">Bill Items Breakdown</th>
-                    <th className="py-3.5 px-4">Total (MMK)</th>
-                    <th className="py-3.5 px-4">Status</th>
-                    <th className="py-3.5 px-4 text-right">Cashier Actions</th>
+                    <th className="py-2.5 px-4">Invoice</th>
+                    <th className="py-2.5 px-4">Patient</th>
+                    <th className="py-2.5 px-4">Date</th>
+                    <th className="py-2.5 px-4">Items</th>
+                    <th className="py-2.5 px-4">Total</th>
+                    <th className="py-2.5 px-4">Status</th>
+                    <th className="py-2.5 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {invoices.map((inv) => (
                     <tr key={inv.id} className="hover:bg-slate-50/70 transition">
-                      <td className="py-3.5 px-4 font-mono font-bold text-slate-800">
+                      <td className="py-3 px-4 font-mono font-bold text-slate-800">
                         {inv.invoiceNumber}
                       </td>
 
-                      <td className="py-3.5 px-4">
-                        <div className="font-bold text-slate-900 text-sm">{inv.patientName}</div>
+                      <td className="py-3 px-4">
+                        <div className="font-bold text-slate-900">{inv.patientName}</div>
                         {inv.patientPhone && (
-                          <div className="text-[11px] text-slate-500">📞 {inv.patientPhone}</div>
+                          <div className="text-[11px] text-slate-400 font-mono">{inv.patientPhone}</div>
                         )}
                       </td>
 
-                      <td className="py-3.5 px-4 text-slate-600">{inv.date}</td>
+                      <td className="py-3 px-4 text-slate-500">{inv.date}</td>
 
-                      <td className="py-3.5 px-4 text-slate-600 max-w-xs">
-                        {inv.items.map((it, idx) => (
-                          <div key={idx} className="truncate">
-                            • {it.description} ({it.total.toLocaleString()} Ks)
-                          </div>
-                        ))}
+                      <td className="py-3 px-4 text-slate-600 max-w-xs truncate">
+                        {inv.items.map((it) => it.description).join(', ')}
                       </td>
 
-                      <td className="py-3.5 px-4 font-mono font-bold text-sm text-slate-900">
+                      <td className="py-3 px-4 font-mono font-bold text-slate-900">
                         {inv.totalAmount.toLocaleString()} Ks
                       </td>
 
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-4">
                         {inv.status === 'paid' ? (
-                          <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
                             Paid ({inv.paymentMethod?.toUpperCase()})
                           </span>
                         ) : (
-                          <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
                             Unpaid
                           </span>
                         )}
                       </td>
 
-                      <td className="py-3.5 px-4 text-right">
+                      <td className="py-3 px-4 text-right">
                         <div className="inline-flex items-center gap-1.5">
                           <button
                             onClick={() => setPrintInvoice(inv)}
-                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs cursor-pointer"
-                            title="Print Patient Receipt"
-                            aria-label="Print Patient Receipt"
+                            className="p-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs cursor-pointer"
+                            title="Receipt"
+                            aria-label="Receipt"
                           >
-                            <Printer className="w-4 h-4" />
+                            <Printer className="w-3.5 h-3.5" />
                           </button>
 
                           {inv.status === 'unpaid' ? (
                             <button
                               onClick={() => setPayingInvoice(inv)}
-                              className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs transition"
+                              className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition"
                             >
-                              Collect Payment
+                              Collect
                             </button>
                           ) : (
-                            <span className="text-[11px] text-emerald-700 font-semibold">
-                              Receipt #{inv.receiptNumber}
+                            <span className="text-[11px] text-emerald-700 font-medium font-mono">
+                              #{inv.receiptNumber}
                             </span>
                           )}
                         </div>
@@ -1754,77 +1661,64 @@ export default function AdminDashboardPage() {
             <div className="sm:hidden divide-y divide-slate-100">
               {invoices.length === 0 ? (
                 <div className="p-6 text-center text-slate-400 text-xs">
-                  No billing invoices recorded yet.
+                  No invoices.
                 </div>
               ) : (
                 invoices.map((inv) => (
-                  <div key={inv.id} className="p-4 space-y-3 min-w-0">
+                  <div key={inv.id} className="p-3.5 space-y-2 min-w-0">
                     <div className="flex items-start justify-between gap-2 min-w-0">
                       <div className="min-w-0">
-                        <span className="font-mono text-xs font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded-md inline-block">
-                          {inv.invoiceNumber}
-                        </span>
-                        <h3 className="font-bold text-slate-900 text-sm mt-1 truncate">{inv.patientName}</h3>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-mono text-xs font-bold text-slate-800 bg-slate-100 px-1.5 py-0.2 rounded">
+                            {inv.invoiceNumber}
+                          </span>
+                          <h3 className="font-bold text-slate-900 text-sm truncate">{inv.patientName}</h3>
+                        </div>
                         {inv.patientPhone && (
-                          <a href={`tel:${inv.patientPhone}`} className="text-xs text-teal-700 font-medium flex items-center gap-1 mt-0.5">
-                            <span>📞 {inv.patientPhone}</span>
+                          <a href={`tel:${inv.patientPhone}`} className="text-xs text-slate-400 font-mono block mt-0.5">
+                            {inv.patientPhone}
                           </a>
                         )}
                       </div>
 
                       <div className="shrink-0">
                         {inv.status === 'paid' ? (
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 shrink-0 inline-block">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
                             Paid ({inv.paymentMethod?.toUpperCase() || 'CASH'})
                           </span>
                         ) : (
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 shrink-0 inline-block">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
                             Unpaid
                           </span>
                         )}
                       </div>
                     </div>
 
-                    <div className="bg-slate-50 rounded-xl p-2.5 text-xs text-slate-600 space-y-1">
-                      <div className="text-[10px] uppercase font-semibold text-slate-400 mb-0.5">Itemized Breakdown:</div>
-                      {inv.items.map((it, idx) => (
-                        <div key={idx} className="flex justify-between text-[11px] gap-2">
-                          <span className="truncate">• {it.description}</span>
-                          <span className="font-mono font-medium shrink-0">{it.total.toLocaleString()} Ks</span>
-                        </div>
-                      ))}
+                    <div className="flex items-center justify-between text-xs text-slate-500 truncate">
+                      <span className="truncate">{inv.items.map((it) => it.description).join(', ')}</span>
+                      <span className="font-mono font-bold text-slate-900 shrink-0 ml-2">
+                        {inv.totalAmount.toLocaleString()} Ks
+                      </span>
                     </div>
 
-                    <div className="flex items-center justify-between pt-1">
-                      <div>
-                        <span className="text-[10px] text-slate-400 uppercase font-semibold block">Total Amount</span>
-                        <span className="font-mono font-black text-base text-slate-900">
-                          {inv.totalAmount.toLocaleString()} Ks
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => setPrintInvoice(inv)}
-                          className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 transition cursor-pointer"
-                          title="Print Patient Receipt"
-                          aria-label="Print Patient Receipt"
-                        >
-                          <Printer className="w-4 h-4" />
-                        </button>
+                    <div className="flex items-center justify-end gap-2 pt-1 border-t border-slate-50">
+                      <button
+                        onClick={() => setPrintInvoice(inv)}
+                        className="p-2 rounded-xl bg-slate-100 text-slate-600 transition"
+                        title="Print Receipt"
+                        aria-label="Print Receipt"
+                      >
+                        <Printer className="w-3.5 h-3.5" />
+                      </button>
 
-                        {inv.status === 'unpaid' ? (
-                          <button
-                            onClick={() => setPayingInvoice(inv)}
-                            className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-xs transition active:scale-98 cursor-pointer"
-                          >
-                            Collect Payment
-                          </button>
-                        ) : (
-                          <span className="text-[11px] text-emerald-700 font-semibold px-2 py-1 bg-emerald-50 rounded-lg">
-                            #{inv.receiptNumber || 'REC'}
-                          </span>
-                        )}
-                      </div>
+                      {inv.status === 'unpaid' && (
+                        <button
+                          onClick={() => setPayingInvoice(inv)}
+                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition"
+                        >
+                          Collect
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))
@@ -1835,13 +1729,13 @@ export default function AdminDashboardPage() {
       )}
 
       {/* ========================================================================= */}
-      {/* MODAL 1: NEW WALK-IN APPOINTMENT */}
+      {/* MODAL 1: NEW APPOINTMENT */}
       {/* ========================================================================= */}
       {showNewApptModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-8 space-y-4 sm:space-y-5 shadow-2xl animate-fade-in my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base sm:text-lg font-bold text-slate-900">Book Walk-in / Phone Visit</h3>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900">Book Appointment</h3>
               <button
                 onClick={() => setShowNewApptModal(false)}
                 className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer"
@@ -1853,7 +1747,7 @@ export default function AdminDashboardPage() {
 
             <form onSubmit={handleCreateAppointment} className="space-y-4 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Patient Full Name</label>
+                <label className="font-semibold text-slate-700 block mb-1">Patient Name</label>
                 <input
                   type="text"
                   required
@@ -1866,7 +1760,7 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Phone Number</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Phone</label>
                   <input
                     type="tel"
                     required
@@ -1878,7 +1772,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Select Doctor</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Doctor</label>
                   <select
                     value={newApptDoctor}
                     onChange={(e) => {
@@ -1899,7 +1793,7 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Appointment Date</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Date</label>
                   <input
                     type="date"
                     required
@@ -1910,7 +1804,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Time Slot</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Time</label>
                   <select
                     value={newApptTime}
                     onChange={(e) => setNewApptTime(e.target.value)}
@@ -1929,12 +1823,12 @@ export default function AdminDashboardPage() {
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Notes / Chief Complaint</label>
+                <label className="font-semibold text-slate-700 block mb-1">Notes</label>
                 <textarea
                   rows={2}
                   value={newApptNotes}
                   onChange={(e) => setNewApptNotes(e.target.value)}
-                  placeholder="Patient symptoms or notes..."
+                  placeholder="Patient notes or symptoms..."
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 text-base sm:text-xs"
                 />
               </div>
@@ -1943,7 +1837,7 @@ export default function AdminDashboardPage() {
                 type="submit"
                 className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md transition cursor-pointer min-h-[44px]"
               >
-                Confirm & Issue Queue Token
+                Confirm & Issue Token
               </button>
             </form>
           </div>
@@ -1957,7 +1851,7 @@ export default function AdminDashboardPage() {
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-8 space-y-4 sm:space-y-5 shadow-2xl animate-fade-in my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base sm:text-lg font-bold text-slate-900">Register Master Patient Record</h3>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900">New Patient</h3>
               <button
                 onClick={() => setShowNewPatientModal(false)}
                 className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer"
@@ -2024,7 +1918,7 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Phone Number</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Phone</label>
                   <input
                     type="tel"
                     required
@@ -2049,7 +1943,7 @@ export default function AdminDashboardPage() {
 
               <div>
                 <label className="font-semibold text-slate-700 block mb-1">
-                  Drug Allergies (Comma separated)
+                  Drug Allergies
                 </label>
                 <input
                   type="text"
@@ -2062,13 +1956,13 @@ export default function AdminDashboardPage() {
 
               <div>
                 <label className="font-semibold text-slate-700 block mb-1">
-                  Chronic Illnesses / Conditions
+                  Chronic Conditions
                 </label>
                 <input
                   type="text"
                   value={newPatChronic}
                   onChange={(e) => setNewPatChronic(e.target.value)}
-                  placeholder="e.g. Hypertension, Type 2 Diabetes"
+                  placeholder="e.g. Hypertension, Diabetes"
                   className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 text-base sm:text-xs"
                 />
               </div>
@@ -2077,7 +1971,7 @@ export default function AdminDashboardPage() {
                 type="submit"
                 className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md transition cursor-pointer min-h-[44px]"
               >
-                Register & Generate HN Number
+                Save Patient
               </button>
             </form>
           </div>
@@ -2093,7 +1987,7 @@ export default function AdminDashboardPage() {
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
                 <h3 className="text-base sm:text-lg font-bold text-slate-900">
-                  Doctor Consultation Note & E-Prescription
+                  Consultation & Rx
                 </h3>
                 <p className="text-xs text-slate-500">
                   Patient: <strong className="text-teal-800">{selectedPatientForEMR.name}</strong> ({selectedPatientForEMR.hn})
@@ -2112,7 +2006,7 @@ export default function AdminDashboardPage() {
               {/* Vitals Grid */}
               <div className="p-3.5 sm:p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
                 <span className="font-bold text-slate-800 uppercase tracking-wider text-[11px] block">
-                  Patient Vitals (ဇီဝကမ္မအချက်အလက်များ)
+                  Patient Vitals
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-2.5">
                   <div>
@@ -2175,7 +2069,7 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Attending Physician</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Doctor</label>
                   <select
                     value={emrDoctor}
                     onChange={(e) => setEmrDoctor(e.target.value)}
@@ -2190,36 +2084,36 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Clinical Diagnosis</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Diagnosis</label>
                   <input
                     type="text"
                     required
                     value={emrDiagnosis}
                     onChange={(e) => setEmrDiagnosis(e.target.value)}
-                    placeholder="e.g. Essential Hypertension Grade 1"
+                    placeholder="e.g. Hypertension Grade 1"
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-base sm:text-xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Chief Complaint & Symptoms</label>
+                <label className="font-semibold text-slate-700 block mb-1">Chief Complaint</label>
                 <input
                   type="text"
                   value={emrComplaint}
                   onChange={(e) => setEmrComplaint(e.target.value)}
-                  placeholder="Patient stated: Occasional headache, dizziness on exertion..."
+                  placeholder="Patient stated: Occasional headache..."
                   className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-base sm:text-xs"
                 />
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Physician Clinical Notes & Lifestyle Advice</label>
+                <label className="font-semibold text-slate-700 block mb-1">Clinical Notes & Advice</label>
                 <textarea
                   rows={2}
                   value={emrNotes}
                   onChange={(e) => setEmrNotes(e.target.value)}
-                  placeholder="Examination findings, dietary modifications, follow-up guidelines..."
+                  placeholder="Clinical findings, dietary modifications, follow-up..."
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-base sm:text-xs"
                 />
               </div>
@@ -2227,11 +2121,11 @@ export default function AdminDashboardPage() {
               {/* Prescription Builder */}
               <div className="p-3.5 sm:p-4 bg-teal-50/60 rounded-2xl border border-teal-200 space-y-3">
                 <span className="font-bold text-teal-900 uppercase tracking-wider text-[11px] block">
-                  Prescribe Medication (ဆေးညွှန်းစာ ထုတ်ပေးခြင်း)
+                  Medication
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <div>
-                    <label className="text-slate-600 block mb-0.5">Medicine Name</label>
+                    <label className="text-slate-600 block mb-0.5">Medicine</label>
                     <select
                       value={emrRxMedName}
                       onChange={(e) => setEmrRxMedName(e.target.value)}
@@ -2245,7 +2139,7 @@ export default function AdminDashboardPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-slate-600 block mb-0.5">Frequency & Timing</label>
+                    <label className="text-slate-600 block mb-0.5">Frequency</label>
                     <select
                       value={emrRxFreq}
                       onChange={(e) => setEmrRxFreq(e.target.value)}
@@ -2280,7 +2174,7 @@ export default function AdminDashboardPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-slate-600 block mb-0.5">Quantity (Units)</label>
+                    <label className="text-slate-600 block mb-0.5">Quantity</label>
                     <input
                       type="number"
                       value={emrRxQty}
@@ -2295,7 +2189,7 @@ export default function AdminDashboardPage() {
                 type="submit"
                 className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md transition cursor-pointer min-h-[44px]"
               >
-                Save EMR & Forward to Pharmacy Counter
+                Save & Forward to Pharmacy
               </button>
             </form>
           </div>
@@ -2309,7 +2203,7 @@ export default function AdminDashboardPage() {
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-8 space-y-4 sm:space-y-5 shadow-2xl animate-fade-in my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base sm:text-lg font-bold text-slate-900">Add Medicine to Catalog</h3>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900">Add Medicine</h3>
               <button
                 onClick={() => setShowNewMedicineModal(false)}
                 className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer"
@@ -2394,7 +2288,7 @@ export default function AdminDashboardPage() {
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Reorder Alert Level</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Alert Level</label>
                   <input
                     type="number"
                     value={medReorder}
@@ -2430,7 +2324,7 @@ export default function AdminDashboardPage() {
                 type="submit"
                 className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-md transition cursor-pointer min-h-[44px]"
               >
-                Add Medicine to Inventory
+                Save Medicine
               </button>
             </form>
           </div>
@@ -2444,7 +2338,7 @@ export default function AdminDashboardPage() {
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-8 space-y-4 sm:space-y-5 shadow-2xl animate-fade-in my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base sm:text-lg font-bold text-slate-900">Generate Cashier Invoice</h3>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900">Create Invoice</h3>
               <button
                 onClick={() => setShowNewInvoiceModal(false)}
                 className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer"
@@ -2468,7 +2362,7 @@ export default function AdminDashboardPage() {
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Phone Number</label>
+                <label className="font-semibold text-slate-700 block mb-1">Phone</label>
                 <input
                   type="tel"
                   value={invPhone}
@@ -2480,7 +2374,7 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Consultation Fee (MMK)</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Consultation (MMK)</label>
                   <input
                     type="number"
                     value={invConsultFee}
@@ -2490,7 +2384,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Pharmacy Medication (MMK)</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Pharmacy (MMK)</label>
                   <input
                     type="number"
                     value={invPharmacyFee}
@@ -2502,7 +2396,7 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Lab / Procedure Fee (MMK)</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Lab / Procedure (MMK)</label>
                   <input
                     type="number"
                     value={invLabFee}
@@ -2512,7 +2406,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Discount Amount (MMK)</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Discount (MMK)</label>
                   <input
                     type="number"
                     value={invDiscount}
@@ -2523,7 +2417,7 @@ export default function AdminDashboardPage() {
               </div>
 
               <div className="p-3.5 rounded-2xl bg-teal-50 border border-teal-200 flex items-center justify-between font-bold">
-                <span className="text-teal-900 text-xs sm:text-sm">Total Net Amount:</span>
+                <span className="text-teal-900 text-xs sm:text-sm">Total Net:</span>
                 <span className="text-teal-950 font-mono text-base sm:text-lg">
                   {(
                     Number(invConsultFee || 0) +
@@ -2554,7 +2448,7 @@ export default function AdminDashboardPage() {
           <div className="bg-white rounded-2xl max-w-md w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-8 space-y-4 sm:space-y-5 shadow-2xl animate-fade-in my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
-                <h3 className="text-base sm:text-lg font-bold text-slate-900">Process Patient Payment</h3>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900">Collect Payment</h3>
                 <p className="text-xs text-slate-500">
                   {payingInvoice.invoiceNumber} • {payingInvoice.patientName}
                 </p>
@@ -2579,44 +2473,40 @@ export default function AdminDashboardPage() {
 
             <div className="space-y-2">
               <span className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
-                Select Payment Mode (ငွေပေးချေမှုပုံစံ)
+                Payment Method
               </span>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+              <div className="grid grid-cols-2 gap-2.5">
                 <button
                   onClick={() => handlePayInvoice('cash')}
-                  className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 hover:border-teal-500 hover:bg-teal-50 text-left transition space-y-1 cursor-pointer min-h-[64px]"
+                  className="p-3.5 rounded-xl border border-slate-200 hover:border-teal-500 hover:bg-teal-50 text-left transition flex items-center gap-2.5 cursor-pointer min-h-[50px]"
                 >
-                  <DollarSign className="w-5 h-5 text-emerald-600" />
-                  <div className="font-bold text-slate-900 text-xs sm:text-sm">Cash Desk</div>
-                  <div className="text-[10px] text-slate-500">Instant Cash Drawer</div>
+                  <DollarSign className="w-5 h-5 text-emerald-600 shrink-0" />
+                  <span className="font-bold text-slate-900 text-xs sm:text-sm">Cash</span>
                 </button>
 
                 <button
                   onClick={() => handlePayInvoice('kpay')}
-                  className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-left transition space-y-1 cursor-pointer min-h-[64px]"
+                  className="p-3.5 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-left transition flex items-center gap-2.5 cursor-pointer min-h-[50px]"
                 >
-                  <QrCode className="w-5 h-5 text-blue-600" />
-                  <div className="font-bold text-slate-900 text-xs sm:text-sm">KBZPay (KPay)</div>
-                  <div className="text-[10px] text-slate-500">Scan QR Code</div>
+                  <QrCode className="w-5 h-5 text-blue-600 shrink-0" />
+                  <span className="font-bold text-slate-900 text-xs sm:text-sm">KBZPay</span>
                 </button>
 
                 <button
                   onClick={() => handlePayInvoice('wave')}
-                  className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 hover:border-amber-500 hover:bg-amber-50 text-left transition space-y-1 cursor-pointer min-h-[64px]"
+                  className="p-3.5 rounded-xl border border-slate-200 hover:border-amber-500 hover:bg-amber-50 text-left transition flex items-center gap-2.5 cursor-pointer min-h-[50px]"
                 >
-                  <Activity className="w-5 h-5 text-amber-600" />
-                  <div className="font-bold text-slate-900 text-xs sm:text-sm">WavePay / AYA</div>
-                  <div className="text-[10px] text-slate-500">Mobile Wallet</div>
+                  <Activity className="w-5 h-5 text-amber-600 shrink-0" />
+                  <span className="font-bold text-slate-900 text-xs sm:text-sm">WavePay</span>
                 </button>
 
                 <button
                   onClick={() => handlePayInvoice('card')}
-                  className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 text-left transition space-y-1 cursor-pointer min-h-[64px]"
+                  className="p-3.5 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 text-left transition flex items-center gap-2.5 cursor-pointer min-h-[50px]"
                 >
-                  <CreditCard className="w-5 h-5 text-indigo-600" />
-                  <div className="font-bold text-slate-900 text-xs sm:text-sm">Debit / Credit Card</div>
-                  <div className="text-[10px] text-slate-500">MPU / Visa / Master</div>
+                  <CreditCard className="w-5 h-5 text-indigo-600 shrink-0" />
+                  <span className="font-bold text-slate-900 text-xs sm:text-sm">Card</span>
                 </button>
               </div>
             </div>
@@ -2707,7 +2597,7 @@ export default function AdminDashboardPage() {
                 className="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm cursor-pointer min-h-[44px]"
               >
                 <Printer className="w-4 h-4" />
-                <span>Print Official Slip</span>
+                <span>Print Prescription</span>
               </button>
             </div>
           </div>
@@ -2724,7 +2614,7 @@ export default function AdminDashboardPage() {
             <div className="text-center border-b border-slate-200 pb-4 space-y-1">
               <h3 className="font-black text-slate-900 text-lg tracking-tight">NAN DA WUN CLINIC</h3>
               <p className="text-[10px] text-slate-500 uppercase tracking-widest">
-                OFFICIAL PATIENT PAYMENT RECEIPT
+                OFFICIAL PAYMENT RECEIPT
               </p>
               <p className="text-xs font-mono font-bold text-teal-700 mt-1">
                 {printInvoice.receiptNumber || printInvoice.invoiceNumber}
@@ -2771,14 +2661,14 @@ export default function AdminDashboardPage() {
               </div>
               {printInvoice.discount > 0 && (
                 <div className="flex justify-between text-[11px] text-slate-500">
-                  <span>Discount Applied:</span>
+                  <span>Discount:</span>
                   <span>-{printInvoice.discount.toLocaleString()} Ks</span>
                 </div>
               )}
             </div>
 
             <div className="text-center text-[10px] text-slate-400 pt-3 border-t border-slate-100 leading-relaxed">
-              Thank you for trusting Nan Da Wun Healthcare. Wishing you swift recovery!
+              Thank you for visiting Nan Da Wun Clinic.
             </div>
 
             <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 pt-2">
@@ -2793,7 +2683,7 @@ export default function AdminDashboardPage() {
                 className="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm cursor-pointer min-h-[44px]"
               >
                 <Printer className="w-4 h-4" />
-                <span>Print Thermal Receipt</span>
+                <span>Print Receipt</span>
               </button>
             </div>
           </div>

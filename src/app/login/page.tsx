@@ -18,9 +18,8 @@ import {
   Eye,
   EyeOff,
   Sparkles,
-  Info,
 } from 'lucide-react';
-import { ClinicRole, DEMO_CREDENTIALS, ROLE_CONFIG, setStoredSession, getStoredUser } from '@/lib/auth';
+import { ClinicRole, DEMO_CREDENTIALS, setStoredSession, getStoredUser } from '@/lib/auth';
 
 function LoginFormContent() {
   const router = useRouter();
@@ -105,8 +104,6 @@ function LoginFormContent() {
     }
   };
 
-  const currentRoleMeta = DEMO_CREDENTIALS.find((d) => d.role === role);
-
   const rolesList: { role: ClinicRole; label: string; icon: typeof Stethoscope }[] = [
     { role: 'owner', label: 'Clinic Owner', icon: Building2 },
     { role: 'doctor', label: 'Doctor', icon: Stethoscope },
@@ -118,21 +115,21 @@ function LoginFormContent() {
   return (
     <div className="w-full max-w-xl mx-auto px-3 sm:px-4 py-6 sm:py-12 min-w-0 overflow-x-hidden">
       {/* Header */}
-      <div className="text-center space-y-3 mb-6 sm:mb-8">
+      <div className="text-center space-y-2 mb-6 sm:mb-8">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold">
           <ShieldCheck className="w-3.5 h-3.5 text-teal-600 shrink-0" />
-          <span>Nan Da Wun Clinic Staff Portal</span>
+          <span>Staff Portal</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-          Clinic ERP & Staff Sign In
+          Staff Sign In
         </h1>
-        <p className="text-slate-600 text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
-          Secure authenticated access for physicians, clinical triage, reception, dispensary, and billing cashiers.
+        <p className="text-slate-600 text-xs sm:text-sm max-w-md mx-auto">
+          Sign in to access clinic workspace.
         </p>
 
         {existingUser && (
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 text-xs mt-2 border border-slate-200">
-            <span>Currently signed in as <strong>{existingUser}</strong></span>
+            <span>Signed in as <strong>{existingUser}</strong></span>
             <Link href="/admin" className="text-teal-600 font-semibold hover:underline">
               Go to ERP &rarr;
             </Link>
@@ -145,7 +142,7 @@ function LoginFormContent() {
         {/* Role Selector Grid */}
         <div>
           <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-            Select Your Clinic Staff Role
+            Role
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {rolesList.map((item) => {
@@ -170,19 +167,6 @@ function LoginFormContent() {
           </div>
         </div>
 
-        {/* Current Role Access Description */}
-        {currentRoleMeta && (
-          <div className="p-3 bg-teal-50/60 border border-teal-100 rounded-xl flex items-start gap-2.5 text-xs text-teal-900">
-            <Info className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
-            <div>
-              <p className="font-semibold text-teal-900">{currentRoleMeta.roleLabel}</p>
-              <p className="text-[11px] text-teal-700 mt-0.5 leading-relaxed">
-                {currentRoleMeta.permissionsSummary}
-              </p>
-            </div>
-          </div>
-        )}
-
         {/* Error Alert */}
         {error && (
           <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-start gap-2.5 text-xs text-rose-800 animate-slide-down">
@@ -199,9 +183,8 @@ function LoginFormContent() {
           <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-start gap-2.5 text-xs text-emerald-800 animate-slide-down">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold">Authentication Successful</p>
+              <p className="font-semibold">Signed In</p>
               <p>{success}</p>
-              <p className="text-[11px] text-emerald-600 mt-0.5">Redirecting to Clinic ERP command center...</p>
             </div>
           </div>
         )}
@@ -211,13 +194,7 @@ function LoginFormContent() {
           <div>
             <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
               <User className="w-3.5 h-3.5 text-teal-600" />
-              <span>
-                {role === 'doctor'
-                  ? 'Doctor Name / Medical ID'
-                  : role === 'owner'
-                  ? 'Owner Username'
-                  : `${ROLE_CONFIG[role]?.shortLabel || 'Staff'} Username`}
-              </span>
+              <span>Username / ID</span>
             </label>
             <input
               type="text"
@@ -239,7 +216,7 @@ function LoginFormContent() {
             <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Lock className="w-3.5 h-3.5 text-teal-600" />
-                <span>{role === 'doctor' ? 'Doctor Secret PIN' : 'Password / Passcode'}</span>
+                <span>Password</span>
               </span>
               <button
                 type="button"
@@ -274,20 +251,19 @@ function LoginFormContent() {
               disabled={loading}
               className="w-full inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 disabled:opacity-50 text-white font-bold py-3 px-6 rounded-xl text-sm transition shadow-xs cursor-pointer min-h-[44px]"
             >
-              <span>{loading ? 'Verifying Credentials...' : `Sign In as ${ROLE_CONFIG[role]?.shortLabel}`}</span>
+              <span>{loading ? 'Signing In...' : 'Sign In'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </form>
 
-        {/* 1-Click Quick Demo Switcher */}
+        {/* Quick Demo Switcher */}
         <div className="pt-4 border-t border-slate-100 space-y-2.5">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>1-Click Evaluator Accounts</span>
+              <span>Demo Accounts</span>
             </span>
-            <span className="text-[10px] text-slate-400">Click to autofill</span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -314,7 +290,7 @@ function LoginFormContent() {
         {/* Return to Public Site */}
         <div className="pt-2 border-t border-slate-100 text-center">
           <Link href="/" className="text-xs text-teal-600 hover:underline inline-block py-1">
-            &larr; Return to Clinic Public Portal
+            &larr; Public Site
           </Link>
         </div>
       </div>
