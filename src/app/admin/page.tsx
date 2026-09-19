@@ -18,7 +18,6 @@ import {
   Pill,
   FileText,
   Printer,
-  AlertTriangle,
   Stethoscope,
   Activity,
   Heart,
@@ -607,12 +606,9 @@ export default function AdminDashboardPage() {
       {/* Top Admin Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 sm:pb-4 border-b border-slate-200 min-w-0">
         <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight truncate">
-            Clinic Operations
+          <h1 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight truncate">
+            Operations
           </h1>
-          <p className="text-slate-500 text-xs mt-0.5">
-            Nan Da Wun Primary Care & EMR Center
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 min-w-0">
@@ -666,7 +662,7 @@ export default function AdminDashboardPage() {
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 border-b border-slate-200 scrollbar-none text-xs sm:text-sm font-semibold w-full min-w-0">
         <button
           onClick={() => setActiveTab('overview')}
-          className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
             activeTab === 'overview'
               ? 'bg-teal-600 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
@@ -678,22 +674,19 @@ export default function AdminDashboardPage() {
 
         <button
           onClick={() => setActiveTab('appointments')}
-          className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
             activeTab === 'appointments'
               ? 'bg-teal-600 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Calendar className="w-4 h-4 shrink-0" />
-          <span>Appointments</span>
-          <span className="px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">
-            {appointments.length}
-          </span>
+          <span>Visits</span>
         </button>
 
         <button
           onClick={() => setActiveTab('patients')}
-          className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
             activeTab === 'patients'
               ? 'bg-teal-600 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
@@ -701,14 +694,11 @@ export default function AdminDashboardPage() {
         >
           <Stethoscope className="w-4 h-4 shrink-0" />
           <span>Patients</span>
-          <span className="px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">
-            {patients.length}
-          </span>
         </button>
 
         <button
           onClick={() => setActiveTab('pharmacy')}
-          className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
             activeTab === 'pharmacy'
               ? 'bg-teal-600 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
@@ -717,15 +707,13 @@ export default function AdminDashboardPage() {
           <Pill className="w-4 h-4 shrink-0" />
           <span>Pharmacy</span>
           {lowStockMedicines.length > 0 && (
-            <span className="px-1.5 py-0.2 rounded-full bg-rose-100 text-rose-700 text-[10px] font-bold">
-              {lowStockMedicines.length} Low
-            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
           )}
         </button>
 
         <button
           onClick={() => setActiveTab('billing')}
-          className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition shrink-0 cursor-pointer active:scale-95 ${
             activeTab === 'billing'
               ? 'bg-teal-600 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
@@ -733,9 +721,6 @@ export default function AdminDashboardPage() {
         >
           <CreditCard className="w-4 h-4 shrink-0" />
           <span>Billing</span>
-          <span className="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-            {invoices.length}
-          </span>
         </button>
       </div>
 
@@ -745,106 +730,94 @@ export default function AdminDashboardPage() {
       {activeTab === 'overview' && (
         <div className="space-y-4 sm:space-y-6 animate-fade-in min-w-0">
           {/* Metrics Row */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 min-w-0">
-            <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-xs min-w-0">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 min-w-0">
+            <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs min-w-0">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">
-                  Appointments
+                  Visits
                 </span>
                 <Calendar className="w-4 h-4 text-teal-600 shrink-0" />
               </div>
-              <p className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2 truncate">
+              <p className="text-xl font-extrabold text-slate-900 mt-1 truncate">
                 {appointments.length}
-              </p>
-              <p className="text-[11px] text-teal-700 font-medium mt-0.5">
-                Active today
               </p>
             </div>
 
-            <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-xs min-w-0">
+            <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs min-w-0">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">
                   Revenue
                 </span>
                 <DollarSign className="w-4 h-4 text-emerald-600 shrink-0" />
               </div>
-              <p className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2 truncate">
+              <p className="text-xl font-extrabold text-slate-900 mt-1 truncate">
                 {billingMetrics.totalRevenueMMK.toLocaleString()} <span className="text-xs font-normal text-slate-500">Ks</span>
-              </p>
-              <p className="text-[11px] text-slate-500 mt-0.5 truncate">
-                Pending: {billingMetrics.pendingRevenueMMK.toLocaleString()} Ks
               </p>
             </div>
 
-            <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-xs min-w-0">
+            <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs min-w-0">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">
                   Patients
                 </span>
                 <Users className="w-4 h-4 text-teal-600 shrink-0" />
               </div>
-              <p className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2 truncate">{patients.length}</p>
-              <p className="text-[11px] text-slate-400 font-medium mt-0.5">Master records</p>
+              <p className="text-xl font-extrabold text-slate-900 mt-1 truncate">{patients.length}</p>
             </div>
 
-            <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-xs min-w-0">
+            <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs min-w-0">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">
-                  Stock Alerts
+                  Low Stock
                 </span>
                 <Pill className="w-4 h-4 text-amber-600 shrink-0" />
               </div>
-              <p className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2 truncate">
+              <p className="text-xl font-extrabold text-slate-900 mt-1 truncate">
                 {lowStockMedicines.length}
-              </p>
-              <p className="text-[11px] text-amber-700 font-medium mt-0.5 truncate">
-                {lowStockMedicines.length > 0 ? 'Reorder needed' : 'Normal'}
               </p>
             </div>
           </div>
 
           {/* Quick Action Hub */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 min-w-0">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 min-w-0">
             <button
               onClick={() => setShowNewApptModal(true)}
-              className="p-3 sm:p-4 rounded-xl bg-teal-50 border border-teal-200 text-teal-900 hover:bg-teal-100 transition flex items-center justify-between active:scale-98 cursor-pointer min-w-0"
+              className="p-3 rounded-xl bg-teal-50 border border-teal-200 text-teal-900 hover:bg-teal-100 transition flex items-center justify-between active:scale-98 cursor-pointer min-w-0"
             >
-              <span className="font-bold text-xs sm:text-sm">Book Visit</span>
+              <span className="font-bold text-xs">+ Visit</span>
               <Plus className="w-4 h-4 text-teal-700 shrink-0" />
             </button>
 
             <button
               onClick={() => setShowNewPatientModal(true)}
-              className="p-3 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 hover:bg-slate-100 transition flex items-center justify-between active:scale-98 cursor-pointer min-w-0"
+              className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 hover:bg-slate-100 transition flex items-center justify-between active:scale-98 cursor-pointer min-w-0"
             >
-              <span className="font-bold text-xs sm:text-sm">New Patient</span>
+              <span className="font-bold text-xs">+ Patient</span>
               <Users className="w-4 h-4 text-slate-600 shrink-0" />
             </button>
 
             <button
               onClick={() => setShowNewMedicineModal(true)}
-              className="p-3 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 hover:bg-slate-100 transition flex items-center justify-between active:scale-98 cursor-pointer min-w-0"
+              className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 hover:bg-slate-100 transition flex items-center justify-between active:scale-98 cursor-pointer min-w-0"
             >
-              <span className="font-bold text-xs sm:text-sm">Add Drug</span>
+              <span className="font-bold text-xs">+ Drug</span>
               <Pill className="w-4 h-4 text-slate-600 shrink-0" />
             </button>
 
             <button
               onClick={() => setShowNewInvoiceModal(true)}
-              className="p-3 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 hover:bg-slate-100 transition flex items-center justify-between active:scale-98 cursor-pointer min-w-0"
+              className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 hover:bg-slate-100 transition flex items-center justify-between active:scale-98 cursor-pointer min-w-0"
             >
-              <span className="font-bold text-xs sm:text-sm">New Invoice</span>
+              <span className="font-bold text-xs">+ Invoice</span>
               <CreditCard className="w-4 h-4 text-slate-600 shrink-0" />
             </button>
           </div>
 
           {/* Consultation Rooms Status */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-3 shadow-xs min-w-0">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm sm:text-base font-bold text-slate-900">
-                Rooms & Doctors
-              </h3>
-            </div>
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 space-y-3 shadow-xs min-w-0">
+            <h3 className="text-sm font-bold text-slate-900">
+              Doctors
+            </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 min-w-0">
               {initialDoctors.map((doc, idx) => {
@@ -870,19 +843,18 @@ export default function AdminDashboardPage() {
                             : 'bg-slate-200 text-slate-600'
                         }`}
                       >
-                        {activeAppt ? 'Consulting' : 'Ready'}
+                        {activeAppt ? 'Busy' : 'Free'}
                       </span>
                     </div>
-                    <div className="font-semibold text-slate-900 text-xs sm:text-sm truncate">{doc.name}</div>
-                    <div className="text-[11px] text-slate-500 truncate">{doc.specialty}</div>
+                    <div className="font-semibold text-slate-900 text-xs truncate">{doc.name}</div>
 
                     <div className="mt-2 pt-2 border-t border-slate-200/60 text-xs">
                       {activeAppt ? (
                         <p className="font-mono font-bold text-teal-700 truncate text-[11px]">
-                          Token: {activeAppt.tokenNumber} ({activeAppt.patientName})
+                          #{activeAppt.tokenNumber} · {activeAppt.patientName}
                         </p>
                       ) : (
-                        <span className="text-slate-400 text-[11px]">Available</span>
+                        <span className="text-slate-400 text-[11px]">Free</span>
                       )}
                     </div>
                   </div>
@@ -899,8 +871,8 @@ export default function AdminDashboardPage() {
       {activeTab === 'appointments' && (
         <div className="space-y-3 sm:space-y-4 animate-fade-in min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 min-w-0">
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 truncate">
-              Appointments
+            <h2 className="text-base font-bold text-slate-900 truncate">
+              Visits
             </h2>
 
             <button
@@ -908,7 +880,7 @@ export default function AdminDashboardPage() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition shrink-0 active:scale-98 cursor-pointer"
             >
               <Plus className="w-4 h-4 shrink-0" />
-              <span>Book Visit</span>
+              <span>+ Visit</span>
             </button>
           </div>
 
@@ -916,30 +888,29 @@ export default function AdminDashboardPage() {
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs w-full min-w-0">
             {['all', 'pending', 'confirmed', 'in_consultation', 'completed', 'cancelled'].map(
               (st) => {
-                const count =
-                  st === 'all'
-                    ? appointments.length
-                    : appointments.filter((a) => a.status === st).length;
                 const label =
                   st === 'all'
                     ? 'All'
                     : st === 'in_consultation'
-                    ? 'Consulting'
+                    ? 'Busy'
                     : st === 'confirmed'
                     ? 'Waiting'
+                    : st === 'completed'
+                    ? 'Done'
+                    : st === 'cancelled'
+                    ? 'Cancel'
                     : st.charAt(0).toUpperCase() + st.slice(1);
                 return (
                   <button
                     key={st}
                     onClick={() => setApptStatusFilter(st)}
-                    className={`px-3 py-1 rounded-xl font-semibold transition flex items-center gap-1 shrink-0 cursor-pointer active:scale-95 ${
+                    className={`px-3 py-1 rounded-xl font-semibold transition shrink-0 cursor-pointer active:scale-95 ${
                       apptStatusFilter === st
                         ? 'bg-slate-900 text-white shadow-xs'
                         : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                     }`}
                   >
-                    <span>{label}</span>
-                    <span className="text-[10px] opacity-70 font-mono">({count})</span>
+                    {label}
                   </button>
                 );
               }
@@ -955,10 +926,10 @@ export default function AdminDashboardPage() {
                   <tr>
                     <th className="py-3 px-4">Token</th>
                     <th className="py-3 px-4">Patient</th>
-                    <th className="py-3 px-4">Doctor & Room</th>
+                    <th className="py-3 px-4">Doctor</th>
                     <th className="py-3 px-4">Time</th>
                     <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
+                    <th className="py-3 px-4 text-right"></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -997,7 +968,7 @@ export default function AdminDashboardPage() {
                         <td className="py-3 px-4">
                           {appt.status === 'in_consultation' && (
                             <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-100 text-teal-800 animate-pulse">
-                              Consulting
+                              Busy
                             </span>
                           )}
                           {appt.status === 'confirmed' && (
@@ -1037,7 +1008,7 @@ export default function AdminDashboardPage() {
                                 onClick={() => updateAppointmentStatus(appt.id, 'in_consultation')}
                                 className="px-2.5 py-1 bg-teal-700 hover:bg-teal-800 text-white rounded-lg text-[11px] font-semibold transition"
                               >
-                                Call In
+                                Call
                               </button>
                             )}
                             {appt.status === 'in_consultation' && (
@@ -1045,7 +1016,7 @@ export default function AdminDashboardPage() {
                                 onClick={() => updateAppointmentStatus(appt.id, 'completed')}
                                 className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[11px] font-semibold transition"
                               >
-                                Complete
+                                Done
                               </button>
                             )}
                             {appt.status !== 'cancelled' && appt.status !== 'completed' && (
@@ -1092,7 +1063,7 @@ export default function AdminDashboardPage() {
                       <div className="shrink-0">
                         {appt.status === 'in_consultation' && (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-100 text-teal-800 animate-pulse">
-                            Consulting
+                            Busy
                           </span>
                         )}
                         {appt.status === 'confirmed' && (
@@ -1112,7 +1083,7 @@ export default function AdminDashboardPage() {
                         )}
                         {appt.status === 'cancelled' && (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500">
-                            Cancelled
+                            Cancel
                           </span>
                         )}
                       </div>
@@ -1138,7 +1109,7 @@ export default function AdminDashboardPage() {
                           onClick={() => updateAppointmentStatus(appt.id, 'in_consultation')}
                           className="flex-1 py-2 bg-teal-700 hover:bg-teal-800 text-white rounded-xl text-xs font-semibold transition"
                         >
-                          Call In
+                          Call
                         </button>
                       )}
                       {appt.status === 'in_consultation' && (
@@ -1146,7 +1117,7 @@ export default function AdminDashboardPage() {
                           onClick={() => updateAppointmentStatus(appt.id, 'completed')}
                           className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition"
                         >
-                          Complete
+                          Done
                         </button>
                       )}
                       {appt.status !== 'cancelled' && appt.status !== 'completed' && (
@@ -1172,7 +1143,7 @@ export default function AdminDashboardPage() {
       {activeTab === 'patients' && (
         <div className="space-y-3 sm:space-y-4 animate-fade-in min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 min-w-0">
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 truncate">
+            <h2 className="text-base font-bold text-slate-900 truncate">
               Patients
             </h2>
 
@@ -1181,18 +1152,18 @@ export default function AdminDashboardPage() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition shrink-0 active:scale-98 cursor-pointer"
             >
               <Plus className="w-4 h-4 shrink-0" />
-              <span>New Patient</span>
+              <span>+ Patient</span>
             </button>
           </div>
 
           {/* Search bar */}
-          <div className="relative w-full sm:max-w-md min-w-0">
+          <div className="relative w-full sm:max-w-xs min-w-0">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               value={patientSearch}
               onChange={(e) => setPatientSearch(e.target.value)}
-              placeholder="Search by name, HN, phone..."
+              placeholder="Search..."
               className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-base sm:text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
             />
           </div>
@@ -1243,16 +1214,11 @@ export default function AdminDashboardPage() {
                   {/* Medical Tags */}
                   <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
                     <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 font-semibold border border-rose-100">
-                      Blood {pat.bloodType}
+                      {pat.bloodType}
                     </span>
                     {pat.allergies.length > 0 && (
-                      <span className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200">
-                        Allergy: {pat.allergies.join(', ')}
-                      </span>
-                    )}
-                    {pat.chronicConditions.length > 0 && (
-                      <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
-                        {pat.chronicConditions.join(', ')}
+                      <span className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200 truncate max-w-[180px]">
+                        {pat.allergies[0]}{pat.allergies.length > 1 ? ` +${pat.allergies.length - 1}` : ''}
                       </span>
                     )}
                   </div>
@@ -1270,13 +1236,8 @@ export default function AdminDashboardPage() {
                           >
                             <div className="flex items-center justify-between text-[11px]">
                               <span className="font-bold text-teal-900">{rec.date}</span>
-                              <span className="text-slate-500 truncate ml-2">{rec.doctorName}</span>
                             </div>
                             <p className="font-semibold text-slate-900 truncate">{rec.diagnosis}</p>
-                            <div className="flex items-center gap-2 text-[10px] text-slate-500 font-mono">
-                              <span>BP: {rec.vitals.bloodPressure}</span>
-                              <span>HR: {rec.vitals.heartRate}</span>
-                            </div>
                           </div>
                         ))}
                     </div>
@@ -1293,9 +1254,9 @@ export default function AdminDashboardPage() {
       {activeTab === 'pharmacy' && (
         <div className="space-y-4 sm:space-y-6 animate-fade-in min-w-0">
           {/* Section 1: Prescription Dispensing Counter */}
-          <div className="space-y-2.5 sm:space-y-3 min-w-0">
-            <h2 className="text-base sm:text-lg font-bold text-slate-900">
-              Prescriptions
+          <div className="space-y-2.5 min-w-0">
+            <h2 className="text-base font-bold text-slate-900">
+              Rx
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 min-w-0">
@@ -1352,7 +1313,7 @@ export default function AdminDashboardPage() {
                           </p>
                         </div>
                         <span className="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded shrink-0">
-                          Qty: {it.quantity}
+                          ×{it.quantity}
                         </span>
                       </div>
                     ))}
@@ -1365,8 +1326,8 @@ export default function AdminDashboardPage() {
           {/* Section 2: Medicine Inventory Catalog */}
           <div className="space-y-3 pt-4 border-t border-slate-200 min-w-0">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 min-w-0">
-              <h3 className="text-base sm:text-lg font-bold text-slate-900 truncate">
-                Inventory
+              <h3 className="text-base font-bold text-slate-900 truncate">
+                Stock
               </h3>
 
               <button
@@ -1374,24 +1335,21 @@ export default function AdminDashboardPage() {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition shrink-0 active:scale-98"
               >
                 <Plus className="w-4 h-4 shrink-0" />
-                <span>Add Medicine</span>
+                <span>+ Drug</span>
               </button>
             </div>
 
             {/* Low Stock Banner */}
             {lowStockMedicines.length > 0 && (
-              <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 min-w-0">
-                <div className="flex items-center gap-2 min-w-0">
-                  <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>
-                    <strong>Low Stock:</strong> {lowStockMedicines.length} medicine(s) below reorder level.
-                  </span>
-                </div>
+              <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between gap-2 min-w-0">
+                <span>
+                  <strong>{lowStockMedicines.length} low</strong>
+                </span>
                 <button
                   onClick={() => handleStockUpdate(lowStockMedicines[0]?.id || '', 50)}
                   className="px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shrink-0 transition"
                 >
-                  Restock +50
+                  +50
                 </button>
               </div>
             )}
@@ -1404,12 +1362,12 @@ export default function AdminDashboardPage() {
                   <thead className="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
                     <tr>
                       <th className="py-2.5 px-4">Code</th>
-                      <th className="py-2.5 px-4">Brand / Generic</th>
+                      <th className="py-2.5 px-4">Name</th>
                       <th className="py-2.5 px-4">Form</th>
                       <th className="py-2.5 px-4">Stock</th>
                       <th className="py-2.5 px-4">Price</th>
-                      <th className="py-2.5 px-4">Expiry</th>
-                      <th className="py-2.5 px-4 text-right">Adjust</th>
+                      <th className="py-2.5 px-4">Exp</th>
+                      <th className="py-2.5 px-4 text-right"></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -1484,7 +1442,7 @@ export default function AdminDashboardPage() {
                                 : 'bg-emerald-50 text-emerald-800'
                             }`}
                           >
-                            {med.currentStock} units
+                            {med.currentStock}
                           </span>
                           <span className="font-mono font-bold text-xs text-slate-900 mt-0.5 block">
                             {med.unitPrice.toLocaleString()} Ks
@@ -1493,7 +1451,7 @@ export default function AdminDashboardPage() {
                       </div>
 
                       <div className="flex items-center justify-between pt-1 text-xs">
-                        <span className="text-[11px] text-slate-400 font-mono">Exp: {med.expiryDate}</span>
+                        <span className="text-[11px] text-slate-400 font-mono">{med.expiryDate}</span>
                         <div className="flex items-center gap-1.5">
                           <button
                             onClick={() => handleStockUpdate(med.id, 10)}
@@ -1522,10 +1480,10 @@ export default function AdminDashboardPage() {
       {/* TAB 5: BILLING, INVOICING & CASHIER POS */}
       {/* ========================================================================= */}
       {activeTab === 'billing' && (
-        <div className="space-y-4 sm:space-y-5 animate-fade-in min-w-0">
+        <div className="space-y-4 animate-fade-in min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 min-w-0">
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 truncate">
-              Billing & Invoices
+            <h2 className="text-base font-bold text-slate-900 truncate">
+              Billing
             </h2>
 
             <button
@@ -1533,44 +1491,34 @@ export default function AdminDashboardPage() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition shrink-0 active:scale-98 cursor-pointer"
             >
               <Plus className="w-4 h-4 shrink-0" />
-              <span>New Invoice</span>
+              <span>+ Invoice</span>
             </button>
           </div>
 
           {/* Daily Cashier Financial Summary */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 min-w-0">
-            <div className="bg-emerald-50 border border-emerald-200 p-3.5 sm:p-4 rounded-2xl min-w-0">
+          <div className="grid grid-cols-2 gap-2.5 min-w-0">
+            <div className="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl min-w-0">
               <span className="text-[11px] font-bold uppercase text-emerald-800 tracking-wider block">
-                Paid Revenue
+                Paid
               </span>
-              <p className="text-lg sm:text-xl font-black text-emerald-950 mt-1 truncate">
-                {billingMetrics.totalRevenueMMK.toLocaleString()} MMK
+              <p className="text-lg font-black text-emerald-950 mt-1 truncate">
+                {billingMetrics.totalRevenueMMK.toLocaleString()} Ks
               </p>
               <p className="text-[11px] text-emerald-700 mt-0.5">
-                {billingMetrics.paidCount} settled bills
+                {billingMetrics.paidCount} paid
               </p>
             </div>
 
-            <div className="bg-amber-50 border border-amber-200 p-3.5 sm:p-4 rounded-2xl min-w-0">
+            <div className="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl min-w-0">
               <span className="text-[11px] font-bold uppercase text-amber-800 tracking-wider block">
-                Pending Collection
+                Pending
               </span>
-              <p className="text-lg sm:text-xl font-black text-amber-950 mt-1 truncate">
-                {billingMetrics.pendingRevenueMMK.toLocaleString()} MMK
+              <p className="text-lg font-black text-amber-950 mt-1 truncate">
+                {billingMetrics.pendingRevenueMMK.toLocaleString()} Ks
               </p>
               <p className="text-[11px] text-amber-700 mt-0.5">
-                {billingMetrics.unpaidCount} unpaid bills
+                {billingMetrics.unpaidCount} unpaid
               </p>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200 p-3.5 sm:p-4 rounded-2xl min-w-0">
-              <span className="text-[11px] font-bold uppercase text-slate-600 tracking-wider block">
-                Payment Methods
-              </span>
-              <p className="text-xs sm:text-sm font-bold text-slate-800 mt-1 truncate">
-                Cash • KBZPay • WavePay • Cards
-              </p>
-              <p className="text-[11px] text-slate-400 mt-0.5">Instant drawer reconciliation</p>
             </div>
           </div>
 
@@ -1581,13 +1529,12 @@ export default function AdminDashboardPage() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
                   <tr>
-                    <th className="py-2.5 px-4">Invoice</th>
+                    <th className="py-2.5 px-4">No.</th>
                     <th className="py-2.5 px-4">Patient</th>
                     <th className="py-2.5 px-4">Date</th>
-                    <th className="py-2.5 px-4">Items</th>
                     <th className="py-2.5 px-4">Total</th>
                     <th className="py-2.5 px-4">Status</th>
-                    <th className="py-2.5 px-4 text-right">Actions</th>
+                    <th className="py-2.5 px-4 text-right"></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -1598,26 +1545,19 @@ export default function AdminDashboardPage() {
                       </td>
 
                       <td className="py-3 px-4">
-                        <div className="font-bold text-slate-900">{inv.patientName}</div>
-                        {inv.patientPhone && (
-                          <div className="text-[11px] text-slate-400 font-mono">{inv.patientPhone}</div>
-                        )}
+                        <div className="font-bold text-slate-900 truncate max-w-[140px]">{inv.patientName}</div>
                       </td>
 
-                      <td className="py-3 px-4 text-slate-500">{inv.date}</td>
+                      <td className="py-3 px-4 text-slate-500 whitespace-nowrap">{inv.date}</td>
 
-                      <td className="py-3 px-4 text-slate-600 max-w-xs truncate">
-                        {inv.items.map((it) => it.description).join(', ')}
-                      </td>
-
-                      <td className="py-3 px-4 font-mono font-bold text-slate-900">
+                      <td className="py-3 px-4 font-mono font-bold text-slate-900 whitespace-nowrap">
                         {inv.totalAmount.toLocaleString()} Ks
                       </td>
 
                       <td className="py-3 px-4">
                         {inv.status === 'paid' ? (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                            Paid ({inv.paymentMethod?.toUpperCase()})
+                            Paid
                           </span>
                         ) : (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
@@ -1637,17 +1577,13 @@ export default function AdminDashboardPage() {
                             <Printer className="w-3.5 h-3.5" />
                           </button>
 
-                          {inv.status === 'unpaid' ? (
+                          {inv.status === 'unpaid' && (
                             <button
                               onClick={() => setPayingInvoice(inv)}
                               className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition"
                             >
                               Collect
                             </button>
-                          ) : (
-                            <span className="text-[11px] text-emerald-700 font-medium font-mono">
-                              #{inv.receiptNumber}
-                            </span>
                           )}
                         </div>
                       </td>
@@ -1684,7 +1620,7 @@ export default function AdminDashboardPage() {
                       <div className="shrink-0">
                         {inv.status === 'paid' ? (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                            Paid ({inv.paymentMethod?.toUpperCase() || 'CASH'})
+                            Paid
                           </span>
                         ) : (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
@@ -1694,8 +1630,8 @@ export default function AdminDashboardPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-slate-500 truncate">
-                      <span className="truncate">{inv.items.map((it) => it.description).join(', ')}</span>
+                    <div className="flex items-center justify-between text-xs pt-1">
+                      <span className="text-slate-500">{inv.items.length} items · {inv.date}</span>
                       <span className="font-mono font-bold text-slate-900 shrink-0 ml-2">
                         {inv.totalAmount.toLocaleString()} Ks
                       </span>
@@ -1735,7 +1671,7 @@ export default function AdminDashboardPage() {
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-8 space-y-4 sm:space-y-5 shadow-2xl animate-fade-in my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base sm:text-lg font-bold text-slate-900">Book Appointment</h3>
+              <h3 className="text-base font-bold text-slate-900">New Visit</h3>
               <button
                 onClick={() => setShowNewApptModal(false)}
                 className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer"
@@ -1747,13 +1683,13 @@ export default function AdminDashboardPage() {
 
             <form onSubmit={handleCreateAppointment} className="space-y-4 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Patient Name</label>
+                <label className="font-semibold text-slate-700 block mb-1">Name</label>
                 <input
                   type="text"
                   required
                   value={newApptPatientName}
                   onChange={(e) => setNewApptPatientName(e.target.value)}
-                  placeholder="e.g. U Kyaw Myint"
+                  placeholder="Name"
                   className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 text-base sm:text-xs"
                 />
               </div>
@@ -1784,7 +1720,7 @@ export default function AdminDashboardPage() {
                   >
                     {initialDoctors.map((doc) => (
                       <option key={doc.id} value={doc.name}>
-                        {doc.name} ({doc.specialty})
+                        {doc.name}
                       </option>
                     ))}
                   </select>
@@ -1823,12 +1759,12 @@ export default function AdminDashboardPage() {
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Notes</label>
+                <label className="font-semibold text-slate-700 block mb-1">Note</label>
                 <textarea
                   rows={2}
                   value={newApptNotes}
                   onChange={(e) => setNewApptNotes(e.target.value)}
-                  placeholder="Patient notes or symptoms..."
+                  placeholder="Note..."
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 text-base sm:text-xs"
                 />
               </div>
@@ -1837,7 +1773,7 @@ export default function AdminDashboardPage() {
                 type="submit"
                 className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md transition cursor-pointer min-h-[44px]"
               >
-                Confirm & Issue Token
+                Save
               </button>
             </form>
           </div>
@@ -1863,7 +1799,7 @@ export default function AdminDashboardPage() {
 
             <form onSubmit={handleCreatePatient} className="space-y-4 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Full Name</label>
+                <label className="font-semibold text-slate-700 block mb-1">Name</label>
                 <input
                   type="text"
                   required
@@ -1900,7 +1836,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Blood Type</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Blood</label>
                   <select
                     value={newPatBlood}
                     onChange={(e) => setNewPatBlood(e.target.value)}
@@ -1930,7 +1866,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Emergency Contact</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Emergency</label>
                   <input
                     type="text"
                     value={newPatEmergency}
@@ -1943,7 +1879,7 @@ export default function AdminDashboardPage() {
 
               <div>
                 <label className="font-semibold text-slate-700 block mb-1">
-                  Drug Allergies
+                  Allergies
                 </label>
                 <input
                   type="text"
@@ -1956,7 +1892,7 @@ export default function AdminDashboardPage() {
 
               <div>
                 <label className="font-semibold text-slate-700 block mb-1">
-                  Chronic Conditions
+                  Chronic
                 </label>
                 <input
                   type="text"
@@ -1971,7 +1907,7 @@ export default function AdminDashboardPage() {
                 type="submit"
                 className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md transition cursor-pointer min-h-[44px]"
               >
-                Save Patient
+                Save
               </button>
             </form>
           </div>
@@ -1986,11 +1922,11 @@ export default function AdminDashboardPage() {
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90dvh] overflow-y-auto p-4 sm:p-8 space-y-4 sm:space-y-5 shadow-2xl my-auto animate-fade-in">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
-                <h3 className="text-base sm:text-lg font-bold text-slate-900">
-                  Consultation & Rx
+                <h3 className="text-base font-bold text-slate-900">
+                  Visit Note
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Patient: <strong className="text-teal-800">{selectedPatientForEMR.name}</strong> ({selectedPatientForEMR.hn})
+                  <strong className="text-teal-800">{selectedPatientForEMR.name}</strong> ({selectedPatientForEMR.hn})
                 </p>
               </div>
               <button
@@ -2004,13 +1940,13 @@ export default function AdminDashboardPage() {
 
             <form onSubmit={handleCreateEMR} className="space-y-4 text-xs">
               {/* Vitals Grid */}
-              <div className="p-3.5 sm:p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+              <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
                 <span className="font-bold text-slate-800 uppercase tracking-wider text-[11px] block">
-                  Patient Vitals
+                  Vitals
                 </span>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-2.5">
+                <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
                   <div>
-                    <label className="text-slate-500 block mb-0.5 text-[10px] sm:text-xs">BP (mmHg)</label>
+                    <label className="text-slate-500 block mb-0.5 text-[10px]">BP</label>
                     <input
                       type="text"
                       value={emrBp}
@@ -2019,7 +1955,7 @@ export default function AdminDashboardPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-slate-500 block mb-0.5 text-[10px] sm:text-xs">Heart Rate</label>
+                    <label className="text-slate-500 block mb-0.5 text-[10px]">HR</label>
                     <input
                       type="number"
                       value={emrHr}
@@ -2028,7 +1964,7 @@ export default function AdminDashboardPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-slate-500 block mb-0.5 text-[10px] sm:text-xs">Temp (°C)</label>
+                    <label className="text-slate-500 block mb-0.5 text-[10px]">Temp</label>
                     <input
                       type="number"
                       step="0.1"
@@ -2038,7 +1974,7 @@ export default function AdminDashboardPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-slate-500 block mb-0.5 text-[10px] sm:text-xs">SpO2 (%)</label>
+                    <label className="text-slate-500 block mb-0.5 text-[10px]">SpO2</label>
                     <input
                       type="number"
                       value={emrSpo2}
@@ -2047,7 +1983,7 @@ export default function AdminDashboardPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-slate-500 block mb-0.5 text-[10px] sm:text-xs">Weight (kg)</label>
+                    <label className="text-slate-500 block mb-0.5 text-[10px]">Wt</label>
                     <input
                       type="number"
                       value={emrWeight}
@@ -2056,7 +1992,7 @@ export default function AdminDashboardPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-slate-500 block mb-0.5 text-[10px] sm:text-xs">Height (cm)</label>
+                    <label className="text-slate-500 block mb-0.5 text-[10px]">Ht</label>
                     <input
                       type="number"
                       value={emrHeight}
@@ -2097,35 +2033,35 @@ export default function AdminDashboardPage() {
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Chief Complaint</label>
+                <label className="font-semibold text-slate-700 block mb-1">Complaint</label>
                 <input
                   type="text"
                   value={emrComplaint}
                   onChange={(e) => setEmrComplaint(e.target.value)}
-                  placeholder="Patient stated: Occasional headache..."
+                  placeholder="Complaint..."
                   className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-base sm:text-xs"
                 />
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Clinical Notes & Advice</label>
+                <label className="font-semibold text-slate-700 block mb-1">Notes</label>
                 <textarea
                   rows={2}
                   value={emrNotes}
                   onChange={(e) => setEmrNotes(e.target.value)}
-                  placeholder="Clinical findings, dietary modifications, follow-up..."
+                  placeholder="Notes..."
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-base sm:text-xs"
                 />
               </div>
 
               {/* Prescription Builder */}
-              <div className="p-3.5 sm:p-4 bg-teal-50/60 rounded-2xl border border-teal-200 space-y-3">
+              <div className="p-3.5 bg-teal-50/60 rounded-2xl border border-teal-200 space-y-3">
                 <span className="font-bold text-teal-900 uppercase tracking-wider text-[11px] block">
-                  Medication
+                  Rx
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <div>
-                    <label className="text-slate-600 block mb-0.5">Medicine</label>
+                    <label className="text-slate-600 block mb-0.5">Drug</label>
                     <select
                       value={emrRxMedName}
                       onChange={(e) => setEmrRxMedName(e.target.value)}
@@ -2139,7 +2075,7 @@ export default function AdminDashboardPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-slate-600 block mb-0.5">Frequency</label>
+                    <label className="text-slate-600 block mb-0.5">Freq</label>
                     <select
                       value={emrRxFreq}
                       onChange={(e) => setEmrRxFreq(e.target.value)}
@@ -2156,7 +2092,7 @@ export default function AdminDashboardPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   <div>
-                    <label className="text-slate-600 block mb-0.5">Dosage</label>
+                    <label className="text-slate-600 block mb-0.5">Dose</label>
                     <input
                       type="text"
                       value={emrRxDosage}
@@ -2165,7 +2101,7 @@ export default function AdminDashboardPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-slate-600 block mb-0.5">Duration</label>
+                    <label className="text-slate-600 block mb-0.5">Days</label>
                     <input
                       type="text"
                       value={emrRxDuration}
@@ -2174,7 +2110,7 @@ export default function AdminDashboardPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-slate-600 block mb-0.5">Quantity</label>
+                    <label className="text-slate-600 block mb-0.5">Qty</label>
                     <input
                       type="number"
                       value={emrRxQty}
@@ -2189,7 +2125,7 @@ export default function AdminDashboardPage() {
                 type="submit"
                 className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md transition cursor-pointer min-h-[44px]"
               >
-                Save & Forward to Pharmacy
+                Save
               </button>
             </form>
           </div>
@@ -2203,7 +2139,7 @@ export default function AdminDashboardPage() {
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-8 space-y-4 sm:space-y-5 shadow-2xl animate-fade-in my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base sm:text-lg font-bold text-slate-900">Add Medicine</h3>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900">New Drug</h3>
               <button
                 onClick={() => setShowNewMedicineModal(false)}
                 className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer"
@@ -2216,7 +2152,7 @@ export default function AdminDashboardPage() {
             <form onSubmit={handleCreateMedicine} className="space-y-4 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Generic Name</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Generic</label>
                   <input
                     type="text"
                     required
@@ -2227,7 +2163,7 @@ export default function AdminDashboardPage() {
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Brand Name</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Brand</label>
                   <input
                     type="text"
                     required
@@ -2241,7 +2177,7 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Category</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Cat</label>
                   <input
                     type="text"
                     value={medCategory}
@@ -2279,7 +2215,7 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Initial Stock</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Stock</label>
                   <input
                     type="number"
                     value={medStock}
@@ -2288,7 +2224,7 @@ export default function AdminDashboardPage() {
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Alert Level</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Low at</label>
                   <input
                     type="number"
                     value={medReorder}
@@ -2300,7 +2236,7 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Selling Price (MMK)</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Price</label>
                   <input
                     type="number"
                     required
@@ -2310,7 +2246,7 @@ export default function AdminDashboardPage() {
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Cost Price (MMK)</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Cost</label>
                   <input
                     type="number"
                     value={medCost}
@@ -2324,7 +2260,7 @@ export default function AdminDashboardPage() {
                 type="submit"
                 className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-md transition cursor-pointer min-h-[44px]"
               >
-                Save Medicine
+                Save
               </button>
             </form>
           </div>
@@ -2338,7 +2274,7 @@ export default function AdminDashboardPage() {
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-8 space-y-4 sm:space-y-5 shadow-2xl animate-fade-in my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base sm:text-lg font-bold text-slate-900">Create Invoice</h3>
+              <h3 className="text-base font-bold text-slate-900">New Bill</h3>
               <button
                 onClick={() => setShowNewInvoiceModal(false)}
                 className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer"
@@ -2350,13 +2286,13 @@ export default function AdminDashboardPage() {
 
             <form onSubmit={handleCreateInvoice} className="space-y-4 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Patient Name</label>
+                <label className="font-semibold text-slate-700 block mb-1">Name</label>
                 <input
                   type="text"
                   required
                   value={invPatientName}
                   onChange={(e) => setInvPatientName(e.target.value)}
-                  placeholder="e.g. U Kyaw Myint"
+                  placeholder="Name"
                   className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-base sm:text-xs"
                 />
               </div>
@@ -2372,9 +2308,9 @@ export default function AdminDashboardPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Consultation (MMK)</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Consult</label>
                   <input
                     type="number"
                     value={invConsultFee}
@@ -2384,7 +2320,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Pharmacy (MMK)</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Pharmacy</label>
                   <input
                     type="number"
                     value={invPharmacyFee}
@@ -2394,9 +2330,9 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Lab / Procedure (MMK)</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Lab</label>
                   <input
                     type="number"
                     value={invLabFee}
@@ -2406,7 +2342,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Discount (MMK)</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Discount</label>
                   <input
                     type="number"
                     value={invDiscount}
@@ -2417,15 +2353,15 @@ export default function AdminDashboardPage() {
               </div>
 
               <div className="p-3.5 rounded-2xl bg-teal-50 border border-teal-200 flex items-center justify-between font-bold">
-                <span className="text-teal-900 text-xs sm:text-sm">Total Net:</span>
-                <span className="text-teal-950 font-mono text-base sm:text-lg">
+                <span className="text-teal-900 text-xs">Total:</span>
+                <span className="text-teal-950 font-mono text-base">
                   {(
                     Number(invConsultFee || 0) +
                     Number(invPharmacyFee || 0) +
                     Number(invLabFee || 0) -
                     Number(invDiscount || 0)
                   ).toLocaleString()}{' '}
-                  MMK
+                  Ks
                 </span>
               </div>
 
@@ -2433,7 +2369,7 @@ export default function AdminDashboardPage() {
                 type="submit"
                 className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md transition cursor-pointer min-h-[44px]"
               >
-                Create Invoice
+                Save
               </button>
             </form>
           </div>
@@ -2448,7 +2384,7 @@ export default function AdminDashboardPage() {
           <div className="bg-white rounded-2xl max-w-md w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-8 space-y-4 sm:space-y-5 shadow-2xl animate-fade-in my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
-                <h3 className="text-base sm:text-lg font-bold text-slate-900">Collect Payment</h3>
+                <h3 className="text-base font-bold text-slate-900">Pay</h3>
                 <p className="text-xs text-slate-500">
                   {payingInvoice.invoiceNumber} • {payingInvoice.patientName}
                 </p>
@@ -2464,16 +2400,16 @@ export default function AdminDashboardPage() {
 
             <div className="text-center py-4 bg-emerald-50 rounded-2xl border border-emerald-200">
               <span className="text-xs font-semibold uppercase text-emerald-800 tracking-wider">
-                Amount Due
+                Due
               </span>
-              <div className="text-2xl sm:text-3xl font-black font-mono text-emerald-950 mt-1">
-                {payingInvoice.totalAmount.toLocaleString()} MMK
+              <div className="text-2xl font-black font-mono text-emerald-950 mt-1">
+                {payingInvoice.totalAmount.toLocaleString()} Ks
               </div>
             </div>
 
             <div className="space-y-2">
               <span className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
-                Payment Method
+                Pay via
               </span>
 
               <div className="grid grid-cols-2 gap-2.5">
@@ -2523,13 +2459,9 @@ export default function AdminDashboardPage() {
             {/* Prescription Header */}
             <div className="flex items-center justify-between border-b-2 border-teal-600 pb-4">
               <div>
-                <h3 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
-                  NAN DA WUN HEALTHCARE
+                <h3 className="text-lg font-black text-slate-900 tracking-tight">
+                  NAN DA WUN
                 </h3>
-                <p className="text-[10px] font-semibold uppercase text-teal-700 tracking-widest">
-                  Specialty Clinic & Primary Care Center
-                </p>
-                <p className="text-[10px] text-slate-500">742 Evergreen Medical Way, Yangon • Tel: (800) 555-0199</p>
               </div>
               <div className="text-right shrink-0">
                 <div className="text-2xl font-serif font-black text-teal-700">℞</div>
@@ -2540,15 +2472,15 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* Patient Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <div className="grid grid-cols-2 gap-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200">
               <div>
-                <span className="text-slate-400 block text-[10px] uppercase">Patient Name</span>
-                <span className="font-bold text-slate-900 text-sm sm:text-xs">{printPrescription.patientName}</span>
+                <span className="text-slate-400 block text-[10px] uppercase">Patient</span>
+                <span className="font-bold text-slate-900 text-xs">{printPrescription.patientName}</span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[10px] uppercase">Date & Doctor</span>
+                <span className="text-slate-400 block text-[10px] uppercase">Visit</span>
                 <span className="font-medium text-slate-800">
-                  {printPrescription.date} • {printPrescription.doctorName}
+                  {printPrescription.date}
                 </span>
               </div>
             </div>
@@ -2558,11 +2490,10 @@ export default function AdminDashboardPage() {
               {printPrescription.items.map((it, idx) => (
                 <div key={idx} className="py-2.5 space-y-0.5">
                   <div className="flex items-center justify-between font-bold text-slate-900 text-sm">
-                    <span>{idx + 1}. {it.medicineName} ({it.dosage})</span>
-                    <span className="font-mono text-teal-800 shrink-0 ml-2">Qty: {it.quantity}</span>
+                    <span className="truncate">{idx + 1}. {it.medicineName}</span>
+                    <span className="font-mono text-teal-800 shrink-0 ml-2">×{it.quantity}</span>
                   </div>
-                  <div className="text-teal-700 font-semibold">{it.frequency}</div>
-                  <div className="text-slate-500 text-[11px]">{it.instructions}</div>
+                  <div className="text-teal-700 font-semibold truncate">{it.frequency}</div>
                 </div>
               ))}
             </div>
@@ -2570,22 +2501,22 @@ export default function AdminDashboardPage() {
             {/* Doctor Signature */}
             <div className="pt-5 border-t border-slate-200 flex items-end justify-between text-xs">
               <div>
-                <span className="text-[10px] text-slate-400 uppercase block">Clinic Stamp</span>
-                <div className="w-20 sm:w-24 h-10 sm:h-12 border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center text-[10px] text-slate-400">
+                <span className="text-[10px] text-slate-400 uppercase block">Stamp</span>
+                <div className="w-20 h-10 border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center text-[10px] text-slate-400">
                   SEAL
                 </div>
               </div>
 
               <div className="text-right space-y-1">
-                <div className="font-serif italic text-base text-slate-700 border-b border-slate-300 pb-1 w-32 sm:w-40 text-right">
+                <div className="font-serif italic text-base text-slate-700 border-b border-slate-300 pb-1 w-32 text-right truncate">
                   {printPrescription.doctorName}
                 </div>
-                <span className="text-[10px] text-slate-400 uppercase block">Licensed Physician Signature</span>
+                <span className="text-[10px] text-slate-400 uppercase block">Signature</span>
               </div>
             </div>
 
             {/* Action buttons */}
-            <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 pt-2">
+            <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={() => setPrintPrescription(null)}
                 className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold text-center cursor-pointer min-h-[44px]"
@@ -2597,7 +2528,7 @@ export default function AdminDashboardPage() {
                 className="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm cursor-pointer min-h-[44px]"
               >
                 <Printer className="w-4 h-4" />
-                <span>Print Prescription</span>
+                <span>Print</span>
               </button>
             </div>
           </div>
@@ -2612,9 +2543,9 @@ export default function AdminDashboardPage() {
           <div className="bg-white rounded-2xl max-w-md w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-8 space-y-4 sm:space-y-5 shadow-2xl animate-fade-in border border-slate-200 my-auto">
             {/* Header */}
             <div className="text-center border-b border-slate-200 pb-4 space-y-1">
-              <h3 className="font-black text-slate-900 text-lg tracking-tight">NAN DA WUN CLINIC</h3>
+              <h3 className="font-black text-slate-900 text-lg tracking-tight">NAN DA WUN</h3>
               <p className="text-[10px] text-slate-500 uppercase tracking-widest">
-                OFFICIAL PAYMENT RECEIPT
+                RECEIPT
               </p>
               <p className="text-xs font-mono font-bold text-teal-700 mt-1">
                 {printInvoice.receiptNumber || printInvoice.invoiceNumber}
@@ -2624,15 +2555,15 @@ export default function AdminDashboardPage() {
             {/* Patient & Date */}
             <div className="text-xs space-y-1.5">
               <div className="flex justify-between">
-                <span className="text-slate-500">Patient:</span>
-                <span className="font-bold text-slate-900">{printInvoice.patientName}</span>
+                <span className="text-slate-500">To:</span>
+                <span className="font-bold text-slate-900 truncate ml-2">{printInvoice.patientName}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Date:</span>
                 <span className="text-slate-700">{printInvoice.date}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Payment Mode:</span>
+                <span className="text-slate-500">Via:</span>
                 <span className="font-bold text-emerald-700 uppercase">
                   {printInvoice.paymentMethod || 'Cash'}
                 </span>
@@ -2654,24 +2585,20 @@ export default function AdminDashboardPage() {
             {/* Total */}
             <div className="space-y-1 text-xs">
               <div className="flex justify-between font-bold text-base text-slate-900 pt-1">
-                <span>Total Paid:</span>
+                <span>Total:</span>
                 <span className="font-mono text-teal-800">
-                  {printInvoice.totalAmount.toLocaleString()} MMK
+                  {printInvoice.totalAmount.toLocaleString()} Ks
                 </span>
               </div>
               {printInvoice.discount > 0 && (
                 <div className="flex justify-between text-[11px] text-slate-500">
-                  <span>Discount:</span>
+                  <span>Off:</span>
                   <span>-{printInvoice.discount.toLocaleString()} Ks</span>
                 </div>
               )}
             </div>
 
-            <div className="text-center text-[10px] text-slate-400 pt-3 border-t border-slate-100 leading-relaxed">
-              Thank you for visiting Nan Da Wun Clinic.
-            </div>
-
-            <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 pt-2">
+            <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={() => setPrintInvoice(null)}
                 className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold text-center cursor-pointer min-h-[44px]"
@@ -2683,7 +2610,7 @@ export default function AdminDashboardPage() {
                 className="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm cursor-pointer min-h-[44px]"
               >
                 <Printer className="w-4 h-4" />
-                <span>Print Receipt</span>
+                <span>Print</span>
               </button>
             </div>
           </div>
