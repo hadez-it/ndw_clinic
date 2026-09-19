@@ -116,15 +116,15 @@ function LoginFormContent() {
   ];
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-8 sm:py-12">
+    <div className="w-full max-w-xl mx-auto px-3 sm:px-4 py-6 sm:py-12 min-w-0 overflow-x-hidden">
       {/* Header */}
-      <div className="text-center space-y-3 mb-8">
+      <div className="text-center space-y-3 mb-6 sm:mb-8">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold">
           <ShieldCheck className="w-3.5 h-3.5 text-teal-600 shrink-0" />
           <span>Nan Da Wun Clinic Staff Portal</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-          Clinic ERP and Staff Sign In
+          Clinic ERP & Staff Sign In
         </h1>
         <p className="text-slate-600 text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
           Secure authenticated access for physicians, clinical triage, reception, dispensary, and billing cashiers.
@@ -141,7 +141,7 @@ function LoginFormContent() {
       </div>
 
       {/* Main Login Card */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 sm:p-8 space-y-5">
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-4 sm:p-8 space-y-4 sm:space-y-5">
         {/* Role Selector Grid */}
         <div>
           <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
@@ -156,7 +156,7 @@ function LoginFormContent() {
                   key={item.role}
                   type="button"
                   onClick={() => handleRoleChange(item.role)}
-                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-bold transition border text-left cursor-pointer ${
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-bold transition border text-left cursor-pointer min-h-[44px] min-w-0 ${
                     isSelected
                       ? 'bg-teal-600 text-white border-teal-600 shadow-xs'
                       : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
@@ -231,7 +231,7 @@ function LoginFormContent() {
                   ? 'admin'
                   : role
               }
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:outline-none text-xs sm:text-sm text-slate-900 bg-slate-50 focus:bg-white transition"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:outline-none text-base sm:text-sm text-slate-900 bg-slate-50 focus:bg-white transition min-h-[44px]"
             />
           </div>
 
@@ -244,7 +244,7 @@ function LoginFormContent() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-[11px] text-teal-600 hover:text-teal-700 font-medium flex items-center gap-1 focus:outline-none cursor-pointer"
+                className="text-[11px] text-teal-600 hover:text-teal-700 font-medium flex items-center gap-1 focus:outline-none cursor-pointer p-1"
               >
                 {showPassword ? (
                   <>
@@ -263,7 +263,7 @@ function LoginFormContent() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={role === 'doctor' ? 'doctor1234' : '••••••••'}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:outline-none text-xs sm:text-sm text-slate-900 bg-slate-50 focus:bg-white transition"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:outline-none text-base sm:text-sm text-slate-900 bg-slate-50 focus:bg-white transition min-h-[44px]"
             />
           </div>
 
@@ -272,7 +272,7 @@ function LoginFormContent() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 disabled:opacity-50 text-white font-bold py-3 px-6 rounded-xl text-xs sm:text-sm transition shadow-xs cursor-pointer"
+              className="w-full inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 disabled:opacity-50 text-white font-bold py-3 px-6 rounded-xl text-sm transition shadow-xs cursor-pointer min-h-[44px]"
             >
               <span>{loading ? 'Verifying Credentials...' : `Sign In as ${ROLE_CONFIG[role]?.shortLabel}`}</span>
               <ArrowRight className="w-4 h-4" />
@@ -296,7 +296,7 @@ function LoginFormContent() {
                 key={demo.role}
                 type="button"
                 onClick={() => handleQuickDemoSelect(demo)}
-                className={`p-2 rounded-xl border text-left transition text-[11px] cursor-pointer ${
+                className={`p-2 sm:p-2.5 rounded-xl border text-left transition text-[11px] cursor-pointer min-w-0 ${
                   role === demo.role
                     ? 'border-teal-400 bg-teal-50/60 text-teal-900 font-semibold'
                     : 'border-slate-200 hover:border-slate-300 bg-slate-50 text-slate-700'
@@ -313,7 +313,7 @@ function LoginFormContent() {
 
         {/* Return to Public Site */}
         <div className="pt-2 border-t border-slate-100 text-center">
-          <Link href="/" className="text-xs text-teal-600 hover:underline">
+          <Link href="/" className="text-xs text-teal-600 hover:underline inline-block py-1">
             &larr; Return to Clinic Public Portal
           </Link>
         </div>
